@@ -1,0 +1,10 @@
+package net.greeta.stock.ordering.infrastructure.entity;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
+@Repository
+interface OrderEntityRepository extends CrudRepository<OrderEntity, UUID> {
+}

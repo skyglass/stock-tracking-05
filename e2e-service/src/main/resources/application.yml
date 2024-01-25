@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: e2e
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            readTimeout: 20000
+            connectTimeout: 30000
+          order:
+            url: http://localhost:9000/order
+          order2:
+            url: http://localhost:9000/order2
+          order3:
+            url: http://localhost:9000/order3
+          customer:
+            url: http://localhost:9000/customer
+          payment:
+            url: http://localhost:9000/payment
+          payment2:
+            url: http://localhost:9000/payment2
+          oauth2:
+            url: http://localhost:8080
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+  datasource:
+    order:
+      username: postgres
+      password: postgres
+      url: jdbc:postgresql://localhost:5433/postgres?currentSchema=order&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified
+      hikari:
+        connection-timeout: 2000 #ms
+        maximum-pool-size: 5
+    customer:
+      username: postgres
+      password: postgres
+      url: jdbc:postgresql://localhost:5433/postgres?currentSchema=customer&binaryTransfer=true&reWriteBatchedInserts=true
+      hikari:
+        connection-timeout: 2000 #ms
+        maximum-pool-size: 5
+    payment:
+      username: postgres
+      password: postgres
+      url: jdbc:postgresql://localhost:5433/postgres?currentSchema=payment&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified
+      hikari:
+        connection-timeout: 2000 #ms
+        maximum-pool-size: 5
+
+security:
+  oauth2:
+    client-id: stock-app
+    grant-type: password
+    username: admin
+    password: admin

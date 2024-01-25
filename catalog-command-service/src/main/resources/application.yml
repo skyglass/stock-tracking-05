@@ -1,0 +1,142 @@
+server:
+  shutdown: graceful
+  forward-headers-strategy: framework
+  tomcat:
+    connection-timeout: 2s
+    keep-alive-timeout: 15s
+    threads:
+      max: 50
+      min-spare: 5
+
+spring:
+  application:
+    name: catalog-command
+  lifecycle:
+    timeout-per-shutdown-phase: 15s
+
+  keycloak:
+    server-url: http://localhost:8080
+    server-external-url: http://localhost:8080
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${spring.keycloak.server-external-url}/realms/eshop-realm
+          jwk-set-uri: ${spring.keycloak.server-url}/realms/eshop-realm/protocol/openid-connect/certs
+
+  # Kafka
+  kafka:
+    bootstrap-servers: ${app.kafka.broker.host}:${app.kafka.broker.port}
+    producer:
+      transaction-id-prefix: tx-catalog-
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      properties:
+        isolation.level: read_committed
+      topic:
+        orders: orders
+        orderCheckouts: order-checkouts
+        productPriceChanges: product-price-changes
+        paidOrders: paid-orders
+        ordersWaitingForValidation: orders-waiting-for-validation
+        orderStockConfirmed: order-stock-confirmed
+        orderStockRejected: order-stock-rejected
+        submittedOrders: submitted-orders
+        shippedOrders: shipped-orders
+        cancelledOrders: cancelled-orders
+        gracePeriodConfirmed: grace-period-confirmed
+        paymentStatus: payment-status
+        stockConfirmed: stock-confirmed
+
+  data:
+    # Mongo
+    mongodb:
+      uri: mongodb://${app.mongodb.user}:${app.mongodb.password}@${app.mongodb.host}:${app.mongodb.port}/${app.mongodb.database}?authSource=admin
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
+  level:
+    net.greeta.stock: DEBUG
+    org.springframework.cloud.kubernetes: TRACE
+    org.springframework.security: DEBUG
+
+info:
+  system: Catalog Command Service
+
+jwt:
+  auth:
+    converter:
+      resource-id: eshop-app
+      principal-attribute: preferred_username
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bindings, configprops, env, flyway, functions, health, heapdump, info, loggers, mappings, prometheus
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/api/v2/spans
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+
+openapi:
+  oauthflow:
+    authServerUrl: ${spring.keycloak.server-external-url}
+    realm: eshop-realm
+
+# Custom config
+app:
+  mongodb:
+    host: mongo
+    port: 27017
+    user: user
+    password: pass
+    database: catalog-command-db
+  kafka:
+    broker:
+      host: kafka
+      port: 29092
+    group:
+      paidOrders: paid-orders-group
+      ordersWaitingValidation: orders-waiting-validation-group
+
+
+axon:
+  serializer:
+    general: jackson
+    events: jackson
+    messages: jackson
+  axonserver:
+    enabled: false
+  kafka:
+    clientid: catalog-command-app
+    producer:
+      retries: 3
+      bootstrap-servers: ${app.kafka.broker.host}:${app.kafka.broker.port}
+      event-processor-mode: tracking
+    properties:
+      security.protocol: PLAINTEXT

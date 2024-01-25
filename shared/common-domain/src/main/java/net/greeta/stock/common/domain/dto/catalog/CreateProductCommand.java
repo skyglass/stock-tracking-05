@@ -1,0 +1,32 @@
+package net.greeta.stock.common.domain.dto.catalog;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
+import net.greeta.stock.common.domain.dto.Command;
+
+import java.util.UUID;
+
+;
+
+public record CreateProductCommand(
+    @JsonProperty
+    @NotNull(message = "No product name defined")
+    String name,
+    @JsonProperty
+    String description,
+    @JsonProperty
+    @NotNull
+    Double price,
+    @JsonProperty
+    String pictureFileName,
+    @NotNull
+    @JsonProperty
+    Integer availableStock,
+    @JsonProperty
+    @NotNull
+    UUID brandId,
+    @JsonProperty
+    @NotNull
+    UUID categoryId
+) implements Command<CatalogItemResponse> {
+}
