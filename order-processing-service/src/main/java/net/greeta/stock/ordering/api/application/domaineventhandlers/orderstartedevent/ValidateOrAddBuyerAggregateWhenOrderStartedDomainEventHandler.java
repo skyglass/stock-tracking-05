@@ -1,24 +1,19 @@
 package net.greeta.stock.ordering.api.application.domaineventhandlers.orderstartedevent;
 
+import lombok.RequiredArgsConstructor;
+import net.greeta.stock.common.domain.dto.order.buyer.Buyer;
+import net.greeta.stock.common.domain.dto.order.events.OrderStartedDomainEvent;
 import net.greeta.stock.ordering.api.application.domaineventhandlers.DomainEventHandler;
 import net.greeta.stock.ordering.api.application.integrationevents.events.OrderStatusChangedToSubmittedIntegrationEvent;
 import net.greeta.stock.ordering.config.KafkaTopics;
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.Buyer;
 import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.BuyerRepository;
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.CardType;
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.PaymentMethodData;
-import net.greeta.stock.ordering.domain.events.OrderStartedDomainEvent;
 import net.greeta.stock.ordering.shared.EventHandler;
 import net.greeta.stock.shared.outbox.IntegrationEventLogService;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.nonNull;
 
 @EventHandler
 @RequiredArgsConstructor
@@ -31,7 +26,7 @@ public class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler imple
 
   @EventListener
   public void handle(OrderStartedDomainEvent orderStartedEvent) {
-    final var buyer = verifyOrAddPaymentMethod(orderStartedEvent);
+    final var buyer = verify(orderStartedEvent);
     final var order = orderStartedEvent.order();
     final var orderItems = order.getOrderItems().stream()
         .map(orderItem -> new OrderStatusChangedToSubmittedIntegrationEvent.OrderItemDto(
@@ -51,28 +46,17 @@ public class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler imple
     integrationEventLogService.saveEvent(orderStatusChangedToSubmittedIntegrationEvent, topics.getSubmittedOrders());
 
     logger.info(
-        "Buyer {} and related payment method were validated or updated for orderId: {}.",
-        buyer.getId(),
+        "Buyer {} was validated or updated for orderId: {}.",
+        buyer.getBuyerName(),
         order.getId()
     );
   }
 
-  private Buyer verifyOrAddPaymentMethod(OrderStartedDomainEvent orderStartedEvent) {
+  private Buyer verify(OrderStartedDomainEvent orderStartedEvent) {
     final var buyer = buyerRepository.findByUserId(orderStartedEvent.userId())
         .orElseGet(() -> new Buyer(orderStartedEvent.userId(), orderStartedEvent.buyerName()));
-    buyer.verifyOrAddPaymentMethod(paymentMethodDataFor(orderStartedEvent), orderStartedEvent.order().getId());
+    buyer.verify(orderStartedEvent.order().getId());
     return buyerRepository.save(buyer);
   }
 
-  private PaymentMethodData paymentMethodDataFor(OrderStartedDomainEvent orderStartedEvent) {
-    final var cardType = nonNull(orderStartedEvent.cardType()) ? orderStartedEvent.cardType() : CardType.Amex;
-    return PaymentMethodData.builder()
-        .cardType(cardType)
-        .alias("Payment Method on {%s}".formatted(LocalDateTime.now()))
-        .cardNumber(orderStartedEvent.cardNumber())
-        .expiration(orderStartedEvent.cardExpiration())
-        .securityNumber(orderStartedEvent.cardSecurityNumber())
-        .cardHolderName(orderStartedEvent.cardHolderName())
-        .build();
-  }
 }

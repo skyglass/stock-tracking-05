@@ -1,10 +1,11 @@
 package net.greeta.stock.catalog.application.commands.createproduct;
 
-import net.greeta.stock.catalog.application.commandbus.CatalogCommandHandler;
-import net.greeta.stock.catalog.application.models.CatalogItemResponse;
-import net.greeta.stock.catalog.domain.catalogitem.*;
-import net.greeta.stock.shared.rest.error.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import net.greeta.stock.catalog.application.commandbus.CatalogCommandHandler;
+import net.greeta.stock.catalog.domain.catalogitem.*;
+import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
+import net.greeta.stock.common.domain.dto.catalog.CreateProductCommand;
+import net.greeta.stock.shared.rest.error.BadRequestException;
 import org.axonframework.commandhandling.CommandHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

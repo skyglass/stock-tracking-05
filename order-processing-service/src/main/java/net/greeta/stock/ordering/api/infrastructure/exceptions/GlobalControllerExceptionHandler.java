@@ -1,7 +1,7 @@
 package net.greeta.stock.ordering.api.infrastructure.exceptions;
 
 import net.greeta.stock.shared.rest.error.ControllerExceptionHandler;
-import net.greeta.stock.ordering.domain.exceptions.OrderingDomainException;
+import net.greeta.stock.common.domain.dto.order.exceptions.OrderingDomainException;
 import net.greeta.stock.shared.rest.error.HttpErrorInfo;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.ExceptionHandler;

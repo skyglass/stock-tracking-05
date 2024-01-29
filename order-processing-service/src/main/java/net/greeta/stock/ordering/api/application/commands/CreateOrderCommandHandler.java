@@ -1,16 +1,14 @@
 package net.greeta.stock.ordering.api.application.commands;
 
 import an.awesome.pipelinr.Command;
-import net.greeta.stock.ordering.api.application.dtos.OrderItemDTO;
+import net.greeta.stock.common.domain.dto.order.*;
+import net.greeta.stock.common.domain.dto.order.buyer.*;
 import net.greeta.stock.ordering.api.application.integrationevents.events.OrderStartedIntegrationEvent;
 import net.greeta.stock.ordering.config.KafkaTopics;
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.*;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.*;
 import net.greeta.stock.ordering.domain.aggregatesmodel.order.*;
 import net.greeta.stock.ordering.shared.CommandHandler;
 import net.greeta.stock.shared.outbox.IntegrationEventLogService;
 import lombok.RequiredArgsConstructor;
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,18 +49,6 @@ public class CreateOrderCommandHandler implements Command.Handler<CreateOrderCom
     final var orderData = NewOrderData.builder()
         .userId(UserId.of(command.getUserId()))
         .buyerName(BuyerName.of(command.getUserName()))
-        .address(Address.builder()
-            .city(command.getCity())
-            .street(command.getStreet())
-            .state(command.getState())
-            .country(command.getCountry())
-            .zipCode(command.getZipCode())
-            .build())
-        .cardType(CardType.of(command.getCardType()))
-        .cardNumber(CardNumber.of(command.getCardNumber()))
-        .cardSecurityNumber(SecurityNumber.of(command.getCardSecurityNumber()))
-        .cardHolderName(CardHolder.of(command.getCardHolderName()))
-        .cardExpiration(CardExpiration.of(command.getCardExpiration()))
         .build();
 
     return Order.create(orderData);

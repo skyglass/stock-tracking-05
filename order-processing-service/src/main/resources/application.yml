@@ -33,7 +33,7 @@ spring:
 
   # Kafka
   kafka:
-    bootstrap-servers: ${app.kafka.broker.host}:${app.kafka.broker.port}
+    bootstrap-servers: ${app.kafka.brokers}
     producer:
       properties:
         spring.json.add.type.headers: false
@@ -63,8 +63,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${spring.keycloak.server-external-url}/realms/eshop-realm
-          jwk-set-uri: ${spring.keycloak.server-url}/realms/eshop-realm/protocol/openid-connect/certs
+          issuer-uri: ${spring.keycloak.server-external-url}/realms/stock-realm
+          jwk-set-uri: ${spring.keycloak.server-url}/realms/stock-realm/protocol/openid-connect/certs
 
 logging:
   pattern:
@@ -81,7 +81,7 @@ info:
 jwt:
   auth:
     converter:
-      resource-id: eshop-app
+      resource-id: stock-app
       principal-attribute: preferred_username
 
 management:
@@ -116,7 +116,7 @@ management:
 openapi:
   oauthflow:
     authServerUrl: ${spring.keycloak.server-external-url}
-    realm: eshop-realm
+    realm: stock-realm
 
 # Custom config
 app:
@@ -127,9 +127,7 @@ app:
     user: orderdbuser
     password: dbpass
   kafka:
-    broker:
-      host: kafka
-      port: 29092
+    brokers: "stock-kafka1:29092,stock-kafka2:29093"
     group:
       gracePeriodConfirmed: grace-period-confirmed-group
       paymentStatus: payment-status-group

@@ -19,7 +19,7 @@ spring:
   data:
     # Mongo
     mongodb:
-      uri: mongodb://${app.mongodb.user}:${app.mongodb.password}@${app.mongodb.host}:${app.mongodb.port}/${app.mongodb.database}?authSource=admin
+      uri: mongodb://${app.mongodb.user}:${app.mongodb.password}@${app.mongodb.host}:${app.mongodb.port}?authSource=admin
 
   # JPA
   jpa:
@@ -40,7 +40,7 @@ spring:
 
   # Kafka
   kafka:
-    bootstrap-servers: ${app.kafka.broker.host}:${app.kafka.broker.port}
+    bootstrap-servers: ${app.kafka.brokers}
     producer:
       properties:
         spring.json.add.type.headers: false
@@ -70,8 +70,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${spring.keycloak.server-external-url}/realms/eshop-realm
-          jwk-set-uri: ${spring.keycloak.server-url}/realms/eshop-realm/protocol/openid-connect/certs
+          issuer-uri: ${spring.keycloak.server-external-url}/realms/stock-realm
+          jwk-set-uri: ${spring.keycloak.server-url}/realms/stock-realm/protocol/openid-connect/certs
 
 logging:
   pattern:
@@ -88,7 +88,7 @@ info:
 jwt:
   auth:
     converter:
-      resource-id: eshop-app
+      resource-id: stock-app
       principal-attribute: preferred_username
 
 management:
@@ -123,14 +123,12 @@ management:
 openapi:
   oauthflow:
     authServerUrl: ${spring.keycloak.server-external-url}
-    realm: eshop-realm
+    realm: stock-realm
 
 # Custom config
 app:
   kafka:
-    broker:
-      host: kafka
-      port: 29092
+    brokers: "stock-kafka1:29092,stock-kafka2:29093"
   postgres:
     host: postgres
     port: 5432
@@ -142,7 +140,6 @@ app:
     port: 27017
     user: user
     password: pass
-    database: catalog-query-db
 
 
 axon:
@@ -155,7 +152,7 @@ axon:
   kafka:
     clientid: catalog-query-app
     consumer:
-      bootstrap-servers: ${app.kafka.broker.host}:${app.kafka.broker.port}
+      bootstrap-servers: ${app.kafka.brokers}
       event-processor-mode: tracking
       auto-offset-reset: earliest
       properties:

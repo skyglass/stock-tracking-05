@@ -32,6 +32,11 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>an.awesome</groupId>
+			<artifactId>pipelinr</artifactId>
+		</dependency>
+
 		<!-- SpringDoc OpenApi -->
 		<dependency>
 			<groupId>org.springdoc</groupId>

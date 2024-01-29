@@ -1,5 +1,7 @@
 package net.greeta.stock.ordering.domain.aggregatesmodel.order;
 
+import net.greeta.stock.common.domain.dto.order.Order;
+import net.greeta.stock.common.domain.dto.order.OrderId;
 import net.greeta.stock.ordering.domain.base.Repository;
 import org.springframework.lang.NonNull;
 

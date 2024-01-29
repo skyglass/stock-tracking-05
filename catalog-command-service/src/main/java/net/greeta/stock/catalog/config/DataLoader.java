@@ -1,12 +1,12 @@
 package net.greeta.stock.catalog.config;
 
+import lombok.RequiredArgsConstructor;
 import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
-import net.greeta.stock.catalog.application.commands.createproduct.CreateProductCommand;
 import net.greeta.stock.catalog.domain.catalogitem.Brand;
 import net.greeta.stock.catalog.domain.catalogitem.BrandRepository;
 import net.greeta.stock.catalog.domain.catalogitem.Category;
 import net.greeta.stock.catalog.domain.catalogitem.CategoryRepository;
-import lombok.RequiredArgsConstructor;
+import net.greeta.stock.common.domain.dto.catalog.CreateProductCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;

@@ -18,9 +18,4 @@ class BuyerEntity extends DbEntity {
 
   @Column(name = "name", nullable = false)
   private String name;
-
-  @Setter
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "buyer")
-  @OrderBy("id")
-  private Set<PaymentMethodEntity> paymentMethods;
 }

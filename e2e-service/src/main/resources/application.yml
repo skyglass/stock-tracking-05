@@ -24,28 +24,41 @@ spring:
           oauth2:
             url: http://localhost:8080
 
+  data:
+    axon:
+      mongodb:
+        uri: mongodb://${app.axon.mongodb.user}:${app.axon.mongodb.password}@${app.axon.mongodb.host}:${app.axon.mongodb.port}/${app.axon.mongodb.database}?authSource=admin
+        database: ${app.axon.mongodb.database}
+
+    basket:
+      redis:
+        password: ${app.basket.redis.password}
+        host: ${app.basket.redis.host}
+        port: ${app.basket.redis.port}
+
+    catalog-command:
+      mongodb:
+        uri: mongodb://${app.catalog-command.mongodb.user}:${app.catalog-command.mongodb.password}@${app.catalog-command.mongodb.host}:${app.catalog-command.mongodb.port}/${app.catalog-command.mongodb.database}?authSource=admin
+        database: ${app.catalog-command.mongodb.database}
+
+
   jpa:
     hibernate:
       ddl-auto: none
   datasource:
-    order:
-      username: postgres
-      password: postgres
-      url: jdbc:postgresql://localhost:5433/postgres?currentSchema=order&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified
+    catalog-query:
+      url: jdbc:postgresql://${app.catalog-query.postgres.host}:${app.catalog-query.postgres.port}/${app.catalog-query.postgres.database}
+      username: ${app.catalog-query.postgres.user}
+      password: ${app.catalog-query.postgres.password}
+      driver-class-name: org.postgresql.Driver
       hikari:
         connection-timeout: 2000 #ms
         maximum-pool-size: 5
-    customer:
-      username: postgres
-      password: postgres
-      url: jdbc:postgresql://localhost:5433/postgres?currentSchema=customer&binaryTransfer=true&reWriteBatchedInserts=true
-      hikari:
-        connection-timeout: 2000 #ms
-        maximum-pool-size: 5
-    payment:
-      username: postgres
-      password: postgres
-      url: jdbc:postgresql://localhost:5433/postgres?currentSchema=payment&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified
+    order-processing:
+      url: jdbc:postgresql://${app.order-processing.postgres.host}:${app.order-processing.postgres.port}/${app.order-processing.postgres.database}
+      username: ${app.order-processing.postgres.user}
+      password: ${app.order-processing.postgres.password}
+      driver-class-name: org.postgresql.Driver
       hikari:
         connection-timeout: 2000 #ms
         maximum-pool-size: 5
@@ -56,3 +69,44 @@ security:
     grant-type: password
     username: admin
     password: admin
+
+app:
+  axon:
+    mongodb:
+      host: localhost
+      port: 27017
+      user: user
+      password: pass
+      database: axonframework
+
+  basket:
+    redis:
+      host: localhost
+      port: 6379
+      password: pass
+
+  catalog-query:
+    postgres:
+      host: localhost
+      port: 5432
+      database: catalogdb
+      user: catalogdbuser
+      password: dbpass
+
+  catalog-command:
+    mongodb:
+      host: localhost
+      port: 27017
+      user: user
+      password: pass
+      database: catalog-command-db
+
+  order-processing:
+    postgres:
+      host: localhost
+      port: 5432
+      database: orderdb
+      user: orderdbuser
+      password: dbpass
+
+

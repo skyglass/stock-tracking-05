@@ -1,9 +1,9 @@
 package net.greeta.stock.ordering.infrastructure.entity;
 
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.Buyer;
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.BuyerId;
+import net.greeta.stock.common.domain.dto.order.buyer.Buyer;
+import net.greeta.stock.common.domain.dto.order.buyer.BuyerId;
 import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.BuyerRepository;
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.UserId;
+import net.greeta.stock.common.domain.dto.order.buyer.UserId;
 import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

@@ -57,71 +57,61 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: customer
-          uri: ${CUSTOMER_SERVICE_URL:http://localhost:9001}
+        - id: anaylytics
+          uri: ${ANALYTICS_SERVICE_URL:http://localhost:9001}
           predicates:
-            - Path=/customer/**
+            - Path=/analytics/**
           filters:
-            - RewritePath=/customer/(?<path>.*), /$\{path}
+            - RewritePath=/analytics/(?<path>.*), /$\{path}
             - name: CircuitBreaker
               args:
-                name: customerCircuitBreaker
+                name: analyticsCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: basket
+          uri: ${BASKET_SERVICE_URL:http://localhost:9002}
+          predicates:
+            - Path=/basket/**
+          filters:
+            - RewritePath=/basket/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: basketCircuitBreaker
                 fallbackUri: forward:/stock-fallback
 
 
-        - id: order
-          uri: ${ORDER_SERVICE_URL:http://localhost:9002}
+        - id: catalog-command
+          uri: ${CATALOG_COMMAND_SERVICE_URL:http://localhost:9003}
           predicates:
-            - Path=/order/**
+            - Path=/catalog-command/**
           filters:
-            - RewritePath=/order/(?<path>.*), /$\{path}
+            - RewritePath=/catalog-command/(?<path>.*), /$\{path}
             - name: CircuitBreaker
               args:
-                name: orderCircuitBreaker
+                name: catalogCommandCircuitBreaker
                 fallbackUri: forward:/stock-fallback
 
-        - id: order2
-          uri: ${ORDER2_SERVICE_URL:http://localhost:9003}
+
+        - id: catalog-query
+          uri: ${CATALOG_QUERY_SERVICE_URL:http://localhost:9004}
           predicates:
-            - Path=/order2/**
+            - Path=/catalog-query/**
           filters:
-            - RewritePath=/order2/(?<path>.*), /$\{path}
+            - RewritePath=/catalog-query/(?<path>.*), /$\{path}
             - name: CircuitBreaker
               args:
-                name: orderCircuitBreaker
+                name: catalogQueryCircuitBreaker
                 fallbackUri: forward:/stock-fallback
 
-        - id: order3
-          uri: ${ORDER3_SERVICE_URL:http://localhost:9004}
+        - id: order-processing
+          uri: ${ORDER_PROCESSING_SERVICE_URL:http://localhost:9005}
           predicates:
-            - Path=/order3/**
+            - Path=/order-processing/**
           filters:
-            - RewritePath=/order3/(?<path>.*), /$\{path}
+            - RewritePath=/order-processing/(?<path>.*), /$\{path}
             - name: CircuitBreaker
               args:
-                name: orderCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: payment
-          uri: ${PAYMENT_SERVICE_URL:http://localhost:9005}
-          predicates:
-            - Path=/payment/**
-          filters:
-            - RewritePath=/payment/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: paymentCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: payment2
-          uri: ${PAYMENT2_SERVICE_URL:http://localhost:9006}
-          predicates:
-            - Path=/payment2/**
-          filters:
-            - RewritePath=/payment2/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: paymentCircuitBreaker
+                name: orderProcessingCircuitBreaker
                 fallbackUri: forward:/stock-fallback
 
   redis:
@@ -216,15 +206,15 @@ springdoc:
       # - url: /v3/api-docs
       #   name: API Gateway Service
       #   primaryName: API Gateway Service
-      - url: /customer/v3/api-docs
-        name: Customer Service
-      - url: /order/v3/api-docs
-        name: Order Service
+      - url: /analytics/v3/api-docs
+        name: Analytics Service
+      - url: /basket/v3/api-docs
+        name: Basket Service
+      - url: /catalog-command/v3/api-docs
+        name: Catalog Command Service
+      - url: /catalog-query/v3/api-docs
+        name: Catalog Query Service
+      - url: /order-processing/v3/api-docs
+        name: Order Processing Service
       - url: /payment/v3/api-docs
         name: Payment Service
-      - url: /payment2/v3/api-docs
-        name: Payment2 Service
-      - url: /order2/v3/api-docs
-        name: Order2 Service
-      - url: /order3/v3/api-docs
-        name: Order3 Service

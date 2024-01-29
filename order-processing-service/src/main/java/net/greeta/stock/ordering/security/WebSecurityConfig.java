@@ -22,8 +22,8 @@ public class WebSecurityConfig {
 
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
 
-                        .requestMatchers("/api", "/api/ship", "/api/cancel").hasRole(ESHOP_MANAGER)
-                        .requestMatchers("/api/*").hasAnyRole(ESHOP_MANAGER, ESHOP_USER)
+                        .requestMatchers("/api", "/api/ship", "/api/cancel").hasRole(STOCK_MANAGER)
+                        .requestMatchers("/api/*").hasAnyRole(STOCK_MANAGER, STOCK_USER)
 
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(
@@ -33,6 +33,6 @@ public class WebSecurityConfig {
                 .build();
     }
 
-    public static final String ESHOP_MANAGER = "ESHOP_MANAGER";
-    public static final String ESHOP_USER = "ESHOP_USER";
+    public static final String STOCK_MANAGER = "STOCK_MANAGER";
+    public static final String STOCK_USER = "STOCK_USER";
 }

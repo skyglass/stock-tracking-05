@@ -1,5 +1,8 @@
 package net.greeta.stock.ordering.domain.aggregatesmodel.buyer;
 
+import net.greeta.stock.common.domain.dto.order.buyer.Buyer;
+import net.greeta.stock.common.domain.dto.order.buyer.BuyerId;
+import net.greeta.stock.common.domain.dto.order.buyer.UserId;
 import net.greeta.stock.ordering.domain.base.Repository;
 import org.springframework.lang.NonNull;
 

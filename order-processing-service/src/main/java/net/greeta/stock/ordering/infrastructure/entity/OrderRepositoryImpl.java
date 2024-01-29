@@ -1,7 +1,7 @@
 package net.greeta.stock.ordering.infrastructure.entity;
 
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.Order;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.OrderId;
+import net.greeta.stock.common.domain.dto.order.Order;
+import net.greeta.stock.common.domain.dto.order.OrderId;
 import net.greeta.stock.ordering.domain.aggregatesmodel.order.OrderRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

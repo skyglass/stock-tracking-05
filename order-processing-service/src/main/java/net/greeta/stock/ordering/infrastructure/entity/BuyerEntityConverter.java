@@ -1,9 +1,7 @@
 package net.greeta.stock.ordering.infrastructure.entity;
 
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.*;
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.snapshot.BuyerSnapshot;
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.snapshot.PaymentMethodSnapshot;
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.Buyer;
+import net.greeta.stock.common.domain.dto.order.buyer.snapshot.BuyerSnapshot;
+import net.greeta.stock.common.domain.dto.order.buyer.Buyer;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,29 +20,7 @@ class BuyerEntityConverter implements EntityConverter<BuyerEntity, Buyer> {
         .name(snapshot.getBuyerName())
         .build();
 
-    buyerEntity.setPaymentMethods(toPaymentMethodEntities(snapshot.getPaymentMethods(), buyerEntity));
-
     return buyerEntity;
-  }
-
-  private Set<PaymentMethodEntity> toPaymentMethodEntities(List<PaymentMethodSnapshot> snapshots, BuyerEntity buyerEntity) {
-    return snapshots.stream()
-        .map(paymentMethod -> toPaymentMethodEntity(paymentMethod, buyerEntity))
-        .collect(Collectors.toSet());
-  }
-
-  private PaymentMethodEntity toPaymentMethodEntity(PaymentMethodSnapshot snapshot, BuyerEntity buyerEntity) {
-    return PaymentMethodEntity
-        .builder()
-        .id(UUID.fromString(snapshot.getId()))
-        .alias(snapshot.getAlias())
-        .cardNumber(snapshot.getCardNumber())
-        .cardHolderName(snapshot.getCardHolderName())
-        .expiration(snapshot.getExpiration())
-        .securityNumber(snapshot.getSecurityNumber())
-        .cardType(snapshot.getCardType())
-        .buyer(buyerEntity)
-        .build();
   }
 
   @Override
@@ -53,26 +29,7 @@ class BuyerEntityConverter implements EntityConverter<BuyerEntity, Buyer> {
         .id(entity.getId().toString())
         .userId(entity.getUserId())
         .buyerName(entity.getName())
-        .paymentMethods(toPaymentMethodSnapshots(entity.getPaymentMethods()))
         .build());
-  }
-
-  private List<PaymentMethodSnapshot> toPaymentMethodSnapshots(Set<PaymentMethodEntity> entities) {
-    return entities.stream()
-        .map(this::toPaymentMethodSnapshot)
-        .collect(Collectors.toList());
-  }
-
-  private PaymentMethodSnapshot toPaymentMethodSnapshot(PaymentMethodEntity entity) {
-    return PaymentMethodSnapshot.builder()
-        .id(entity.getId().toString())
-        .alias(entity.getAlias())
-        .cardHolderName(entity.getCardHolderName())
-        .cardNumber(entity.getCardNumber())
-        .cardType(entity.getCardType())
-        .expiration(entity.getExpiration())
-        .securityNumber(entity.getSecurityNumber())
-        .build();
   }
 
 }

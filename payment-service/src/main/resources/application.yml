@@ -16,7 +16,7 @@ spring:
 
   # Kafka
   kafka:
-    bootstrap-servers: ${app.kafka.broker.host}:${app.kafka.broker.port}
+    bootstrap-servers: ${app.kafka.brokers}
     producer:
       transaction-id-prefix: tx-payment-
       properties:
@@ -84,8 +84,6 @@ management:
 
 app:
   kafka:
-    broker:
-      host: kafka
-      port: 29092
+    brokers: "stock-kafka1:29092,stock-kafka2:29093"
     group:
       stockConfirmed: stock-confirmed-group

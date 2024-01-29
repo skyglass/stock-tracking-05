@@ -20,9 +20,6 @@ class OrderEntity extends DbEntity {
   @Column(nullable = false)
   private LocalDateTime orderDate;
 
-  @Embedded
-  private AddressModel address;
-
   @Column(name = "buyer_id", nullable = false)
   private UUID buyerId;
 
@@ -34,9 +31,6 @@ class OrderEntity extends DbEntity {
 
   @Column(name = "is_draft")
   private boolean isDraft;
-
-  @Column(name = "payment_method_id", nullable = false)
-  private UUID paymentMethodId;
 
   @Setter
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")

@@ -1,8 +1,9 @@
 package net.greeta.stock.ordering.api.application.commands;
 
 import an.awesome.pipelinr.Command;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.Order;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.OrderId;
+import net.greeta.stock.common.domain.dto.order.CancelOrderCommand;
+import net.greeta.stock.common.domain.dto.order.Order;
+import net.greeta.stock.common.domain.dto.order.OrderId;
 import net.greeta.stock.ordering.domain.aggregatesmodel.order.OrderRepository;
 import net.greeta.stock.ordering.shared.CommandHandler;
 import net.greeta.stock.shared.rest.error.NotFoundException;

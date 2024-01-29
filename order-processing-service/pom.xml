@@ -19,15 +19,15 @@
     <dependencies>
         <dependency>
             <groupId>net.greeta.stock</groupId>
+            <artifactId>common-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.greeta.stock</groupId>
             <artifactId>rest</artifactId>
         </dependency>
         <dependency>
             <groupId>net.greeta.stock</groupId>
             <artifactId>security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.greeta.stock</groupId>
-            <artifactId>validation</artifactId>
         </dependency>
         <dependency>
             <groupId>net.greeta.stock</groupId>

@@ -4,8 +4,8 @@ import net.greeta.stock.ordering.api.application.domaineventhandlers.DomainEvent
 import net.greeta.stock.ordering.api.application.integrationevents.events.OrderStatusChangedToShippedIntegrationEvent;
 import net.greeta.stock.ordering.api.application.services.OrderApplicationService;
 import net.greeta.stock.ordering.config.KafkaTopics;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.OrderStatus;
-import net.greeta.stock.ordering.domain.events.OrderShippedDomainEvent;
+import net.greeta.stock.common.domain.dto.order.OrderStatus;
+import net.greeta.stock.common.domain.dto.order.events.OrderShippedDomainEvent;
 import net.greeta.stock.ordering.shared.EventHandler;
 import net.greeta.stock.shared.outbox.IntegrationEventLogService;
 import lombok.RequiredArgsConstructor;

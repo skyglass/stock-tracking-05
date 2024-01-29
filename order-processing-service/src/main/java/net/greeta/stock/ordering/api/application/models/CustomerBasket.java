@@ -2,6 +2,7 @@ package net.greeta.stock.ordering.api.application.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.greeta.stock.common.domain.dto.order.BasketItem;
 
 import java.util.ArrayList;
 import java.util.List;

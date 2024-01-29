@@ -40,8 +40,10 @@
         <module>catalog-shared</module>
         <module>catalog-query-service</module>
         <module>catalog-command-service</module>
+        <module>basket-service</module>
         <module>order-processing-service</module>
         <module>payment-service</module>
+        <module>analytics-service</module>
         <module>gateway-service</module>
         <module>e2e-service</module>
     </modules>
@@ -66,11 +68,6 @@
             <dependency>
                 <groupId>net.greeta.stock</groupId>
                 <artifactId>security</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.greeta.stock</groupId>
-                <artifactId>validation</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

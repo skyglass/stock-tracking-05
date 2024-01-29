@@ -1,9 +1,9 @@
 package net.greeta.stock.ordering.api.application.services;
 
-import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.Buyer;
+import net.greeta.stock.common.domain.dto.order.buyer.Buyer;
 import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.BuyerRepository;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.Order;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.OrderId;
+import net.greeta.stock.common.domain.dto.order.Order;
+import net.greeta.stock.common.domain.dto.order.OrderId;
 import net.greeta.stock.ordering.domain.aggregatesmodel.order.OrderRepository;
 import net.greeta.stock.ordering.shared.ApplicationService;
 import net.greeta.stock.shared.rest.error.NotFoundException;

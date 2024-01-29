@@ -1,8 +1,8 @@
 package net.greeta.stock.ordering.infrastructure.entity;
 
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.Order;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.snapshot.OrderItemSnapshot;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.snapshot.OrderSnapshot;
+import net.greeta.stock.common.domain.dto.order.Order;
+import net.greeta.stock.common.domain.dto.order.snapshot.OrderItemSnapshot;
+import net.greeta.stock.common.domain.dto.order.snapshot.OrderSnapshot;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -21,15 +21,7 @@ class OrderEntityConverter implements EntityConverter<OrderEntity, Order> {
         .buyerId(snapshot.getBuyerId() != null ? UUID.fromString(snapshot.getBuyerId()) : null)
         .description(snapshot.getDescription())
         .isDraft(snapshot.isDraft())
-        .paymentMethodId(snapshot.getPaymentMethodId() != null ? UUID.fromString(snapshot.getPaymentMethodId()) : null)
         .orderStatus(order.getOrderStatus().getStatus())
-        .address(AddressModel.builder()
-            .city(snapshot.getCity())
-            .country(snapshot.getCountry())
-            .state(snapshot.getState())
-            .street(snapshot.getStreet())
-            .zipCode(snapshot.getZipCode())
-            .build())
         .build();
 
     orderEntity.setOrderItems(snapshot.getOrderItems()
@@ -60,13 +52,7 @@ class OrderEntityConverter implements EntityConverter<OrderEntity, Order> {
         .orderStatus(orderEntity.getOrderStatus())
         .orderDate(orderEntity.getOrderDate())
         .draft(orderEntity.isDraft())
-        .paymentMethodId(orderEntity.getPaymentMethodId() != null ? orderEntity.getPaymentMethodId().toString() : null)
         .buyerId(orderEntity.getBuyerId() != null ? orderEntity.getBuyerId().toString() : null)
-        .city(orderEntity.getAddress().getCity())
-        .street(orderEntity.getAddress().getStreet())
-        .zipCode(orderEntity.getAddress().getZipCode())
-        .state(orderEntity.getAddress().getState())
-        .country(orderEntity.getAddress().getCountry())
         .orderItems(orderEntity.getOrderItems().stream()
             .map(this::toOrderItemSnapshot)
             .collect(Collectors.toList()))

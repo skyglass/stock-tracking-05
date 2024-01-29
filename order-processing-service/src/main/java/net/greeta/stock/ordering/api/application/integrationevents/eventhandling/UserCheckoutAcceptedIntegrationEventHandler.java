@@ -42,16 +42,6 @@ public class UserCheckoutAcceptedIntegrationEventHandler {
         .basketItems(event.getBasket().getItems())
         .userId(event.getUserId())
         .userName(event.getUserName())
-        .city(event.getCity())
-        .street(event.getStreet())
-        .state(event.getState())
-        .country(event.getCountry())
-        .zipCode(event.getZipCode())
-        .cardNumber(event.getCardNumber())
-        .cardHolderName(event.getCardHolderName())
-        .cardExpiration(event.getCardExpiration())
-        .cardSecurityNumber(event.getCardSecurityNumber())
-        .cardType(event.getCardType())
         .build();
     var requestCreateOrder = new CreateOrderIdentifiedCommand(createOrderCommand, event.getRequestId());
     var result = commandBus.send(requestCreateOrder);

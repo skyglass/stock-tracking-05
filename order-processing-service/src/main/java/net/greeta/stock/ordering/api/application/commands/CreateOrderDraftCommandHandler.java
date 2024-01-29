@@ -1,14 +1,9 @@
 package net.greeta.stock.ordering.api.application.commands;
 
 import an.awesome.pipelinr.Command;
-import net.greeta.stock.ordering.api.application.dtos.OrderDraftDTO;
-import net.greeta.stock.ordering.api.application.models.BasketItem;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.Order;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.Price;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.Product;
-import net.greeta.stock.ordering.domain.aggregatesmodel.order.Units;
-import net.greeta.stock.ordering.shared.CommandHandler;
 import lombok.RequiredArgsConstructor;
+import net.greeta.stock.common.domain.dto.order.*;
+import net.greeta.stock.ordering.shared.CommandHandler;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;

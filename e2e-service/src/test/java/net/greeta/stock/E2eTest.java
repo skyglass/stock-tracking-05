@@ -1,30 +1,38 @@
 package net.greeta.stock;
 
 import lombok.SneakyThrows;
-import net.greeta.stock.order.OrderTestDataService;
-import net.greeta.stock.customer.CustomerTestDataService;
-import net.greeta.stock.payment.PaymentTestDataService;
+import net.greeta.stock.axon.AxonTestDataService;
+import net.greeta.stock.basket.BasketTestDataService;
+import net.greeta.stock.catalogcommand.CatalogCommandTestDataService;
+import net.greeta.stock.catalogquery.CatalogQueryTestDataService;
+import net.greeta.stock.orderprocessing.OrderProcessingTestDataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class E2eTest {
 
     @Autowired
-    private OrderTestDataService orderTestDataService;
+    private BasketTestDataService basketTestDataService;
 
     @Autowired
-    private CustomerTestDataService customerTestDataService;
+    private CatalogCommandTestDataService catalogCommandTestDataService;
 
     @Autowired
-    private PaymentTestDataService paymentTestDataService;
+    private CatalogQueryTestDataService catalogQueryTestDataService;
+
+    @Autowired
+    private OrderProcessingTestDataService orderProcessingTestDataService;
+
+    @Autowired
+    private AxonTestDataService axonTestDataService;
 
     @BeforeEach
     @SneakyThrows
     void cleanup() {
-        customerTestDataService.resetDatabase();
-        orderTestDataService.resetDatabase();
-        paymentTestDataService.resetDatabase();
+        basketTestDataService.resetDatabase();
+        catalogCommandTestDataService.resetDatabase();
+        catalogQueryTestDataService.resetDatabase();
+        orderProcessingTestDataService.resetDatabase();
+        axonTestDataService.resetDatabase();
     }
 }

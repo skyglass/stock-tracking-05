@@ -2,9 +2,11 @@ package net.greeta.stock.catalogquery.application.queries.catalogitems;
 
 import net.greeta.stock.catalogquery.application.querybus.QueryHandler;
 import net.greeta.stock.catalogquery.model.*;
+import net.greeta.stock.catalogquery.model.Brand;
+import net.greeta.stock.catalogquery.model.CatalogItem;
+import net.greeta.stock.catalogquery.model.Category;
 import net.greeta.stock.shared.rest.error.BadRequestException;
 import lombok.RequiredArgsConstructor;
-import net.greeta.stock.catalogquery.model.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;

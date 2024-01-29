@@ -1,5 +1,6 @@
 package net.greeta.stock.ordering.api.application.queries;
 
+import net.greeta.stock.common.domain.dto.order.OrderViewModel;
 import net.greeta.stock.ordering.shared.QueryHandler;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class OrderQueriesImpl implements OrderQueries {
   @Override
   public Optional<OrderViewModel.Order> getOrder(String id) {
     var query = entityManager.createNativeQuery("""
-        SELECT cast(o.id as varchar) as orderNumber, o.order_date as date, o.description, o.city, o.country, o.state, o.street,
-          o.zip_code as zipCode, o.order_status as status,
+        SELECT cast(o.id as varchar) as orderNumber, o.order_date as date, o.description,
+          o.order_status as status,
           oi.product_name as productName, oi.units, oi.unit_price as unitPrice, oi.picture_url as pictureUrl,
           cast(oi.id as varchar), cast(oi.product_id as varchar), ob.user_id
         FROM orders o
@@ -38,8 +39,8 @@ public class OrderQueriesImpl implements OrderQueries {
   @Override
   public List<OrderViewModel.Order> userOrders(String userId) {
     var query = entityManager.createNativeQuery("""
-      SELECT cast(o.id as varchar) as orderNumber, o.order_date as date, o.description, o.city, o.country, o.state, o.street,
-          o.zip_code as zipCode, o.order_status as status,
+      SELECT cast(o.id as varchar) as orderNumber, o.order_date as date, o.description,
+          o.order_status as status,
           oi.product_name as productName, oi.units, oi.unit_price as unitPrice, oi.picture_url as pictureUrl,
           cast(oi.id as varchar), cast(oi.product_id as varchar), ob.user_id
       FROM orders o
@@ -61,8 +62,8 @@ public class OrderQueriesImpl implements OrderQueries {
   @Override
   public List<OrderViewModel.Order> allOrders() {
     var query = entityManager.createNativeQuery("""
-      SELECT cast(o.id as varchar) as orderNumber, o.order_date as date, o.description, o.city, o.country, o.state, o.street,
-          o.zip_code as zipCode, o.order_status as status,
+      SELECT cast(o.id as varchar) as orderNumber, o.order_date as date, o.description,
+          o.order_status as status,
           oi.product_name as productName, oi.units, oi.unit_price as unitPrice, oi.picture_url as pictureUrl,
           cast(oi.id as varchar), cast(oi.product_id as varchar), ob.user_id
       FROM orders o
@@ -114,12 +115,12 @@ public class OrderQueriesImpl implements OrderQueries {
 
   private OrderViewModel.Order toOrder(List<Object[]> result) {
     var orderItems = result.stream().map(r -> {
-      var productName = (String) r[9];
-      var units = (Integer) r[10];
-      var unitPrice = (Double) r[11];
-      var pictureUrl = (String) r[12];
-      var orderItemId = (String) r[13];
-      var productId = (String) r[14];
+      var productName = (String) r[4];
+      var units = (Integer) r[5];
+      var unitPrice = (Double) r[6];
+      var pictureUrl = (String) r[7];
+      var orderItemId = (String) r[8];
+      var productId = (String) r[9];
 
       return new OrderViewModel.OrderItem(
         orderItemId,
@@ -136,13 +137,8 @@ public class OrderQueriesImpl implements OrderQueries {
     var orderId = (String) orderDetails[0];
     var date = (Timestamp) orderDetails[1];
     var description = (String) orderDetails[2];
-    var city = (String) orderDetails[3];
-    var country = (String) orderDetails[4];
-    var state = (String) orderDetails[5];
-    var street = (String) orderDetails[6];
-    var zipCode = (String) orderDetails[7];
-    var status = (String) orderDetails[8];
-    var ownerId = (String) orderDetails[15];
+    var status = (String) orderDetails[3];
+    var ownerId = (String) orderDetails[10];
 
     var total = orderItems.stream()
       .map(item -> item.units() * item.unitPrice())
@@ -155,11 +151,6 @@ public class OrderQueriesImpl implements OrderQueries {
       date.toLocalDateTime(),
       status,
       description,
-      street,
-      city,
-      state,
-      zipCode,
-      country,
       orderItems,
       total,
       ownerId

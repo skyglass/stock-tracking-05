@@ -1,10 +1,8 @@
 package net.greeta.stock.ordering.api.controllers;
 
+import net.greeta.stock.common.domain.dto.order.*;
 import net.greeta.stock.ordering.api.application.commands.*;
-import net.greeta.stock.ordering.api.application.commands.*;
-import net.greeta.stock.ordering.api.application.dtos.OrderDraftDTO;
 import net.greeta.stock.ordering.api.application.queries.OrderQueries;
-import net.greeta.stock.ordering.api.application.queries.OrderViewModel;
 import net.greeta.stock.ordering.api.application.services.IdentityService;
 import net.greeta.stock.ordering.api.infrastructure.commandbus.CommandBus;
 import net.greeta.stock.ordering.api.infrastructure.exceptions.UnauthorizedException;

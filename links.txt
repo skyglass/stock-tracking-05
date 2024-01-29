@@ -1,2 +1,0 @@
-http://localhost:8024/v1/devmode/purge-events
-https://github.com/AxonIQ/giftcard-demo/tree/master

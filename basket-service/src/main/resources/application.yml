@@ -1,0 +1,125 @@
+server:
+  shutdown: graceful
+  forward-headers-strategy: framework
+  tomcat:
+    connection-timeout: 2s
+    keep-alive-timeout: 15s
+    threads:
+      max: 50
+      min-spare: 5
+
+spring:
+  application:
+    name: basket
+  lifecycle:
+    timeout-per-shutdown-phase: 15s
+
+  # Kafka
+  kafka:
+    bootstrap-servers: ${app.kafka.brokers}
+    producer:
+      transaction-id-prefix: tx-basket-
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      properties:
+        isolation.level: read_committed
+      topic:
+        orders: orders
+        orderCheckouts: order-checkouts
+        productPriceChanges: product-price-changes
+        paidOrders: paid-orders
+        ordersWaitingForValidation: orders-waiting-for-validation
+        orderStockConfirmed: order-stock-confirmed
+        orderStockRejected: order-stock-rejected
+        submittedOrders: submitted-orders
+        shippedOrders: shipped-orders
+        cancelledOrders: cancelled-orders
+        gracePeriodConfirmed: grace-period-confirmed
+        paymentStatus: payment-status
+        stockConfirmed: stock-confirmed
+
+
+  keycloak:
+    server-url: http://localhost:8080
+    server-external-url: http://localhost:8080
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${spring.keycloak.server-external-url}/realms/stock-realm
+          jwk-set-uri: ${spring.keycloak.server-url}/realms/stock-realm/protocol/openid-connect/certs
+
+  # Redis
+  data:
+    redis:
+      password: ${app.redis.password}
+      host: ${app.redis.host}
+      port: ${app.redis.port}
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
+  level:
+    net.greeta.stock: DEBUG
+    org.springframework.cloud.kubernetes: TRACE
+    org.springframework.security: DEBUG
+    org.kafka.transaction: INFO
+
+info:
+  system: Basket Service
+
+jwt:
+  auth:
+    converter:
+      resource-id: stock-app
+      principal-attribute: preferred_username
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bindings, configprops, env, flyway, functions, health, heapdump, info, loggers, mappings, prometheus
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/api/v2/spans
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+
+openapi:
+  oauthflow:
+    authServerUrl: ${spring.keycloak.server-external-url}
+    realm: stock-realm
+
+# Custom config
+app:
+  redis:
+    host: redis
+    port: 6379
+    password: pass
+  kafka:
+    brokers: "stock-kafka1:29092,stock-kafka2:29093"
+    group:
+      orders: orders-group
+      productPriceChanges: product-price-changes-group

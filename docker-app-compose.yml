@@ -7,9 +7,9 @@ networks:
 services:
   # Applications
 
-  customer:
-    image: "customer-service"
-    container_name: "customer"
+  analytics:
+    image: "analytics-service"
+    container_name: "analytics"
     ports:
       - 9001:9001
       - 8001:8001
@@ -24,10 +24,9 @@ services:
     networks:
       - stock
 
-
-  order:
-    image: "order-service"
-    container_name: "order"
+  basket:
+    image: "basket-service"
+    container_name: "basket"
     ports:
       - 9002:9002
       - 8002:8002
@@ -42,9 +41,9 @@ services:
     networks:
       - stock
 
-  order2:
-    image: "order-service"
-    container_name: "order2"
+  catalog-command:
+    image: "catalog-command-service"
+    container_name: "catalog-command"
     ports:
       - 9003:9003
       - 8003:8003
@@ -59,9 +58,9 @@ services:
     networks:
       - stock
 
-  order3:
-    image: "order-service"
-    container_name: "order3"
+  catalog-query:
+    image: "catalog-query-service"
+    container_name: "catalog-query"
     ports:
       - 9004:9004
       - 8004:8004
@@ -76,9 +75,9 @@ services:
     networks:
       - stock
 
-  payment:
-    image: "payment-service"
-    container_name: "payment"
+  order-processing-service:
+    image: "order-processing-service"
+    container_name: "order-processing"
     ports:
       - 9005:9005
       - 8005:8005
@@ -93,9 +92,9 @@ services:
     networks:
       - stock
 
-  payment2:
+  payment-service:
     image: "payment-service"
-    container_name: "payment2"
+    container_name: "payment"
     ports:
       - 9006:9006
       - 8006:8006
@@ -110,6 +109,7 @@ services:
     networks:
       - stock
 
+
   gateway:
     image: "gateway-service"
     container_name: "gateway"
@@ -121,13 +121,14 @@ services:
       # Buildpacks environment variable to enable debug through a socket on port 8000
       - BPL_DEBUG_ENABLED=true
       - BPL_DEBUG_PORT=8000
-      - CUSTOMER_SERVICE_URL=http://customer:9001
-      - ORDER_SERVICE_URL=http://order:9002
-      - ORDER2_SERVICE_URL=http://order2:9003
-      - ORDER3_SERVICE_URL=http://order3:9004
-      - PAYMENT_SERVICE_URL=http://payment:9005
-      - PAYMENT2_SERVICE_URL=http://payment2:9006
+      - ANALYTICS_SERVICE_URL=http://analytics:9001
+      - BASKET_SERVICE_URL=http://basket:9002
+      - CATALOG_COMMAND_SERVICE_URL=http://catalog-command:9003
+      - CATALOG_QUERY_SERVICE_URL=http://catalog-query:9004
+      - ORDER_PROCESSING_SERVICE_URL=http://order-processing:9005
+      - PAYMENT_SERVICE_URL=http://payment:9006
       - SPRING_REDIS_HOST=gateway-redis
+      - SPRING_REDIS_PORT=6380
       - SPRING_KEYCLOAK_SERVER_URL=http://stock-keycloak:8080
       - SPRING_KEYCLOAK_SERVER_EXTERNAL_URL=http://localhost:8080
     networks:

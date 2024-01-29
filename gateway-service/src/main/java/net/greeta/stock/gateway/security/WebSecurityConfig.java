@@ -31,23 +31,20 @@ public class WebSecurityConfig {
                         .pathMatchers(HttpMethod.GET,"/v3/api-docs/**").permitAll()
                         .pathMatchers(HttpMethod.GET,"/favicon.ico").permitAll()
 
-                        .pathMatchers(HttpMethod.GET,"/customer/v3/api-docs/**").permitAll()
-                        .pathMatchers("/customer", "/customer/**").permitAll()
+                        .pathMatchers(HttpMethod.GET,"/analytics/v3/api-docs/**").permitAll()
+                        .pathMatchers("/analytics", "/analytics/**").permitAll()
 
-                        .pathMatchers(HttpMethod.GET,"/order/v3/api-docs/**").permitAll()
-                        .pathMatchers("/order", "/order/**").permitAll()
+                        .pathMatchers(HttpMethod.GET,"/basket/v3/api-docs/**").permitAll()
+                        .pathMatchers("/basket", "/basket/**").permitAll()
 
-                        .pathMatchers(HttpMethod.GET,"/order2/v3/api-docs/**").permitAll()
-                        .pathMatchers("/order2", "/order2/**").permitAll()
+                        .pathMatchers(HttpMethod.GET,"/catalog-command/v3/api-docs/**").permitAll()
+                        .pathMatchers("/catalog-command", "/catalog-command/**").permitAll()
 
-                        .pathMatchers(HttpMethod.GET,"/order3/v3/api-docs/**").permitAll()
-                        .pathMatchers("/order3", "/order3/**").permitAll()
+                        .pathMatchers(HttpMethod.GET,"/catalog-query/v3/api-docs/**").permitAll()
+                        .pathMatchers("/catalog-query", "/catalog-query/**").permitAll()
 
-                        .pathMatchers(HttpMethod.GET,"/payment/v3/api-docs/**").permitAll()
-                        .pathMatchers("/payment", "/payment/**").permitAll()
-
-                        .pathMatchers(HttpMethod.GET,"/payment2/v3/api-docs/**").permitAll()
-                        .pathMatchers("/payment2", "/payment2/**").permitAll()
+                        .pathMatchers(HttpMethod.GET,"/order-processing/v3/api-docs/**").permitAll()
+                        .pathMatchers("/order-processing", "/order-processing/**").permitAll()
 
                         .anyExchange().authenticated()
                         .and()

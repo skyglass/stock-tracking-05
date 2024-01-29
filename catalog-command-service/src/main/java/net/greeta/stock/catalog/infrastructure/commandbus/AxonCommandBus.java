@@ -1,8 +1,8 @@
 package net.greeta.stock.catalog.infrastructure.commandbus;
 
-import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
-import net.greeta.stock.catalog.application.commandbus.Command;
 import lombok.RequiredArgsConstructor;
+import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
+import net.greeta.stock.common.domain.dto.base.Command;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Component;
 

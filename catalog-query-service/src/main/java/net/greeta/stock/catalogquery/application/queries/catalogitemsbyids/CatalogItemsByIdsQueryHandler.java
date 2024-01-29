@@ -1,9 +1,9 @@
 package net.greeta.stock.catalogquery.application.queries.catalogitemsbyids;
 
-import net.greeta.stock.catalogquery.application.querybus.QueryHandler;
-import net.greeta.stock.catalogquery.model.CatalogItem;
-import net.greeta.stock.catalogquery.model.CatalogItemRepository;
 import lombok.RequiredArgsConstructor;
+import net.greeta.stock.catalogquery.application.querybus.QueryHandler;
+import net.greeta.stock.catalogquery.model.CatalogItemRepository;
+import net.greeta.stock.catalogquery.model.CatalogItem;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package net.greeta.stock.ordering.api.application.dtos;
 
-import net.greeta.stock.ordering.api.application.models.BasketItem;
+import net.greeta.stock.common.domain.dto.order.BasketItem;
+import net.greeta.stock.common.domain.dto.order.OrderItemDTO;
 
 public class ToOrderItemDTOMapper {
   public OrderItemDTO map(BasketItem basketItem) {
