@@ -25,7 +25,7 @@ public class WebSecurityConfig {
 
                         .requestMatchers(HttpMethod.GET,"/api", "/api/**").permitAll()
 
-                        .requestMatchers("/api", "/api/**").hasRole(STOCK_MANAGER)
+                        .requestMatchers("/api", "/api/**").hasAnyRole(STOCK_MANAGER, STOCK_USER)
 
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(

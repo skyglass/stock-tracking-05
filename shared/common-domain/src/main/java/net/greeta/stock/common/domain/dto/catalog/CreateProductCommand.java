@@ -21,12 +21,6 @@ public record CreateProductCommand(
     String pictureFileName,
     @NotNull
     @JsonProperty
-    Integer availableStock,
-    @JsonProperty
-    @NotNull
-    UUID brandId,
-    @JsonProperty
-    @NotNull
-    UUID categoryId
+    Integer availableStock
 ) implements Command<CatalogItemResponse> {
 }

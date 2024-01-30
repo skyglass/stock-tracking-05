@@ -1,15 +1,12 @@
 package net.greeta.stock.catalog.domain.catalogitem;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import net.greeta.stock.catalog.domain.base.AggregateRoot;
 import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustNotBeEmpty;
 import net.greeta.stock.catalog.domain.catalogitem.rules.PriceMustBeGreaterThanZero;
 import net.greeta.stock.catalog.domain.catalogitem.rules.QuantityMustBeGreaterThanZero;
-import net.greeta.stock.catalog.shared.events.*;
-import net.greeta.stock.catalog.shared.model.BrandDto;
-import net.greeta.stock.catalog.shared.model.CategoryDto;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import net.greeta.stock.catalog.shared.events.*;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
@@ -30,17 +27,13 @@ public class CatalogItem extends AggregateRoot {
   private String pictureFileName;
   @Getter
   private Units availableStock;
-  private Category category;
-  private Brand brand;
 
   public CatalogItem(
       @NonNull ProductName productName,
       String description,
       @NonNull Price price,
       String pictureFileName,
-      @NonNull Units availableStock,
-      @NonNull Category category,
-      @NonNull Brand brand
+      @NonNull Units availableStock
   ) {
     super(UUID.randomUUID());
     setName(productName);
@@ -48,8 +41,6 @@ public class CatalogItem extends AggregateRoot {
     setPrice(price);
     setPictureFileName(pictureFileName);
     setAvailableStock(availableStock);
-    setCategory(category);
-    setBrand(brand);
 
     apply(new
             CatalogItemCreated(
@@ -58,9 +49,7 @@ public class CatalogItem extends AggregateRoot {
         description,
         price.getValue(),
         pictureFileName,
-        availableStock.getValue(),
-        new CategoryDto(category.getCategoryId(), category.getName()),
-        new BrandDto(brand.getBrandId(), brand.getName())
+        availableStock.getValue()
     ));
   }
 
@@ -122,8 +111,6 @@ public class CatalogItem extends AggregateRoot {
     setPrice(Price.of(event.getPrice()));
     setPictureFileName(event.getPictureFileName());
     setAvailableStock(Units.of(event.getAvailableStock()));
-    setCategory(Category.of(event.getCategory().getId(), event.getCategory().getName()));
-    setBrand(Brand.of(event.getBrand().getId(), event.getBrand().getName()));
   }
 
   @SuppressWarnings("unused")
@@ -170,16 +157,6 @@ public class CatalogItem extends AggregateRoot {
   private void setAvailableStock(Units availableStock) {
     requireNonNull(availableStock, "Available stock cannot be null");
     this.availableStock = availableStock;
-  }
-
-  private void setCategory(Category category) {
-    requireNonNull(category, "Category cannot be null");
-    this.category = category;
-  }
-
-  private void setBrand(Brand brand) {
-    requireNonNull(brand, "Brand cannot be null");
-    this.brand = brand;
   }
 
 }

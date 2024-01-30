@@ -1,19 +1,13 @@
 package net.greeta.stock.catalogquery.api;
 
-import net.greeta.stock.catalogquery.application.queries.allbrands.AllBrandsQuery;
-import net.greeta.stock.catalogquery.application.queries.allcategories.AllCategoryQuery;
-import net.greeta.stock.catalogquery.application.queries.brandbyid.BrandByIdQuery;
+import lombok.RequiredArgsConstructor;
 import net.greeta.stock.catalogquery.application.queries.catalogitembyid.CatalogItemByIdQuery;
 import net.greeta.stock.catalogquery.application.queries.catalogitems.CatalogItemsQuery;
 import net.greeta.stock.catalogquery.application.queries.catalogitemsbyids.CatalogItemsByIdsQuery;
 import net.greeta.stock.catalogquery.application.queries.catalogitemswithname.CatalogItemWithNameQuery;
-import net.greeta.stock.catalogquery.application.queries.categorybyid.CategoryByIdQuery;
 import net.greeta.stock.catalogquery.application.querybus.QueryBus;
-import net.greeta.stock.catalogquery.model.Brand;
 import net.greeta.stock.catalogquery.model.CatalogItem;
-import net.greeta.stock.catalogquery.model.Category;
 import net.greeta.stock.shared.rest.error.BadRequestException;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -61,24 +54,20 @@ public class CatalogController {
   }
 
   /**
-   * Returns catalog items that belong to given brand and type in the given page.
+   * Returns catalog items in the given page.
    *
    * @param pageSize   number of items
    * @param pageIndex  page
-   * @param brandId    item brand
-   * @param categoryId item category
    * @return catalog items
    */
   @RequestMapping("items")
   public Page<CatalogItem> catalogItems(
     @RequestParam(defaultValue = "10", required = false) Integer pageSize,
-    @RequestParam(defaultValue = "0", required = false) Integer pageIndex,
-    @RequestParam(required = false) UUID brandId,
-    @RequestParam(required = false) UUID categoryId
+    @RequestParam(defaultValue = "0", required = false) Integer pageIndex
   ) {
-    logger.info("Find catalog items - page size: {}, page index: {}, brand: {}, type: {}", pageSize, pageIndex, brandId, categoryId);
+    logger.info("Find catalog items - page size: {}, page index: {}", pageSize, pageIndex);
 
-    return queryBus.execute(new CatalogItemsQuery(pageSize, pageIndex, brandId, categoryId));
+    return queryBus.execute(new CatalogItemsQuery(pageSize, pageIndex));
   }
 
   /**
@@ -111,48 +100,6 @@ public class CatalogController {
       throw new BadRequestException("The name must be at least one character long");
     }
     return queryBus.execute(new CatalogItemWithNameQuery(pageSize, pageIndex, name));
-  }
-
-  /**
-   * Returns catalog brand by id.
-   *
-   * @param id brand id
-   * @return brand
-   */
-  @RequestMapping("brands/{id}")
-  public Optional<Brand> brand(@PathVariable UUID id) {
-    return queryBus.execute(new BrandByIdQuery(id));
-  }
-
-  /**
-   * Returns all catalog brands.
-   *
-   * @return all catalog brands
-   */
-  @RequestMapping("brands")
-  public Iterable<Brand> catalogBrands() {
-    return queryBus.execute(new AllBrandsQuery());
-  }
-
-  /**
-   * Returns all catalog brands.
-   *
-   * @return all catalog brands
-   */
-  @RequestMapping("categories")
-  public Iterable<Category> catalogCategories() {
-    return queryBus.execute(new AllCategoryQuery());
-  }
-
-  /**
-   * Returns category by id.
-   *
-   * @param id category id
-   * @return category
-   */
-  @RequestMapping("categories/{id}")
-  public Optional<Category> category(@PathVariable UUID id) {
-    return queryBus.execute(new CategoryByIdQuery(id));
   }
 
 }

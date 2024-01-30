@@ -8,8 +8,6 @@ import java.util.UUID;
 
 public record CatalogItemsQuery(
     Integer pageSize,
-    Integer pageIndex,
-    UUID brandId,
-    UUID categoryId
+    Integer pageIndex
 ) implements Query<Page<CatalogItem>> {
 }

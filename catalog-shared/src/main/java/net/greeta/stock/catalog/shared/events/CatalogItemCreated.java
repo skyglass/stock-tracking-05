@@ -1,7 +1,5 @@
 package net.greeta.stock.catalog.shared.events;
 
-import net.greeta.stock.catalog.shared.model.BrandDto;
-import net.greeta.stock.catalog.shared.model.CategoryDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,8 +13,6 @@ public class CatalogItemCreated extends Event {
   private Double price;
   private String pictureFileName;
   private Integer availableStock;
-  private CategoryDto category;
-  private BrandDto brand;
 
   public CatalogItemCreated(
       UUID id,
@@ -24,9 +20,7 @@ public class CatalogItemCreated extends Event {
       String description,
       Double price,
       String pictureFileName,
-      Integer availableStock,
-      CategoryDto category,
-      BrandDto brand
+      Integer availableStock
   ) {
     super(id);
     this.name = name;
@@ -34,7 +28,5 @@ public class CatalogItemCreated extends Event {
     this.price = price;
     this.pictureFileName = pictureFileName;
     this.availableStock = availableStock;
-    this.category = category;
-    this.brand = brand;
   }
 }

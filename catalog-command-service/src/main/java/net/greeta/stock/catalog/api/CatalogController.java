@@ -57,12 +57,4 @@ public class CatalogController {
     return ResponseEntity.ok(response);
   }
 
-  private ResponseEntity<CatalogItemResponse> response(CatalogItemResponse catalogItemResponse) {
-    return ResponseEntity
-        .ok()
-        .headers(httpHeaders -> httpHeaders.add("Retry-after", "2"))
-        .eTag(catalogItemResponse.getVersion().toString())
-        .body(catalogItemResponse);
-  }
-
 }

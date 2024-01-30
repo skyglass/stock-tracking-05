@@ -52,7 +52,7 @@ public class BasketController {
     basketService.delete(basketId);
   }
 
-  public void setRequestId(BasketCheckout basketCheckout, String requestId) {
+  private void setRequestId(BasketCheckout basketCheckout, String requestId) {
     UUID requestIdUuid;
 
     try {

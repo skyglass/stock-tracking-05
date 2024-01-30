@@ -38,7 +38,7 @@ public class AnalyticsController {
   }
 
   @RequestMapping("/products/top-five")
-  public List<Product> getTopFiveProducts(@RequestParam(value = "category", required = false) String category) {
+  public List<Product> getTopFiveProducts() {
     logger.info("Retrieving top five products");
     return bestSellingProductsService.topFiveProducts();
   }

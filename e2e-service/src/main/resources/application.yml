@@ -9,18 +9,16 @@ spring:
           default:
             readTimeout: 20000
             connectTimeout: 30000
-          order:
-            url: http://localhost:9000/order
-          order2:
-            url: http://localhost:9000/order2
-          order3:
-            url: http://localhost:9000/order3
-          customer:
-            url: http://localhost:9000/customer
-          payment:
-            url: http://localhost:9000/payment
-          payment2:
-            url: http://localhost:9000/payment2
+          analytics:
+            url: http://localhost:9000/analytics
+          basket:
+            url: http://localhost:9000/basket
+          catalog-command:
+            url: http://localhost:9000/catalog-command
+          catalog-query:
+            url: http://localhost:9000/catalog-query
+          order-processing:
+            url: http://localhost:9000/order-processing
           oauth2:
             url: http://localhost:8080
 
@@ -35,12 +33,6 @@ spring:
         password: ${app.basket.redis.password}
         host: ${app.basket.redis.host}
         port: ${app.basket.redis.port}
-
-    catalog-command:
-      mongodb:
-        uri: mongodb://${app.catalog-command.mongodb.user}:${app.catalog-command.mongodb.password}@${app.catalog-command.mongodb.host}:${app.catalog-command.mongodb.port}/${app.catalog-command.mongodb.database}?authSource=admin
-        database: ${app.catalog-command.mongodb.database}
-
 
   jpa:
     hibernate:
@@ -92,14 +84,6 @@ app:
       database: catalogdb
       user: catalogdbuser
       password: dbpass
-
-  catalog-command:
-    mongodb:
-      host: localhost
-      port: 27017
-      user: user
-      password: pass
-      database: catalog-command-db
 
   order-processing:
     postgres:

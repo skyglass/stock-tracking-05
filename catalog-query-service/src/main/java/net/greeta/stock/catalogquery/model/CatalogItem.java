@@ -29,13 +29,5 @@ public class CatalogItem extends DbEntity {
   @Column(name = "available_stock")
   private Integer availableStock;
 
-  @ManyToOne
-  @JoinColumn(name = "category_id")
-  private Category category;
-
-  @ManyToOne
-  @JoinColumn(name = "brand_id")
-  private Brand brand;
-
 }
 

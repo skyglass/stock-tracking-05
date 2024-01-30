@@ -5,7 +5,6 @@ import net.greeta.stock.catalog.application.commandbus.CatalogCommandHandler;
 import net.greeta.stock.catalog.domain.catalogitem.*;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.common.domain.dto.catalog.CreateProductCommand;
-import net.greeta.stock.shared.rest.error.BadRequestException;
 import org.axonframework.commandhandling.CommandHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +15,6 @@ import java.util.UUID;
 @Component
 public class CreateProductCommandHandler implements CatalogCommandHandler<CatalogItemResponse, CreateProductCommand> {
   private final CatalogItemRepository catalogItemRepository;
-  private final CategoryRepository categoryRepository;
-  private final BrandRepository brandRepository;
 
   @Transactional
   @CommandHandler
@@ -33,19 +30,13 @@ public class CreateProductCommandHandler implements CatalogCommandHandler<Catalo
   }
 
   private CatalogItem catalogItemOf(CreateProductCommand command) {
-    final var category = categoryRepository.findById(command.categoryId())
-        .orElseThrow(() -> new BadRequestException("Category does not exist"));
-    final var brand = brandRepository.findById(command.brandId())
-        .orElseThrow(() -> new BadRequestException("Brand does not exist"));
 
     return new CatalogItem(
         ProductName.of(command.name()),
         command.description(),
         Price.of(command.price()),
         command.pictureFileName(),
-        Units.of(command.availableStock()),
-        category,
-        brand
+        Units.of(command.availableStock())
     );
   }
 

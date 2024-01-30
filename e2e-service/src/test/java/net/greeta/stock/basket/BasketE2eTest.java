@@ -1,6 +1,5 @@
-package net.greeta.stock;
+package net.greeta.stock.basket;
 
-import net.greeta.stock.basket.BasketTestHelper;
 import net.greeta.stock.common.E2eTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource(locations = {
         "classpath:application.yml"
 })
-public class OrderProcessingE2eTest extends E2eTest {
+public class BasketE2eTest extends E2eTest {
 
     @Autowired
     private BasketTestHelper customerTestHelper;
