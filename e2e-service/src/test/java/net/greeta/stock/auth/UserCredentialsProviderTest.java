@@ -19,7 +19,7 @@ public class UserCredentialsProviderTest {
     private MockHelper mockHelper;
 
     @Test
-    public void testAdmin() throws Exception {
+    public void testAdmin() {
         mockHelper.mockCredentials("admin", "admin");
         String username = userCredentialsApi.getUsername();
         String password = userCredentialsApi.getPassword();
@@ -28,7 +28,7 @@ public class UserCredentialsProviderTest {
     }
 
     @Test
-    public void testUser() throws Exception {
+    public void testUser() {
         mockHelper.mockCredentials("user", "user");
         String username = userCredentialsApi.getUsername();
         String password = userCredentialsApi.getPassword();

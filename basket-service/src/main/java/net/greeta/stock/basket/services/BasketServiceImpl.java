@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,8 +42,8 @@ public class BasketServiceImpl implements BasketService {
   @Override
   public CustomerBasket updateBasket(CustomerBasket updatedBasket) {
     var basketToUpdate = basketRepository.findByCustomerId(updatedBasket.getBuyerId())
-      .map(b -> updatedBasket)
-      .orElseGet(() -> new CustomerBasket(updatedBasket.getBuyerId()));
+      .map(b -> new CustomerBasket(b.getId(), updatedBasket.getBuyerId(), updatedBasket.getItems()))
+      .orElseGet(() -> new CustomerBasket(UUID.randomUUID(), updatedBasket.getBuyerId(), updatedBasket.getItems()));
 
     return basketRepository.updateBasket(basketToUpdate);
   }
@@ -82,6 +83,7 @@ public class BasketServiceImpl implements BasketService {
 
   private CustomerBasket getCustomerBasket(String customerId) {
     return basketRepository.findByCustomerId(customerId)
-      .orElseGet(() -> basketRepository.updateBasket(new CustomerBasket(customerId)));
+      .orElseGet(() -> basketRepository.updateBasket(
+              new CustomerBasket(customerId)));
   }
 }

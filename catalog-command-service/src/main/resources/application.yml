@@ -54,7 +54,7 @@ spring:
   data:
     # Mongo
     mongodb:
-      uri: mongodb://${app.mongodb.user}:${app.mongodb.password}@${app.mongodb.host}:${app.mongodb.port}?authSource=admin
+      uri: mongodb://${app.mongodb.user}:${app.mongodb.password}@${app.mongodb.host}:${app.mongodb.port}/${app.mongodb.database}?authSource=admin
 
 logging:
   pattern:
@@ -115,7 +115,7 @@ app:
     port: 27017
     user: user
     password: pass
-    database: catalog-command-db
+    database: axonframework
   kafka:
     brokers: "stock-kafka1:29092,stock-kafka2:29093"
     group:

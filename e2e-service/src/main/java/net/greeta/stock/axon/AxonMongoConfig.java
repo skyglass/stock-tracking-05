@@ -9,12 +9,14 @@ import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 @Configuration
 public class AxonMongoConfig {
 
     @Bean
+    @Primary
     @ConfigurationProperties("spring.data.axon.mongodb")
     public MongoProperties axonMongoProperties() {
         return new MongoProperties();

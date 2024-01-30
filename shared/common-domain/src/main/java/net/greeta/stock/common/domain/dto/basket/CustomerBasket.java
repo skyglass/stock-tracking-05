@@ -20,11 +20,16 @@ public class CustomerBasket implements Serializable {
 
   private BasketStatus status = BasketStatus.New;
 
-  private final List<BasketItem> items = new ArrayList<>();
+  private List<BasketItem> items = new ArrayList<>();
 
-  public CustomerBasket(String customerId) {
-    id = UUID.randomUUID();
-    buyerId = customerId;
+    public CustomerBasket(String buyerId) {
+        this(UUID.randomUUID(), buyerId, new ArrayList<>());
+    }
+
+  public CustomerBasket(UUID id, String buyerId, List<BasketItem> items) {
+      this.id = id;
+      this.buyerId = buyerId;
+      this.items = items;
   }
 
   public void changeStatusTo(BasketStatus status) {
