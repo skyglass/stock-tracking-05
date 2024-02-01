@@ -22,6 +22,7 @@ class OrderEntityConverter implements EntityConverter<OrderEntity, Order> {
         .description(snapshot.getDescription())
         .isDraft(snapshot.isDraft())
         .orderStatus(order.getOrderStatus().getStatus())
+        .requestId(order.getRequestId())
         .build();
 
     orderEntity.setOrderItems(snapshot.getOrderItems()
@@ -56,6 +57,7 @@ class OrderEntityConverter implements EntityConverter<OrderEntity, Order> {
         .orderItems(orderEntity.getOrderItems().stream()
             .map(this::toOrderItemSnapshot)
             .collect(Collectors.toList()))
+        .requestId(orderEntity.getRequestId())
         .build());
   }
 

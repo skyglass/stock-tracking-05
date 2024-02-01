@@ -6,6 +6,7 @@ import net.greeta.stock.common.domain.dto.order.base.Snapshot;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 @Getter
@@ -17,4 +18,5 @@ public class OrderSnapshot implements Snapshot {
   private final String orderStatus;
   private final String buyerId;
   private final List<OrderItemSnapshot> orderItems;
+  private final UUID requestId;
 }

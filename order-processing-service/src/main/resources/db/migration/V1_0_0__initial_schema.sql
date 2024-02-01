@@ -33,7 +33,8 @@ create table orders
     description       varchar(255),
     is_draft          boolean   not null,
     order_date        timestamp not null,
-    order_status      varchar(100)   not null
+    order_status      varchar(100)   not null,
+    request_id        uuid   not null
 );
 
 create table order_item

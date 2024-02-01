@@ -54,12 +54,6 @@ public class BasketServiceImpl implements BasketService {
     var userName = identityService.getUserName();
     var basket = getCustomerBasket(userName);
 
-    if (isEmpty(basket.getItems())) {
-      throw new BadRequestException("The basket is empty");
-    }
-
-    logger.info("Checking out the basket for user: {} - request id: {}", userName, basketCheckout.getRequestId());
-
     var event = new UserCheckoutAcceptedIntegrationEvent(
       userName,
       userName,
@@ -68,7 +62,6 @@ public class BasketServiceImpl implements BasketService {
       basket
     );
 
-    basket.changeStatusTo(BasketStatus.CheckedOut);
     basketRepository.updateBasket(basket);
 
     // Once basket is checkout, sends an integration event to order-processor to convert basket to order and proceeds

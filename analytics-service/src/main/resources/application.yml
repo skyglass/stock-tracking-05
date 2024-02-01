@@ -35,7 +35,6 @@ spring:
         submittedOrders: submitted-orders
         shippedOrders: shipped-orders
         cancelledOrders: cancelled-orders
-        gracePeriodConfirmed: grace-period-confirmed
         paymentStatus: payment-status
         stockConfirmed: stock-confirmed
 

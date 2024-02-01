@@ -26,7 +26,8 @@ public final class OrderViewModel {
     String description,
     List<OrderItem> orderItems,
     Double total,
-    String ownerId
+    String ownerId,
+    String requestId
   ) {
   }
 

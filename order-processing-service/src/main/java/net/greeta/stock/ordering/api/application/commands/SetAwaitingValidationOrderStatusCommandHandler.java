@@ -14,7 +14,7 @@ public class SetAwaitingValidationOrderStatusCommandHandler
   private final OrderRepository orderRepository;
 
   /**
-   * Handler which processes the command when graceperiod has finished
+   * Handler which processes the command when order has been created
    */
   @Transactional
   @Override

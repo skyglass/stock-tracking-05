@@ -84,6 +84,12 @@
             <version>${springdoc.version}</version>
         </dependency>
 
+        <!-- MapStruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+
 
         <!-- Spring Boot Starters -->
         <dependency>

@@ -52,7 +52,6 @@ spring:
         submittedOrders: submitted-orders
         shippedOrders: shipped-orders
         cancelledOrders: cancelled-orders
-        gracePeriodConfirmed: grace-period-confirmed
         paymentStatus: payment-status
         stockConfirmed: stock-confirmed
 
@@ -129,7 +128,6 @@ app:
   kafka:
     brokers: "stock-kafka1:29092,stock-kafka2:29093"
     group:
-      gracePeriodConfirmed: grace-period-confirmed-group
       paymentStatus: payment-status-group
       orderStockConfirmed: order-stock-confirmed-group
       orderStockRejected: order-stock-rejected-group

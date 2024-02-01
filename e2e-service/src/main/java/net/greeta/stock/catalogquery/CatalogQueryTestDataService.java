@@ -24,7 +24,7 @@ public class CatalogQueryTestDataService extends JdbcTestDataService {
 
     @Override
     public void resetDatabase() {
-        executeString("DELETE FROM catalog_item");
+        executeString("DELETE FROM public.catalog_item");
     }
 
 }

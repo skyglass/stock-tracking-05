@@ -24,6 +24,8 @@ public class Order extends AggregateRoot<OrderId> {
   private OrderStatus orderStatus;
   @Setter
   private BuyerId buyerId;
+  @Getter
+  private UUID requestId;
 
   /*
    * Using a private collection field, better for DDD Aggregate's encapsulation so OrderItems cannot be added from
@@ -43,11 +45,13 @@ public class Order extends AggregateRoot<OrderId> {
       @NonNull OrderStatus orderStatus,
       BuyerId buyerId,
       boolean draft,
-      List<OrderItem> orderItems
+      List<OrderItem> orderItems,
+      UUID requestId
   ) {
     this();
     Objects.requireNonNull(orderId, "Order id cannot be null");
     Objects.requireNonNull(orderStatus, "Order status cannot be null");
+    Objects.requireNonNull(requestId, "Request id cannot be null");
 
     this.id = orderId;
     this.buyerId = buyerId;
@@ -55,12 +59,13 @@ public class Order extends AggregateRoot<OrderId> {
     this.orderStatus = orderStatus;
     this.draft = draft;
     this.orderItems = orderItems;
+    this.requestId = requestId;
   }
 
   @NonNull
   public static Order create(@NonNull NewOrderData orderData) {
     Objects.requireNonNull(orderData, "New order data cannot be null");
-    var order = new Order(OrderId.of(UUID.randomUUID()), OrderStatus.Submitted, null, false, new ArrayList<>());
+    var order = new Order(OrderId.of(UUID.randomUUID()), OrderStatus.Submitted, null, false, new ArrayList<>(), orderData.getRequestId());
     /*
      * Add the OrderStarterDomainEvent to the domain events collection to be dispatched when committing changes
      * into the Database.
@@ -79,7 +84,8 @@ public class Order extends AggregateRoot<OrderId> {
         snapshot.isDraft(),
         snapshot.getOrderItems().stream()
             .map(OrderItem::rehydrate)
-            .collect(Collectors.toList())
+            .collect(Collectors.toList()),
+        snapshot.getRequestId()
     );
   }
 
@@ -182,6 +188,7 @@ public class Order extends AggregateRoot<OrderId> {
         .orderDate(orderDate)
         .description(description)
         .orderItems(orderItems.stream().map(OrderItem::snapshot).collect(Collectors.toList()))
+        .requestId(requestId)
         .build();
   }
 

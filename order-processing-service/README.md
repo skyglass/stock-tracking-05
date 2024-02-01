@@ -32,7 +32,7 @@ The admin users on the other hand, have access for all endpoints, including "/sh
 If the JWT token doesn't contain "order-service" audience, it's considered invalid.
 
 The Order Processing Service is subscribed for the following integration events:
-1. **GracePeriodConfirmedIntegrationEvent**
+1. **GracePeriodConfirmedIntegrationEvent** (removed)
 
     This event is published by the Order Grace Period Task in case of unsuccessful payment. 
     It will update the order status to "Awaiting Validation", and it will publish **OrderStatusChangedToAwaitingValidationIntegrationEvent**.
@@ -73,15 +73,3 @@ It also, publishes the following integration events:
    This event will be published in case the admin mark the order as shipped by calling "/ship/${orderId}" endpoint.
 
 To update the database and publish integration event atomically, it uses the [Outbox pattern](https://microservices.io/patterns/data/transactional-outbox.html).
-
-# Running the Order Processing Service
-The best way to run the service is with IDE like IntelliJ IDEA or Eclipse. Alternatively, after you build the service,
-you can run it with the following command:
-
-    ~ java -Dspring.profiles.active=dev -jar services/order-processing/build/libs/order-processing.jar
-
-Optional profiles:
-1. **dev** - to insert test data.
-2. **elk** - to enable ELK logging.
-3. **distributed-tracing** - to enable distributed tracing with Sleuth and Zipking.
-4. **docker** - used when the service is run with docker.

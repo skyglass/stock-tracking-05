@@ -36,24 +36,24 @@ public class BasketTestHelper {
 
     private final CustomerBasketBuilder customerBasketBuilder;
 
-    public CustomerBasket checkout(String productName,
+    public BasketCheckout checkout(String productName,
                                    Integer stockQuantity,
                                    Double productPrice,
-                                   Integer orderQuantity,
+                                   Integer productQuantity,
                                    String customerId) {
         CatalogItemResponse product = catalogTestHelper
                 .createProduct(productName, productPrice, stockQuantity);
-        return checkout(product.getProductId(), productName, stockQuantity, productPrice, orderQuantity, customerId);
+        return checkout(product.getProductId(), productName, stockQuantity, productPrice, productQuantity, customerId);
     }
 
-    public CustomerBasket checkout(UUID productId,
+    public BasketCheckout checkout(UUID productId,
                                    String productName,
                                    Integer stockQuantity,
                                    Double productPrice,
-                                   Integer orderQuantity,
+                                   Integer productQuantity,
                                    String customerId) {
         BasketItem basketItem = basketItemBuilder.build(
-                productId, productName, productPrice, orderQuantity);
+                productId, productName, productPrice, productQuantity);
         CustomerBasket customerBasket = customerBasketBuilder.build(customerId, basketItem);
         customerBasket = basketClient.updateBasket(customerBasket);
         assertNotNull(customerBasket.getId());
@@ -66,7 +66,7 @@ public class BasketTestHelper {
         BasketCheckout basketCheckout = basketCheckoutBuilder.build(customerId);
         basketClient.checkout(basketCheckout, basketCheckout.getRequestId().toString());
 
-        return customerBasket;
+        return basketCheckout;
     }
 
 

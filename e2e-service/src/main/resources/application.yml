@@ -21,6 +21,8 @@ spring:
             url: http://localhost:9000/order-processing/api
           oauth2:
             url: http://localhost:8080
+          kafka:
+            url: http://localhost:8070/api/clusters/local
 
   data:
     axon:
@@ -82,7 +84,7 @@ app:
       host: localhost
       port: 5432
       database: catalogdb
-      user: catalogdbuser
+      user: dbuser
       password: dbpass
 
   order-processing:

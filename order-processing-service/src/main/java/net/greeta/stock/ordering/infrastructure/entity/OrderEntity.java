@@ -26,6 +26,9 @@ class OrderEntity extends DbEntity {
   @Column(name = "order_status", nullable = false)
   private String orderStatus;
 
+  @Column(name = "request_id", nullable = false)
+  private UUID requestId;
+
   @Column(name = "description")
   private String description;
 

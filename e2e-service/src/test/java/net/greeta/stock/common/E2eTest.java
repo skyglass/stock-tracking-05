@@ -4,12 +4,19 @@ import lombok.SneakyThrows;
 import net.greeta.stock.axon.AxonTestDataService;
 import net.greeta.stock.basket.BasketTestDataService;
 import net.greeta.stock.catalogquery.CatalogQueryTestDataService;
+import net.greeta.stock.client.KafkaClient;
 import net.greeta.stock.config.MockHelper;
 import net.greeta.stock.config.RedisConfig;
 import net.greeta.stock.orderprocessing.OrderProcessingTestDataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class E2eTest {
 
@@ -26,7 +33,7 @@ public abstract class E2eTest {
     private BasketTestDataService basketTestDataService;
 
     @Autowired
-    private CatalogQueryTestDataService catalogQueryTestDataService;
+    protected CatalogQueryTestDataService catalogQueryTestDataService;
 
     @Autowired
     private OrderProcessingTestDataService orderProcessingTestDataService;
@@ -34,13 +41,19 @@ public abstract class E2eTest {
     @Autowired
     private AxonTestDataService axonTestDataService;
 
+    @Autowired
+    private KafkaClient kafkaClient;
+
     @BeforeEach
     @SneakyThrows
     void cleanup() {
+        var result = kafkaClient.clearMessages("Axon.Events");
+        assertEquals(HttpStatus.OK, result.getStatusCode());
         mockHelper.mockCredentials(securityOauth2Username, securityOauth2Password);
         basketTestDataService.resetDatabase();
         catalogQueryTestDataService.resetDatabase();
         orderProcessingTestDataService.resetDatabase();
         axonTestDataService.resetDatabase();
+        TimeUnit.MILLISECONDS.sleep(Duration.ofSeconds(1).toMillis());
     }
 }

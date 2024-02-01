@@ -125,11 +125,6 @@ public class KafkaConfig implements KafkaListenerConfigurer {
   }
 
   @Bean
-  public NewTopic gracePeriodConfirmedTopic() {
-    return new NewTopic(topics.getGracePeriodConfirmed(), 1, (short) 1);
-  }
-
-  @Bean
   public NewTopic ordersTopic() {
     return new NewTopic(topics.getOrders(), 1, (short) 1);
   }

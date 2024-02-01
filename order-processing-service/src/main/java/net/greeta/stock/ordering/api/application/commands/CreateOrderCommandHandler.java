@@ -1,6 +1,7 @@
 package net.greeta.stock.ordering.api.application.commands;
 
 import an.awesome.pipelinr.Command;
+import an.awesome.pipelinr.Pipeline;
 import net.greeta.stock.common.domain.dto.order.*;
 import net.greeta.stock.common.domain.dto.order.buyer.*;
 import net.greeta.stock.ordering.api.application.integrationevents.events.OrderStartedIntegrationEvent;
@@ -24,6 +25,7 @@ public class CreateOrderCommandHandler implements Command.Handler<CreateOrderCom
   private final OrderRepository orderRepository;
   private final IntegrationEventLogService integrationEventLogService;
   private final KafkaTopics topics;
+  private final Pipeline pipeline;
 
   @Transactional
   @Override
@@ -41,6 +43,7 @@ public class CreateOrderCommandHandler implements Command.Handler<CreateOrderCom
     logger.info("Creating Order");
 
     orderRepository.save(order);
+    pipeline.send(new SetAwaitingValidationOrderStatusCommand(order.getId().getUuid()));
 
     return true;
   }
@@ -49,6 +52,7 @@ public class CreateOrderCommandHandler implements Command.Handler<CreateOrderCom
     final var orderData = NewOrderData.builder()
         .userId(UserId.of(command.getUserId()))
         .buyerName(BuyerName.of(command.getUserName()))
+        .requestId(command.getRequestId())
         .build();
 
     return Order.create(orderData);

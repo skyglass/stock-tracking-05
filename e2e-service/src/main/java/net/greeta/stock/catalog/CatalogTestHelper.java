@@ -18,8 +18,6 @@ public class CatalogTestHelper extends GenericTestHelper {
 
     private final CatalogCommandClient catalogCommandClient;
 
-    private final CatalogQueryClient catalogQueryClient;
-
     private final CreateProductCommandBuilder createProductCommandBuilder;
 
     public CatalogItemResponse createProduct(String name, Double price, Integer availableStock) {

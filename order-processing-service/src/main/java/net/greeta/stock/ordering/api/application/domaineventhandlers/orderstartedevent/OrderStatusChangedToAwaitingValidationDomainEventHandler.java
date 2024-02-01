@@ -1,4 +1,4 @@
-package net.greeta.stock.ordering.api.application.domaineventhandlers.ordergraceperiodconfirmed;
+package net.greeta.stock.ordering.api.application.domaineventhandlers.orderstartedevent;
 
 import net.greeta.stock.ordering.api.application.domaineventhandlers.DomainEventHandler;
 import net.greeta.stock.ordering.api.application.integrationevents.events.OrderStatusChangedToAwaitingValidationIntegrationEvent;

@@ -5,9 +5,9 @@ delete from buyer;
 insert into buyer (id, user_id, name)
 values ('1c94903f-59d4-4498-a737-beae5766accd', 'd8222b6b-f59b-4388-9a1c-e5fe9911c4c6', 'Emilija');
 
-insert into orders (id, buyer_id, description, is_draft, order_date, order_status)
+insert into orders (id, buyer_id, description, is_draft, order_date, order_status, request_id)
 values ('7913e2b7-c190-470a-837f-ba2c84ab2200',
-        '1c94903f-59d4-4498-a737-beae5766accd', 'description...', false, '2021-04-16', 'Shipped'
+        '1c94903f-59d4-4498-a737-beae5766accd', 'description...', false, '2021-04-16', 'Shipped', '7913e2b7-c190-470a-837f-ba2c84ab2200'
 );
 
 insert into order_item (id, discount, picture_url, product_id, product_name, unit_price, units, order_id)

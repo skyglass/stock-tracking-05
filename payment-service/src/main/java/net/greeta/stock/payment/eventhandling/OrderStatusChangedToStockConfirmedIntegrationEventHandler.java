@@ -24,11 +24,7 @@ public class OrderStatusChangedToStockConfirmedIntegrationEventHandler {
   public void handle(OrderStatusChangedToStockConfirmedIntegrationEvent event) {
     logger.info("Handling integration event: {} - ({})", event.getId(), event.getClass().getSimpleName());
 
-    final var n = Math.random();
-    if (n < 0.7) {
       paymentStatusEventBus.publish(new OrderPaymentSucceededIntegrationEvent(event.getOrderId()));
-    } else {
-      paymentStatusEventBus.publish(new OrderPaymentFailedIntegrationEvent(event.getOrderId()));
-    }
+      //paymentStatusEventBus.publish(new OrderPaymentFailedIntegrationEvent(event.getOrderId()));
   }
 }

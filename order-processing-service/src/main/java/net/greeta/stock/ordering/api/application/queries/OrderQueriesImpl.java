@@ -24,7 +24,7 @@ public class OrderQueriesImpl implements OrderQueries {
         SELECT cast(o.id as varchar) as orderNumber, o.order_date as date, o.description,
           o.order_status as status,
           oi.product_name as productName, oi.units, oi.unit_price as unitPrice, oi.picture_url as pictureUrl,
-          cast(oi.id as varchar), cast(oi.product_id as varchar), ob.user_id
+          cast(oi.id as varchar), cast(oi.product_id as varchar), ob.user_id, cast(o.request_id as varchar)
         FROM orders o
         LEFT JOIN order_item oi on o.id = oi.order_id
         LEFT JOIN buyer ob on o.buyer_id = ob.id
@@ -37,12 +37,30 @@ public class OrderQueriesImpl implements OrderQueries {
   }
 
   @Override
+  public Optional<OrderViewModel.Order> getOrderByRequestId(String requestId) {
+    var query = entityManager.createNativeQuery("""
+        SELECT cast(o.id as varchar) as orderNumber, o.order_date as date, o.description,
+          o.order_status as status,
+          oi.product_name as productName, oi.units, oi.unit_price as unitPrice, oi.picture_url as pictureUrl,
+          cast(oi.id as varchar), cast(oi.product_id as varchar), ob.user_id, cast(o.request_id as varchar)
+        FROM orders o
+        LEFT JOIN order_item oi on o.id = oi.order_id
+        LEFT JOIN buyer ob on o.buyer_id = ob.id
+        WHERE o.request_id = ?1
+      """).setParameter(1, UUID.fromString(requestId));
+
+    return isNotEmpty(query.getResultList())
+            ? Optional.of(toOrder(query.getResultList()))
+            : Optional.empty();
+  }
+
+  @Override
   public List<OrderViewModel.Order> userOrders(String userId) {
     var query = entityManager.createNativeQuery("""
       SELECT cast(o.id as varchar) as orderNumber, o.order_date as date, o.description,
           o.order_status as status,
           oi.product_name as productName, oi.units, oi.unit_price as unitPrice, oi.picture_url as pictureUrl,
-          cast(oi.id as varchar), cast(oi.product_id as varchar), ob.user_id
+          cast(oi.id as varchar), cast(oi.product_id as varchar), ob.user_id, cast(o.request_id as varchar)
       FROM orders o
       LEFT JOIN order_item oi ON o.id = oi.order_id
       LEFT JOIN buyer ob on o.buyer_id = ob.id
@@ -65,7 +83,7 @@ public class OrderQueriesImpl implements OrderQueries {
       SELECT cast(o.id as varchar) as orderNumber, o.order_date as date, o.description,
           o.order_status as status,
           oi.product_name as productName, oi.units, oi.unit_price as unitPrice, oi.picture_url as pictureUrl,
-          cast(oi.id as varchar), cast(oi.product_id as varchar), ob.user_id
+          cast(oi.id as varchar), cast(oi.product_id as varchar), ob.user_id, cast(o.request_id as varchar)
       FROM orders o
       LEFT JOIN order_item oi ON o.id = oi.order_id
       LEFT JOIN buyer ob on o.buyer_id = ob.id
@@ -139,6 +157,7 @@ public class OrderQueriesImpl implements OrderQueries {
     var description = (String) orderDetails[2];
     var status = (String) orderDetails[3];
     var ownerId = (String) orderDetails[10];
+    var requestId = (String) orderDetails[11];
 
     var total = orderItems.stream()
       .map(item -> item.units() * item.unitPrice())
@@ -153,7 +172,8 @@ public class OrderQueriesImpl implements OrderQueries {
       description,
       orderItems,
       total,
-      ownerId
+      ownerId,
+      requestId
     );
   }
 }

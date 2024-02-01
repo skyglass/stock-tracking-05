@@ -42,6 +42,7 @@ public class UserCheckoutAcceptedIntegrationEventHandler {
         .basketItems(event.getBasket().getItems())
         .userId(event.getUserId())
         .userName(event.getUserName())
+        .requestId(event.getRequestId())
         .build();
     var requestCreateOrder = new CreateOrderIdentifiedCommand(createOrderCommand, event.getRequestId());
     var result = commandBus.send(requestCreateOrder);

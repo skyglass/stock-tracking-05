@@ -59,6 +59,18 @@ public class OrdersController {
     return ResponseEntity.ok(order);
   }
 
+  @RequestMapping("request-id/{requestId}")
+  public ResponseEntity<OrderViewModel.Order> getOrderByRequestId(@PathVariable String requestId) {
+    final var order = orderQueries.getOrderByRequestId(requestId)
+            .orElseThrow(() -> new NotFoundException("Order with requestId %s not found".formatted(requestId)));
+
+    if (!order.ownerId().equals(identityService.getUserIdentity()) && !identityService.isAdmin()) {
+      throw new UnauthorizedException();
+    }
+
+    return ResponseEntity.ok(order);
+  }
+
   @RequestMapping()
   public ResponseEntity<List<OrderViewModel.Order>> getAllOrders() {
     return ResponseEntity.ok(orderQueries.allOrders());

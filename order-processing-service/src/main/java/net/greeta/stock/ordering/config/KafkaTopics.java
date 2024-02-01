@@ -19,7 +19,6 @@ public class KafkaTopics {
   private String paidOrders;
   private String orderStockConfirmed;
   private String orderStockRejected;
-  private String gracePeriodConfirmed;
   private String paymentStatus;
   private String stockConfirmed;
 }

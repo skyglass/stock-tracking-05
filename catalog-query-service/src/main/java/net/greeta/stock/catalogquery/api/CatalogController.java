@@ -1,12 +1,13 @@
 package net.greeta.stock.catalogquery.api;
 
 import lombok.RequiredArgsConstructor;
-import net.greeta.stock.catalogquery.application.queries.catalogitembyid.CatalogItemByIdQuery;
 import net.greeta.stock.catalogquery.application.queries.catalogitems.CatalogItemsQuery;
 import net.greeta.stock.catalogquery.application.queries.catalogitemsbyids.CatalogItemsByIdsQuery;
 import net.greeta.stock.catalogquery.application.queries.catalogitemswithname.CatalogItemWithNameQuery;
 import net.greeta.stock.catalogquery.application.querybus.QueryBus;
+import net.greeta.stock.catalogquery.application.service.CatalogItemService;
 import net.greeta.stock.catalogquery.model.CatalogItem;
+import net.greeta.stock.common.domain.dto.catalog.CatalogItemDto;
 import net.greeta.stock.shared.rest.error.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,8 @@ public class CatalogController {
   private static final Logger logger = LoggerFactory.getLogger(CatalogController.class);
 
   private final QueryBus queryBus;
+
+  private final CatalogItemService catalogItemService;
 
   /**
    * Returns catalog items for given item ids.
@@ -77,9 +80,9 @@ public class CatalogController {
    * @return catalog item
    */
   @RequestMapping("items/{id}")
-  public ResponseEntity<CatalogItem> catalogItem(@PathVariable UUID id) {
+  public ResponseEntity<CatalogItemDto> catalogItem(@PathVariable UUID id) {
     logger.info("Find catalog item: {}", id);
-    return ResponseEntity.of(queryBus.execute(new CatalogItemByIdQuery(id)));
+    return ResponseEntity.of(catalogItemService.findById(id));
   }
 
   /**
