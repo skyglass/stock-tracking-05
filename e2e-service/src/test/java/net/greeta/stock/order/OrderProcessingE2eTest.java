@@ -8,8 +8,6 @@ import net.greeta.stock.common.domain.dto.basket.BasketCheckout;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemDto;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.common.domain.dto.order.OrderViewModel;
-import net.greeta.stock.common.domain.valueobject.OrderStatus;
-import net.greeta.stock.config.MockHelper;
 import net.greeta.stock.helper.RetryHelper;
 import net.greeta.stock.orderprocessing.OrderProcessingClient;
 import org.junit.jupiter.api.Test;
@@ -87,6 +85,15 @@ public class OrderProcessingE2eTest extends E2eTest {
         });
 
         assertTrue(stockReduced);
+
+        catalogTestHelper.addStock(product.getProductId(), 3);
+
+        Boolean stockIncreased =  RetryHelper.retry(() -> {
+            CatalogItemDto catalogItemDto = catalogQueryClient.catalogItem(product.getProductId());
+            return catalogItemDto.availableStock() == stockQuantity - productQuantity + 3;
+        });
+
+        assertTrue(stockIncreased);
     }
 
 

@@ -29,28 +29,28 @@ public class CatalogController {
     return ResponseEntity.ok(response);
   }
 
-  @RequestMapping(method = RequestMethod.PUT, path = "items/{id}/changeprice")
+  @RequestMapping(method = RequestMethod.PUT, path = "items/changeprice")
   public ResponseEntity<CatalogItemResponse> changeProductPrice(@RequestBody @Valid ChangePriceCommand command) {
     logger.info("Change price request for product: {}", command.productId());
     final var response = commandBus.execute(command);
     return ResponseEntity.ok(response);
   }
 
-  @RequestMapping(method = RequestMethod.PUT, path = "items/{id}/addstock")
+  @RequestMapping(method = RequestMethod.PUT, path = "items/addstock")
   public ResponseEntity<CatalogItemResponse> addStock(@RequestBody @Valid AddStockCommand command) {
     logger.info("Add stock request for product: {}", command.productId());
     final var response = commandBus.execute(command);
     return ResponseEntity.ok(response);
   }
 
-  @RequestMapping(method = RequestMethod.PUT, path = "items/{id}/removestock")
+  @RequestMapping(method = RequestMethod.PUT, path = "items/removestock")
   public ResponseEntity<CatalogItemResponse> removeStock(@RequestBody @Valid RemoveStockCommand command) {
     logger.info("Remove stock request for product: {}", command.productId());
     final var response = commandBus.execute(command);
     return ResponseEntity.ok(response);
   }
 
-  @RequestMapping(method = RequestMethod.PUT, path = "items/{id}/changeproductname")
+  @RequestMapping(method = RequestMethod.PUT, path = "items/changeproductname")
   public ResponseEntity<CatalogItemResponse> changeProductName(@RequestBody @Valid ChangeProductNameCommand command) {
     logger.info("Change product name request for product: {}", command.productId());
     final var response = commandBus.execute(command);
