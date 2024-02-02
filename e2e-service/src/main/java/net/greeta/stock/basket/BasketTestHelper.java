@@ -14,12 +14,14 @@ import net.greeta.stock.common.domain.valueobject.OrderStatus;
 import net.greeta.stock.helper.CalculationHelper;
 import net.greeta.stock.helper.RetryHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @RequiredArgsConstructor
@@ -36,6 +38,18 @@ public class BasketTestHelper {
 
     private final CustomerBasketBuilder customerBasketBuilder;
 
+    @Async
+    public CompletableFuture<BasketCheckout> asyncCheckout(UUID productId,
+                                                           String productName,
+                                                           Integer stockQuantity,
+                                                           Double productPrice,
+                                                           Integer productQuantity,
+                                                           String customerId) {
+        log.info("Order checkout with amount {} for product {}", productQuantity, productName);
+        return CompletableFuture.completedFuture(checkout(productId, productName,
+                productPrice, productQuantity, customerId));
+    }
+
     public BasketCheckout checkout(String productName,
                                    Integer stockQuantity,
                                    Double productPrice,
@@ -43,28 +57,20 @@ public class BasketTestHelper {
                                    String customerId) {
         CatalogItemResponse product = catalogTestHelper
                 .createProduct(productName, productPrice, stockQuantity);
-        return checkout(product.getProductId(), productName, stockQuantity, productPrice, productQuantity, customerId);
+        return checkout(product.getProductId(), productName, productPrice, productQuantity, customerId);
     }
 
     public BasketCheckout checkout(UUID productId,
                                    String productName,
-                                   Integer stockQuantity,
                                    Double productPrice,
                                    Integer productQuantity,
                                    String customerId) {
         BasketItem basketItem = basketItemBuilder.build(
                 productId, productName, productPrice, productQuantity);
         CustomerBasket customerBasket = customerBasketBuilder.build(customerId, basketItem);
-        customerBasket = basketClient.updateBasket(customerBasket);
-        assertNotNull(customerBasket.getId());
-        customerBasket = basketClient.getBasketByCustomerId(customerId);
-        assertNotNull(customerBasket);
-        assertEquals(customerId, customerBasket.getBuyerId());
-        assertEquals(1, customerBasket.getItems().size());
-        assertEquals(productId, customerBasket.getItems().get(0).getProductId());
 
         BasketCheckout basketCheckout = basketCheckoutBuilder.build(customerId);
-        basketClient.checkout(basketCheckout, basketCheckout.getRequestId().toString());
+        basketClient.directCheckout(customerBasket, basketCheckout.getRequestId());
 
         return basketCheckout;
     }

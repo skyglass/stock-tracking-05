@@ -20,8 +20,6 @@ public class SetPaidOrderStatusCommandHandler implements Command.Handler<SetPaid
   @Override
   @Transactional
   public Boolean handle(SetPaidOrderStatusCommand command) {
-    // Simulate a work time for validating the payment
-    Thread.sleep(10000);
 
     final var orderToUpdate = orderRepository.findById(OrderId.of(command.orderNumber()))
         .orElse(null);

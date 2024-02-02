@@ -3,7 +3,7 @@ package net.greeta.stock.ordering.api.application.commands;
 import an.awesome.pipelinr.Command;
 import lombok.Builder;
 import lombok.Getter;
-import net.greeta.stock.common.domain.dto.order.BasketItem;
+import net.greeta.stock.common.domain.dto.order.OrderBasketItem;
 import net.greeta.stock.common.domain.dto.order.OrderItemDTO;
 import net.greeta.stock.ordering.api.application.dtos.ToOrderItemDTOMapper;
 
@@ -20,7 +20,7 @@ public class CreateOrderCommand implements Command<Boolean> {
 
   @Builder
   private CreateOrderCommand(
-      List<BasketItem> basketItems,
+      List<OrderBasketItem> basketItems,
       String userId,
       String userName,
       UUID requestId

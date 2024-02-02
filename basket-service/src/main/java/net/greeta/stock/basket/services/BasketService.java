@@ -16,5 +16,7 @@ public interface BasketService {
 
   void checkout(BasketCheckout basketCheckout);
 
+  void directCheckout(CustomerBasket basket, UUID requestId);
+
   void delete(UUID basketId);
 }

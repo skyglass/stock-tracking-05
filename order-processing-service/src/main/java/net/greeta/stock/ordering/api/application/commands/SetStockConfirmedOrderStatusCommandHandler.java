@@ -20,8 +20,6 @@ public class SetStockConfirmedOrderStatusCommandHandler implements Command.Handl
   @Override
   @Transactional
   public Boolean handle(SetStockConfirmedOrderStatusCommand command) {
-    // Simulate a work time for confirming the stock
-    Thread.sleep(10000);
 
     final var orderToUpdate = orderRepository.findById(OrderId.of(command.orderNumber())).orElse(null);
     if (orderToUpdate == null) {

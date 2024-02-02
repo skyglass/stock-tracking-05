@@ -69,6 +69,24 @@ public class BasketServiceImpl implements BasketService {
     orderCheckoutsEventBus.publish(event);
   }
 
+  @Transactional
+  @Override
+  public void directCheckout(CustomerBasket basket, UUID requestId) {
+    var userName = identityService.getUserName();
+
+    var event = new UserCheckoutAcceptedIntegrationEvent(
+            userName,
+            userName,
+            basket.getBuyerId(),
+            requestId,
+            basket
+    );
+
+    // Once basket is checkout, sends an integration event to order-processor to convert basket to order and proceeds
+    // with order creation process.
+    orderCheckoutsEventBus.publish(event);
+  }
+
   @Override
   public void delete(UUID basketId) {
     basketRepository.delete(basketId);

@@ -14,6 +14,6 @@ public record CreateOrderDraftCommand(
     @JsonProperty("items")
     @Valid
     @NotEmpty(message = "The basket must contain at least one product")
-    List<BasketItem> items
+    List<OrderBasketItem> items
 ) implements Command<OrderDraftDTO> {
 }

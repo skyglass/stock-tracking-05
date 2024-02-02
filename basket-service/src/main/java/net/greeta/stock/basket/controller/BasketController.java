@@ -47,6 +47,15 @@ public class BasketController {
     basketService.checkout(basketCheckout);
   }
 
+  @RequestMapping(path = "direct-checkout", method = RequestMethod.POST)
+  public void directCheckout(
+          @RequestBody @Valid CustomerBasket basket,
+          @RequestHeader("x-requestid") UUID requestId
+  ) {
+    logger.info("Checkout basket for request: {}", requestId);
+    basketService.directCheckout(basket, requestId);
+  }
+
   @RequestMapping(value = "{basketId}", method = RequestMethod.DELETE)
   public void deleteBasket(@PathVariable UUID basketId) {
     basketService.delete(basketId);

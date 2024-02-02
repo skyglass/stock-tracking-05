@@ -30,9 +30,6 @@ public class OrderProcessingE2eTest extends E2eTest {
     private CatalogTestHelper catalogTestHelper;
 
     @Autowired
-    private MockHelper mockHelper;
-
-    @Autowired
     private OrderProcessingClient orderProcessingClient;
 
     @Autowired
@@ -50,8 +47,7 @@ public class OrderProcessingE2eTest extends E2eTest {
 
         BasketCheckout basketCheckout = basketTestHelper.checkout(
                 product.getProductId(),
-                productName, stockQuantity,
-                productPrice, productQuantity, "admin");
+                productName, productPrice, productQuantity, "admin");
 
         OrderViewModel.Order orderCreated =  RetryHelper.retry(() ->
             orderProcessingClient.getOrderByRequestId(

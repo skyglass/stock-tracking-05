@@ -17,7 +17,7 @@ public class CreateOrderDraftCommandHandler implements Command.Handler<CreateOrd
     final var order = Order.newDraft();
     final var orderItems = message.items()
         .stream()
-        .map(BasketItem::toOrderItemDTO)
+        .map(OrderBasketItem::toOrderItemDTO)
         .collect(Collectors.toList());
 
     orderItems.forEach(item -> order.addOrderItem(

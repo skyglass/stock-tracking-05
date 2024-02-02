@@ -5,12 +5,14 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
 @Getter
+@Setter
 @NoArgsConstructor
-public class BasketItem {
+public class OrderBasketItem {
   @JsonProperty
   private String id;
 
@@ -37,7 +39,7 @@ public class BasketItem {
   @JsonProperty
   private String pictureUrl;
 
-  public static OrderItemDTO toOrderItemDTO(BasketItem item) {
+  public static OrderItemDTO toOrderItemDTO(OrderBasketItem item) {
     return new OrderItemDTO(
       item.getProductId(),
       item.getProductName(),

@@ -20,8 +20,6 @@ public class SetStockRejectedOrderStatusCommandHandler implements Command.Handle
   @Override
   @Transactional
   public Boolean handle(SetStockRejectedOrderStatusCommand command) {
-    // Simulate a work time for rejecting the stock
-    Thread.sleep(10000);
 
     final var orderToUpdate = orderRepository.findById(OrderId.of(command.orderNumber()))
         .orElse(null);

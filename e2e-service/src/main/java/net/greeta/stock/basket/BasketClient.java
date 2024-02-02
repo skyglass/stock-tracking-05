@@ -12,15 +12,10 @@ import java.util.UUID;
 @FeignClient(name = "basket")
 public interface BasketClient {
 
-    @RequestMapping("/customer/{customerId}")
-    public CustomerBasket getBasketByCustomerId(@PathVariable String customerId);
-
-    @RequestMapping(method = RequestMethod.POST)
-    public CustomerBasket updateBasket(@RequestBody @Valid CustomerBasket basket);
-
-    @RequestMapping(path = "checkout", method = RequestMethod.POST)
-    public void checkout(@RequestBody @Valid BasketCheckout basketCheckout,
-                         @RequestHeader("x-requestid") String requestId
+    @RequestMapping(path = "direct-checkout", method = RequestMethod.POST)
+    public void directCheckout(
+            @RequestBody @Valid CustomerBasket basket,
+            @RequestHeader("x-requestid") UUID requestId
     );
 
 }
