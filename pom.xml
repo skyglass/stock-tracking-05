@@ -37,7 +37,6 @@
 
     <modules>
         <module>shared</module>
-        <module>catalog-shared</module>
         <module>catalog-query-service</module>
         <module>catalog-command-service</module>
         <module>basket-service</module>
@@ -68,11 +67,6 @@
             <dependency>
                 <groupId>net.greeta.stock</groupId>
                 <artifactId>security</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.greeta.stock</groupId>
-                <artifactId>catalog-shared</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -1,4 +1,4 @@
-package net.greeta.stock.catalog.application.integrationevents.events;
+package net.greeta.stock.common.domain.dto.catalog;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

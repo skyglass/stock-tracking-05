@@ -1,4 +1,4 @@
-package net.greeta.stock.ordering.shared;
+package net.greeta.stock.shared.eventhandling;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;

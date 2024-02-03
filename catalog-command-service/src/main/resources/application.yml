@@ -122,6 +122,7 @@ app:
       ordersWaitingValidation: orders-waiting-validation-group
 
 
+
 axon:
   serializer:
     general: jackson

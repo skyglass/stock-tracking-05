@@ -7,7 +7,7 @@ import net.greeta.stock.ordering.api.application.domaineventhandlers.DomainEvent
 import net.greeta.stock.ordering.api.application.integrationevents.events.OrderStatusChangedToSubmittedIntegrationEvent;
 import net.greeta.stock.ordering.config.KafkaTopics;
 import net.greeta.stock.ordering.domain.aggregatesmodel.buyer.BuyerRepository;
-import net.greeta.stock.ordering.shared.EventHandler;
+import net.greeta.stock.shared.eventhandling.EventHandler;
 import net.greeta.stock.shared.outbox.IntegrationEventLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

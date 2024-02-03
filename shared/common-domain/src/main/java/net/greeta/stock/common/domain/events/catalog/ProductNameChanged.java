@@ -1,4 +1,4 @@
-package net.greeta.stock.catalog.shared.events;
+package net.greeta.stock.common.domain.events.catalog;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

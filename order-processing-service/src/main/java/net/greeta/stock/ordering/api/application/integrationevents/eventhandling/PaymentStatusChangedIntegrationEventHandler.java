@@ -6,7 +6,7 @@ import net.greeta.stock.common.domain.dto.order.CancelOrderCommand;
 import net.greeta.stock.ordering.api.application.commands.SetPaidOrderStatusCommand;
 import net.greeta.stock.ordering.api.application.integrationevents.events.OrderPaymentStatusChangedIntegrationEvent;
 import net.greeta.stock.ordering.api.application.integrationevents.events.models.PaymentStatus;
-import net.greeta.stock.ordering.shared.EventHandler;
+import net.greeta.stock.shared.eventhandling.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;

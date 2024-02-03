@@ -6,7 +6,7 @@ import net.greeta.stock.ordering.api.application.services.OrderApplicationServic
 import net.greeta.stock.ordering.config.KafkaTopics;
 import net.greeta.stock.common.domain.dto.order.OrderStatus;
 import net.greeta.stock.common.domain.dto.order.events.OrderCancelledDomainEvent;
-import net.greeta.stock.ordering.shared.EventHandler;
+import net.greeta.stock.shared.eventhandling.EventHandler;
 import net.greeta.stock.shared.outbox.IntegrationEventLogService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

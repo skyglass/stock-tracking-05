@@ -3,7 +3,7 @@ package net.greeta.stock.ordering.api.application.integrationevents.eventhandlin
 import an.awesome.pipelinr.Pipeline;
 import net.greeta.stock.ordering.api.application.commands.SetStockConfirmedOrderStatusCommand;
 import net.greeta.stock.ordering.api.application.integrationevents.events.OrderStockConfirmedIntegrationEvent;
-import net.greeta.stock.ordering.shared.EventHandler;
+import net.greeta.stock.shared.eventhandling.EventHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

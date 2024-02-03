@@ -4,7 +4,7 @@ import an.awesome.pipelinr.Pipeline;
 import net.greeta.stock.ordering.api.application.commands.SetStockRejectedOrderStatusCommand;
 import net.greeta.stock.ordering.api.application.integrationevents.events.OrderStockRejectedIntegrationEvent;
 import net.greeta.stock.ordering.api.application.integrationevents.events.models.ConfirmedOrderStockItem;
-import net.greeta.stock.ordering.shared.EventHandler;
+import net.greeta.stock.shared.eventhandling.EventHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

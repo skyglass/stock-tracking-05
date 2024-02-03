@@ -4,7 +4,7 @@ import net.greeta.stock.ordering.api.application.commands.CreateOrderCommand;
 import net.greeta.stock.ordering.api.application.commands.CreateOrderIdentifiedCommand;
 import net.greeta.stock.ordering.api.application.integrationevents.events.UserCheckoutAcceptedIntegrationEvent;
 import net.greeta.stock.ordering.api.infrastructure.commandbus.CommandBus;
-import net.greeta.stock.ordering.shared.EventHandler;
+import net.greeta.stock.shared.eventhandling.EventHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,11 +1,15 @@
 package net.greeta.stock.catalog.application.integrationevents.eventhandling;
 
 import lombok.RequiredArgsConstructor;
+import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
 import net.greeta.stock.catalog.application.integrationevents.IntegrationEventPublisher;
 import net.greeta.stock.catalog.application.integrationevents.events.*;
 import net.greeta.stock.catalog.config.KafkaTopics;
 import net.greeta.stock.catalog.domain.catalogitem.CatalogItem;
 import net.greeta.stock.catalog.domain.catalogitem.CatalogItemRepository;
+import net.greeta.stock.common.domain.dto.catalog.ConfirmedOrderStockItem;
+import net.greeta.stock.common.domain.dto.catalog.OrderStockItem;
+import net.greeta.stock.common.domain.dto.catalog.RemoveStockCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -20,9 +24,7 @@ import java.util.List;
 public class OrderStatusChangedToAwaitingValidationIntegrationEventHandler {
   private static final Logger logger = LoggerFactory.getLogger(OrderStatusChangedToAwaitingValidationIntegrationEventHandler.class);
 
-  private final CatalogItemRepository catalogItemRepository;
-  private final IntegrationEventPublisher integrationEventService;
-  private final KafkaTopics kafkaTopics;
+  private final CatalogCommandBus commandBus;
 
   @KafkaListener(
           groupId = "${app.kafka.group.ordersWaitingValidation}",
@@ -31,36 +33,15 @@ public class OrderStatusChangedToAwaitingValidationIntegrationEventHandler {
   @Transactional
   public void handle(OrderStatusChangedToAwaitingValidationIntegrationEvent event) {
     logger.info("Handling integration event: {} ({})", event.getId(), event.getClass().getSimpleName());
-    var confirmedOrderStockItems = new ArrayList<ConfirmedOrderStockItem>();
 
-    event.getOrderStockItems().forEach(orderStockItem -> catalogItemRepository
-            .load(orderStockItem.getProductId())
-            .ifPresent(catalogItem ->
-                    confirmedOrderStockItems.add(createConfirmedOrderStockItem(catalogItem, orderStockItem)))
-    );
-
-    if (allItemsAvailable(confirmedOrderStockItems)) {
-      integrationEventService.publish(
-              kafkaTopics.getOrderStockConfirmed(),
-              new OrderStockConfirmedIntegrationEvent(event.getOrderId())
-      );
-    } else {
-      integrationEventService.publish(kafkaTopics.getOrderStockRejected(),
-              new OrderStockRejectedIntegrationEvent(event.getOrderId(), confirmedOrderStockItems));
+    if (event.getOrderStockItems().size() > 0) {
+      var current = event.getOrderStockItems().get(0);
+      RemoveStockCommand command = new RemoveStockCommand(event.getOrderId(), current.getProductId(),
+              current.getUnits(), event.getOrderStockItems());
+      logger.info("RemoveStockCommand started for product {} with quantity {}", current.getProductId(), current.getUnits());
+      commandBus.execute(command);
     }
 
-  }
-
-  private ConfirmedOrderStockItem createConfirmedOrderStockItem(CatalogItem catalogItem, OrderStockItem orderStockItem) {
-    return new ConfirmedOrderStockItem(catalogItem.getId(), hasStock(catalogItem, orderStockItem));
-  }
-
-  private boolean hasStock(CatalogItem catalogItem, OrderStockItem orderStockItem) {
-    return catalogItem.getAvailableStock().getValue() >= orderStockItem.getUnits();
-  }
-
-  private boolean allItemsAvailable(List<ConfirmedOrderStockItem> confirmedOrderStockItems) {
-    return confirmedOrderStockItems.stream().allMatch(ConfirmedOrderStockItem::getHasStock);
   }
 
 }

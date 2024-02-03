@@ -29,11 +29,6 @@
             <groupId>net.greeta.stock</groupId>
             <artifactId>rest</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.greeta.stock</groupId>
-            <artifactId>catalog-shared</artifactId>
-        </dependency>
-
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>

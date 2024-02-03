@@ -38,7 +38,7 @@ public class KafkaConfig {
   ) {
     return new DefaultErrorHandler(
       deadLetterPublishingRecoverer,
-      new FixedBackOff(1000L, 2)
+      new FixedBackOff(1000L, 3)
     );
   }
 

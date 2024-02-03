@@ -4,14 +4,18 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.greeta.stock.catalog.domain.base.AggregateRoot;
+import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustBeEnough;
 import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustNotBeEmpty;
 import net.greeta.stock.catalog.domain.catalogitem.rules.PriceMustBeGreaterThanZero;
 import net.greeta.stock.catalog.domain.catalogitem.rules.QuantityMustBeGreaterThanZero;
-import net.greeta.stock.catalog.shared.events.*;
+import net.greeta.stock.common.domain.dto.catalog.ConfirmedOrderStockItem;
+import net.greeta.stock.common.domain.events.catalog.*;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.lang.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
@@ -27,6 +31,8 @@ public class CatalogItem extends AggregateRoot {
   private String pictureFileName;
   @Getter
   private Units availableStock;
+
+  private List<ConfirmedOrderStockItem> confirmedOrderStockItems = new ArrayList<>();
 
   public CatalogItem(
       @NonNull ProductName productName,
@@ -61,17 +67,19 @@ public class CatalogItem extends AggregateRoot {
    * In this case, it is the responsibility of the client to determine if the amount that is returned is the same as
    * quantityDesired.
    */
-  public Units removeStock(Units quantityDesired) {
+  public Units removeStock(ConfirmedOrderStockItem confirmedOrderStockItem, Units quantityDesired) {
     checkRule(new AvailableStockMustNotBeEmpty(name, availableStock));
     checkRule(new QuantityMustBeGreaterThanZero(quantityDesired));
+    checkRule(new AvailableStockMustBeEnough(name, availableStock, quantityDesired));
 
-    final var updatedStock = quantityDesired.greaterThan(availableStock)
-        ? Units.empty()
-        : availableStock.subtract(quantityDesired);
-
-    apply(new StockRemoved(id, updatedStock.getValue()));
+    final var updatedStock = availableStock.subtract(quantityDesired);
+    apply(new StockRemoved(id, updatedStock.getValue(), confirmedOrderStockItem));
 
     return updatedStock;
+  }
+
+  private void addConfirmedStockItem(ConfirmedOrderStockItem confirmedOrderStockItem) {
+    confirmedOrderStockItems.add(confirmedOrderStockItem);
   }
 
   /**
@@ -123,6 +131,7 @@ public class CatalogItem extends AggregateRoot {
   @EventSourcingHandler
   private void on(StockRemoved event) {
     setAvailableStock(Units.of(event.getAvailableStock()));
+    addConfirmedStockItem(event.getConfirmedOrderStockItem());
   }
 
   @SuppressWarnings("unused")

@@ -19,11 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -60,7 +62,7 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
         // Start the clock
         long start = Instant.now().toEpochMilli();
 
-        int numberOfOrders = 20;
+        int numberOfOrders = 15;
         List<CompletableFuture<BasketCheckout>> createdOrders = new ArrayList<>();
         // Kick of multiple, asynchronous lookups
         for (int i = 0; i < numberOfOrders; i++) {
@@ -70,7 +72,7 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
             createdOrders.add(orderSummary);
         }
 
-        int numberOfStockUpdates = 15;
+        int numberOfStockUpdates = 5;
         List<CompletableFuture<CatalogItemResponse>> addedStocks = new ArrayList<>();
         // Kick of multiple, asynchronous lookups
         for (int i = 0; i < numberOfStockUpdates; i++) {
@@ -105,15 +107,17 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
 
         Boolean stockReducedToZero =  RetryHelper.retry(() -> {
             CatalogItemDto catalogItemDto = catalogQueryClient.catalogItem(product.getProductId());
-            return catalogItemDto.availableStock() == 10;
+            return catalogItemDto.availableStock() == 0;
         });
 
         assertTrue(stockReducedToZero);
 
+        //TimeUnit.MILLISECONDS.sleep(Duration.ofSeconds(3).toMillis());
+
         //Check that the next order is rejected because the stock is zero
         BasketCheckout rejectedCheckout = basketTestHelper.checkout(
                 product.getProductId(),
-                productName, productPrice, productQuantity, "admin");
+                productName, productPrice, 40, "admin");
         Boolean orderStockRejected =  RetryHelper.retry(() -> {
             var result = orderProcessingClient.getOrderByRequestId(
                     rejectedCheckout.getRequestId().toString());

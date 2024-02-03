@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.greeta.stock.common.domain.dto.order.events.BuyerVerifiedDomainEvent;
 import net.greeta.stock.ordering.api.application.domaineventhandlers.DomainEventHandler;
 import net.greeta.stock.ordering.domain.aggregatesmodel.order.OrderRepository;
-import net.greeta.stock.ordering.shared.EventHandler;
+import net.greeta.stock.shared.eventhandling.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
