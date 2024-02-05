@@ -2,7 +2,7 @@ package net.greeta.stock.catalog.application.commands.addstock;
 
 import lombok.RequiredArgsConstructor;
 import net.greeta.stock.catalog.application.commandbus.CatalogCommandHandler;
-import net.greeta.stock.catalog.domain.catalogitem.CatalogItemRepository;
+import net.greeta.stock.catalog.domain.catalogitem.CatalogItemAggregateRepository;
 import net.greeta.stock.catalog.domain.catalogitem.Units;
 import net.greeta.stock.common.domain.dto.catalog.AddStockCommand;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
@@ -15,7 +15,7 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 @Component
 public class AddStockCommandHandler implements CatalogCommandHandler<CatalogItemResponse, AddStockCommand> {
-  private final CatalogItemRepository catalogItemRepository;
+  private final CatalogItemAggregateRepository catalogItemRepository;
 
   @CommandHandler
   @Override

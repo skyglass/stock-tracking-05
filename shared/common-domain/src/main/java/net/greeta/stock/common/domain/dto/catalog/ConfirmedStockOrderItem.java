@@ -9,7 +9,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class OrderStockItem {
+public class ConfirmedStockOrderItem {
   private UUID productId;
-  private Integer units;
+  private Integer quantity;
+  private Boolean hasStock;
 }

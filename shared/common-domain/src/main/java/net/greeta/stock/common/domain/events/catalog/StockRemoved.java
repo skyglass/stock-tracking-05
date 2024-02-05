@@ -2,7 +2,7 @@ package net.greeta.stock.common.domain.events.catalog;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.greeta.stock.common.domain.dto.catalog.ConfirmedOrderStockItem;
+import net.greeta.stock.common.domain.dto.catalog.ConfirmedStockOrderItem;
 
 import java.util.UUID;
 
@@ -10,11 +10,10 @@ import java.util.UUID;
 @NoArgsConstructor
 public class StockRemoved extends Event {
   private Integer availableStock;
-  private ConfirmedOrderStockItem confirmedOrderStockItem;
+  private ConfirmedStockOrderItem confirmedOrderStockItem;
 
-  public StockRemoved(UUID id, Integer availableStock, ConfirmedOrderStockItem confirmedOrderStockItem) {
+  public StockRemoved(UUID id, Integer availableStock) {
     super(id);
     this.availableStock = availableStock;
-    this.confirmedOrderStockItem = confirmedOrderStockItem;
   }
 }

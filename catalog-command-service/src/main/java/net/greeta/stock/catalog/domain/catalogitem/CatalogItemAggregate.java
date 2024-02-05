@@ -8,14 +8,11 @@ import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustBeEno
 import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustNotBeEmpty;
 import net.greeta.stock.catalog.domain.catalogitem.rules.PriceMustBeGreaterThanZero;
 import net.greeta.stock.catalog.domain.catalogitem.rules.QuantityMustBeGreaterThanZero;
-import net.greeta.stock.common.domain.dto.catalog.ConfirmedOrderStockItem;
 import net.greeta.stock.common.domain.events.catalog.*;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.lang.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
@@ -23,7 +20,7 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Aggregate
-public class CatalogItem extends AggregateRoot {
+public class CatalogItemAggregate extends AggregateRoot {
   private ProductName name;
   private String description;
   @Getter
@@ -32,9 +29,7 @@ public class CatalogItem extends AggregateRoot {
   @Getter
   private Units availableStock;
 
-  private List<ConfirmedOrderStockItem> confirmedOrderStockItems = new ArrayList<>();
-
-  public CatalogItem(
+  public CatalogItemAggregate(
       @NonNull ProductName productName,
       String description,
       @NonNull Price price,
@@ -62,24 +57,18 @@ public class CatalogItem extends AggregateRoot {
   /**
    * If there is sufficient stock of an item, then the integer returned at the end of this call should be the same as
    * quantityDesired.
-   * In the event that there isn't sufficient stock available, the method will remove whatever stock is available
-   * and return that quantity to the client.
-   * In this case, it is the responsibility of the client to determine if the amount that is returned is the same as
-   * quantityDesired.
+   * In the event that there isn't sufficient stock available, the method will throw BusinessRuleBrokenException(AvailableStockMustBeEnough).
+   * In this case, it is the responsibility of the client to retry again (immediately, or later, after StockAdded Event happens)
    */
-  public Units removeStock(ConfirmedOrderStockItem confirmedOrderStockItem, Units quantityDesired) {
+  public Units removeStock(Units quantityDesired) {
     checkRule(new AvailableStockMustNotBeEmpty(name, availableStock));
     checkRule(new QuantityMustBeGreaterThanZero(quantityDesired));
     checkRule(new AvailableStockMustBeEnough(name, availableStock, quantityDesired));
 
     final var updatedStock = availableStock.subtract(quantityDesired);
-    apply(new StockRemoved(id, updatedStock.getValue(), confirmedOrderStockItem));
+    apply(new StockRemoved(id, updatedStock.getValue()));
 
     return updatedStock;
-  }
-
-  private void addConfirmedStockItem(ConfirmedOrderStockItem confirmedOrderStockItem) {
-    confirmedOrderStockItems.add(confirmedOrderStockItem);
   }
 
   /**
@@ -131,7 +120,6 @@ public class CatalogItem extends AggregateRoot {
   @EventSourcingHandler
   private void on(StockRemoved event) {
     setAvailableStock(Units.of(event.getAvailableStock()));
-    addConfirmedStockItem(event.getConfirmedOrderStockItem());
   }
 
   @SuppressWarnings("unused")

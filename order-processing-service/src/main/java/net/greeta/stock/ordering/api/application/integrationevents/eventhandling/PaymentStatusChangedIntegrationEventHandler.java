@@ -2,7 +2,7 @@ package net.greeta.stock.ordering.api.application.integrationevents.eventhandlin
 
 import an.awesome.pipelinr.Pipeline;
 import lombok.RequiredArgsConstructor;
-import net.greeta.stock.common.domain.dto.order.CancelOrderCommand;
+import net.greeta.stock.ordering.api.application.commands.CancelOrderCommand;
 import net.greeta.stock.ordering.api.application.commands.SetPaidOrderStatusCommand;
 import net.greeta.stock.ordering.api.application.integrationevents.events.OrderPaymentStatusChangedIntegrationEvent;
 import net.greeta.stock.ordering.api.application.integrationevents.events.models.PaymentStatus;

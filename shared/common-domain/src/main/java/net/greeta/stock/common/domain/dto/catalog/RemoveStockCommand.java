@@ -11,7 +11,7 @@ import java.util.UUID;
 public record RemoveStockCommand(
     @JsonProperty
     @NotNull
-    String orderId,
+    UUID orderId,
     @JsonProperty
     @NotNull
     UUID productId,
@@ -20,6 +20,6 @@ public record RemoveStockCommand(
     Integer quantity,
     @JsonProperty
     @NotNull
-    List<OrderStockItem> orderStockItems
+    List<StockOrderItem> stockOrderItems
 ) implements Command<CatalogItemResponse> {
 }

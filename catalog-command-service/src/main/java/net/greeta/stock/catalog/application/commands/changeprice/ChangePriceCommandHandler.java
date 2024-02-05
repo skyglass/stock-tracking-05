@@ -4,7 +4,7 @@ import net.greeta.stock.catalog.application.commandbus.CatalogCommandHandler;
 import net.greeta.stock.catalog.application.integrationevents.IntegrationEventPublisher;
 import net.greeta.stock.catalog.application.integrationevents.events.ProductPriceChangedIntegrationEvent;
 import net.greeta.stock.catalog.config.KafkaTopics;
-import net.greeta.stock.catalog.domain.catalogitem.CatalogItemRepository;
+import net.greeta.stock.catalog.domain.catalogitem.CatalogItemAggregateRepository;
 import net.greeta.stock.catalog.domain.catalogitem.Price;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.common.domain.dto.catalog.ChangePriceCommand;
@@ -22,7 +22,7 @@ import static java.util.Objects.isNull;
 @Component
 public class ChangePriceCommandHandler implements CatalogCommandHandler<CatalogItemResponse, ChangePriceCommand> {
   private final IntegrationEventPublisher integrationEventPublisher;
-  private final CatalogItemRepository catalogItemRepository;
+  private final CatalogItemAggregateRepository catalogItemRepository;
   private final KafkaTopics topics;
 
   @CommandHandler

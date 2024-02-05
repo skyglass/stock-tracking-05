@@ -2,9 +2,9 @@ package net.greeta.stock.ordering.api.infrastructure.commandbus;
 
 import an.awesome.pipelinr.Command;
 import an.awesome.pipelinr.Pipeline;
+import lombok.RequiredArgsConstructor;
 import net.greeta.stock.ordering.api.application.commands.IdentifiedCommand;
 import net.greeta.stock.ordering.api.infrastructure.requestmanager.RequestManager;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

@@ -1,20 +1,11 @@
 package net.greeta.stock.catalog.application.integrationevents.eventhandling;
 
 import lombok.AllArgsConstructor;
-import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
 import net.greeta.stock.catalog.application.integrationevents.events.OrderStatusChangedToPaidIntegrationEvent;
-import net.greeta.stock.common.domain.dto.catalog.OrderStockItem;
-import net.greeta.stock.common.domain.dto.catalog.ConfirmedOrderStockItem;
-import net.greeta.stock.common.domain.dto.catalog.RemoveStockCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 @AllArgsConstructor
 @Component

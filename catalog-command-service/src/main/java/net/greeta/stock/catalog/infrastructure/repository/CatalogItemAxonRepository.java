@@ -1,7 +1,7 @@
 package net.greeta.stock.catalog.infrastructure.repository;
 
-import net.greeta.stock.catalog.domain.catalogitem.CatalogItem;
-import net.greeta.stock.catalog.domain.catalogitem.CatalogItemRepository;
+import net.greeta.stock.catalog.domain.catalogitem.CatalogItemAggregate;
+import net.greeta.stock.catalog.domain.catalogitem.CatalogItemAggregateRepository;
 import org.axonframework.modelling.command.Aggregate;
 import org.axonframework.spring.config.SpringAxonConfiguration;
 import org.springframework.stereotype.Repository;
@@ -12,16 +12,16 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Repository
-public class CatalogItemAxonRepository implements CatalogItemRepository {
+public class CatalogItemAxonRepository implements CatalogItemAggregateRepository {
 
-  private final org.axonframework.modelling.command.Repository<CatalogItem> repository;
+  private final org.axonframework.modelling.command.Repository<CatalogItemAggregate> repository;
 
   CatalogItemAxonRepository(SpringAxonConfiguration axonConfiguration) {
-    repository = axonConfiguration.getObject().repository(CatalogItem.class);
+    repository = axonConfiguration.getObject().repository(CatalogItemAggregate.class);
   }
 
   @Override
-  public Optional<CatalogItem> load(UUID id) {
+  public Optional<CatalogItemAggregate> load(UUID id) {
     try {
       return Optional.of(repository.load(id.toString()).invoke(Function.identity()));
     } catch (Exception e) {
@@ -30,12 +30,12 @@ public class CatalogItemAxonRepository implements CatalogItemRepository {
   }
 
   @Override
-  public Aggregate<CatalogItem> loadAggregate(UUID id) {
+  public Aggregate<CatalogItemAggregate> loadAggregate(UUID id) {
     return repository.load(id.toString());
   }
 
   @Override
-  public Aggregate<CatalogItem> save(Supplier<CatalogItem> createCatalogItem) {
+  public Aggregate<CatalogItemAggregate> save(Supplier<CatalogItemAggregate> createCatalogItem) {
     try {
       return repository.newInstance(createCatalogItem::get);
     } catch (Exception e) {

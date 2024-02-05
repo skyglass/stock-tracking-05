@@ -88,13 +88,13 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
             BasketCheckout checkout = orderFuture.get();
             assertNotNull(checkout.getRequestId());
             log.info("--> " + checkout.getRequestId());
-            OrderViewModel.Order orderCreated =  RetryHelper.retry(() ->
-                    orderProcessingClient.getOrderByRequestId(
-                            checkout.getRequestId().toString())
-            );
+            Boolean orderPaid =  RetryHelper.retry(() -> {
+                var result = orderProcessingClient.getOrderByRequestId(
+                        checkout.getRequestId().toString());
+                return Objects.equals(OrderStatus.Paid.getStatus(), result.status());
+            });
 
-            assertNotNull(orderCreated);
-            //assertEquals(OrderStatus.StockConfirmed.getStatus(), orderCreated.status());
+            assertTrue(orderPaid);
         }
 
         for (CompletableFuture<CatalogItemResponse> addStockResultFuture: addedStocks) {
@@ -114,17 +114,17 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
 
         //TimeUnit.MILLISECONDS.sleep(Duration.ofSeconds(3).toMillis());
 
-        //Check that the next order is rejected because the stock is zero
-        BasketCheckout rejectedCheckout = basketTestHelper.checkout(
+        //Check that the next order is not approved, because the stock is zero
+        BasketCheckout notApprovedCheckout = basketTestHelper.checkout(
                 product.getProductId(),
-                productName, productPrice, 40, "admin");
-        Boolean orderStockRejected =  RetryHelper.retry(() -> {
+                productName, productPrice, 1, "admin");
+        Boolean orderStockNotApproved =  RetryHelper.retry(() -> {
             var result = orderProcessingClient.getOrderByRequestId(
-                    rejectedCheckout.getRequestId().toString());
-            return Objects.equals(OrderStatus.Paid.getStatus(), result.status());
+                    notApprovedCheckout.getRequestId().toString());
+            return Objects.equals(OrderStatus.AwaitingValidation.getStatus(), result.status());
         });
 
-        assertTrue(orderStockRejected);
+        assertTrue(orderStockNotApproved);
     }
 
 

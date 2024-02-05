@@ -14,7 +14,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Component
 public class CreateProductCommandHandler implements CatalogCommandHandler<CatalogItemResponse, CreateProductCommand> {
-  private final CatalogItemRepository catalogItemRepository;
+  private final CatalogItemAggregateRepository catalogItemRepository;
 
   @Transactional
   @CommandHandler
@@ -29,9 +29,9 @@ public class CreateProductCommandHandler implements CatalogCommandHandler<Catalo
         .build();
   }
 
-  private CatalogItem catalogItemOf(CreateProductCommand command) {
+  private CatalogItemAggregate catalogItemOf(CreateProductCommand command) {
 
-    return new CatalogItem(
+    return new CatalogItemAggregate(
         ProductName.of(command.name()),
         command.description(),
         Price.of(command.price()),

@@ -31,10 +31,10 @@ services:
     networks:
       - stock
 
-  redis:
+  basket-redis:
     image: redis:6.2.4
     ports:
-      - "6379:6379"
+      - "6380:6380"
     restart: on-failure
     environment:
       REDIS_PASSWORD: pass
@@ -57,7 +57,7 @@ services:
     image: "redis:7.0"
     container_name: "gateway-redis"
     ports:
-      - 6380:6380
+      - 6379:6379
     networks:
       - stock
 

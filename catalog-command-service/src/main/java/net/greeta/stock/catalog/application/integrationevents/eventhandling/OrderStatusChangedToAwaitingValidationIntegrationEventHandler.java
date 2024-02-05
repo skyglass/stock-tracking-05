@@ -2,22 +2,15 @@ package net.greeta.stock.catalog.application.integrationevents.eventhandling;
 
 import lombok.RequiredArgsConstructor;
 import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
-import net.greeta.stock.catalog.application.integrationevents.IntegrationEventPublisher;
 import net.greeta.stock.catalog.application.integrationevents.events.*;
-import net.greeta.stock.catalog.config.KafkaTopics;
-import net.greeta.stock.catalog.domain.catalogitem.CatalogItem;
-import net.greeta.stock.catalog.domain.catalogitem.CatalogItemRepository;
-import net.greeta.stock.common.domain.dto.catalog.ConfirmedOrderStockItem;
-import net.greeta.stock.common.domain.dto.catalog.OrderStockItem;
-import net.greeta.stock.common.domain.dto.catalog.RemoveStockCommand;
+import net.greeta.stock.common.domain.dto.catalog.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
@@ -34,11 +27,16 @@ public class OrderStatusChangedToAwaitingValidationIntegrationEventHandler {
   public void handle(OrderStatusChangedToAwaitingValidationIntegrationEvent event) {
     logger.info("Handling integration event: {} ({})", event.getId(), event.getClass().getSimpleName());
 
-    if (event.getOrderStockItems().size() > 0) {
-      var current = event.getOrderStockItems().get(0);
-      RemoveStockCommand command = new RemoveStockCommand(event.getOrderId(), current.getProductId(),
-              current.getUnits(), event.getOrderStockItems());
-      logger.info("RemoveStockCommand started for product {} with quantity {}", current.getProductId(), current.getUnits());
+    CreateStockOrderCommand createStockOrderCommand = new CreateStockOrderCommand(
+            UUID.fromString(event.getOrderId()), event.getStockOrderItems());
+    commandBus.execute(createStockOrderCommand);
+
+    if (event.getStockOrderItems().size() > 0) {
+      var current = event.getStockOrderItems().get(0);
+      RemoveStockCommand command = new RemoveStockCommand(
+              UUID.fromString(event.getOrderId()), current.getProductId(),
+              current.getUnits(), event.getStockOrderItems());
+      logger.info("RemoveStockCommand started for order {} and product {} with quantity {}", event.getOrderId(), current.getProductId(), current.getUnits());
       commandBus.execute(command);
     }
 

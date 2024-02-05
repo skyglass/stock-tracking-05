@@ -114,8 +114,8 @@ openapi:
 # Custom config
 app:
   redis:
-    host: redis
-    port: 6379
+    host: basket-redis
+    port: 6380
     password: pass
   kafka:
     brokers: "stock-kafka1:29092,stock-kafka2:29093"

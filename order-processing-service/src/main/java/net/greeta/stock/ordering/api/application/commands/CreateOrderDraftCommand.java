@@ -1,9 +1,11 @@
-package net.greeta.stock.common.domain.dto.order;
+package net.greeta.stock.ordering.api.application.commands;
 
 import an.awesome.pipelinr.Command;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import net.greeta.stock.common.domain.dto.order.OrderBasketItem;
+import net.greeta.stock.common.domain.dto.order.OrderDraftDTO;
 
 import java.util.List;
 
