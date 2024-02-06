@@ -1,9 +1,10 @@
-package net.greeta.stock.common.domain.events.catalog;
+package net.greeta.stock.catalog.domain.stockorder.events;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.greeta.stock.common.domain.dto.catalog.ConfirmedStockOrderItem;
 import net.greeta.stock.common.domain.dto.catalog.StockOrderItem;
+import net.greeta.stock.common.domain.events.catalog.Event;
 
 import java.util.UUID;
 
@@ -21,6 +22,6 @@ public class StockOrderItemConfirmed extends Event {
         this.productId = productId;
         this.quantity = quantity;
         this.next = next;
-        this.hasStock = hasStock
+        this.hasStock = hasStock;
     }
 }

@@ -3,12 +3,18 @@ package net.greeta.stock.catalog.domain.catalogitem;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.greeta.stock.catalog.domain.base.AggregateRoot;
+import net.greeta.stock.catalog.domain.catalogitem.events.StockRemoved;
 import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustBeEnough;
 import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustNotBeEmpty;
 import net.greeta.stock.catalog.domain.catalogitem.rules.PriceMustBeGreaterThanZero;
 import net.greeta.stock.catalog.domain.catalogitem.rules.QuantityMustBeGreaterThanZero;
+import net.greeta.stock.catalog.domain.catalogitem.commands.RemoveStockCommand;
+import net.greeta.stock.catalog.domain.stockorder.commands.ConfirmStockOrderItemCommand;
+import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.common.domain.events.catalog.*;
+import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.lang.NonNull;
@@ -17,9 +23,11 @@ import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
+import static org.axonframework.modelling.command.AggregateLifecycle.getVersion;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Aggregate
+@Slf4j
 public class CatalogItemAggregate extends AggregateRoot {
   private ProductName name;
   private String description;
@@ -54,6 +62,27 @@ public class CatalogItemAggregate extends AggregateRoot {
     ));
   }
 
+  @CommandHandler
+  public CatalogItemResponse handle(RemoveStockCommand command) {
+    log.info("RemoveStockCommand started for order {} and product {} with quantity {}", command.getOrderId(), command.getProductId(), command.getQuantity());
+    Units availableStock = removeStock(Units.of(command.getQuantity()));
+
+    StockRemoved event = new StockRemoved(command.getProductId(), command.getOrderId(),
+            command.getQuantity(), availableStock.getValue());
+    apply(event);
+
+    return CatalogItemResponse.builder()
+            .productId(id)
+            .version(version)
+            .build();
+  }
+
+  @EventSourcingHandler
+  public void on(StockRemoved event) {
+    setAvailableStock(Units.of(event.getAvailableStock()));
+  }
+
+
   /**
    * If there is sufficient stock of an item, then the integer returned at the end of this call should be the same as
    * quantityDesired.
@@ -66,8 +95,6 @@ public class CatalogItemAggregate extends AggregateRoot {
     checkRule(new AvailableStockMustBeEnough(name, availableStock, quantityDesired));
 
     final var updatedStock = availableStock.subtract(quantityDesired);
-    apply(new StockRemoved(id, updatedStock.getValue()));
-
     return updatedStock;
   }
 
@@ -113,12 +140,6 @@ public class CatalogItemAggregate extends AggregateRoot {
   @SuppressWarnings("unused")
   @EventSourcingHandler
   private void on(StockAdded event) {
-    setAvailableStock(Units.of(event.getAvailableStock()));
-  }
-
-  @SuppressWarnings("unused")
-  @EventSourcingHandler
-  private void on(StockRemoved event) {
     setAvailableStock(Units.of(event.getAvailableStock()));
   }
 

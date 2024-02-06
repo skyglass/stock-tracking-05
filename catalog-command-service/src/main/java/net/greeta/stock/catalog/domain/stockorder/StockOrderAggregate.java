@@ -3,17 +3,16 @@ package net.greeta.stock.catalog.domain.stockorder;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.greeta.stock.catalog.application.integrationevents.events.OrderStockConfirmedIntegrationEvent;
 import net.greeta.stock.catalog.domain.base.AggregateRoot;
-import net.greeta.stock.catalog.domain.catalogitem.Units;
+import net.greeta.stock.catalog.domain.stockorder.commands.ConfirmStockOrderCommand;
+import net.greeta.stock.catalog.domain.stockorder.commands.ConfirmStockOrderItemCommand;
+import net.greeta.stock.catalog.domain.stockorder.events.StockOrderConfirmed;
 import net.greeta.stock.common.domain.dto.catalog.*;
 import net.greeta.stock.common.domain.events.catalog.StockOrderCreated;
-import net.greeta.stock.common.domain.events.catalog.StockOrderItemConfirmed;
+import net.greeta.stock.catalog.domain.stockorder.events.StockOrderItemConfirmed;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
-import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
-import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,6 @@ import java.util.UUID;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Aggregate
 @Slf4j
 public class StockOrderAggregate extends AggregateRoot {
@@ -31,12 +29,22 @@ public class StockOrderAggregate extends AggregateRoot {
 
     private List<StockOrderItem> stockOrderItems;
 
+    private boolean allConfirmed = false;
+
+    public StockOrderAggregate() {
+    }
+
     @CommandHandler
-    public StockOrderAggregate(CreateStockOrderCommand createStockOrderCommand) {
+    public StockOrderResponse handle(CreateStockOrderCommand command) {
         StockOrderCreated stockOrderCreated = new StockOrderCreated(
-                createStockOrderCommand.orderId(),
-                createStockOrderCommand.stockOrderItems());
+                command.orderId(),
+                command.stockOrderItems());
         apply(stockOrderCreated);
+
+        return StockOrderResponse.builder()
+                .orderId(id)
+                .version(version)
+                .build();
     }
 
     @EventSourcingHandler
@@ -46,10 +54,15 @@ public class StockOrderAggregate extends AggregateRoot {
     }
 
     @CommandHandler
-    public void handle(ConfirmStockOrderItemCommand command) {
-        log.info("ConfirmStockOrderItemCommand started for order {} and product {} with quantity {}", command.orderId(), command.productId(), command.quantity());
-        apply(new StockOrderItemConfirmed(id, command.productId(),
-                command.quantity(), getNext(command.productId()), true));
+    public StockOrderResponse handle(ConfirmStockOrderItemCommand command) {
+        log.info("ConfirmStockOrderItemCommand started for order {} and product {} with quantity {}", command.getOrderId(), command.getProductId(), command.getQuantity());
+        apply(new StockOrderItemConfirmed(id, command.getProductId(),
+                command.getQuantity(), getNext(command.getProductId()), true));
+
+        return StockOrderResponse.builder()
+                .orderId(id)
+                .version(version)
+                .build();
     }
 
     @EventSourcingHandler
@@ -58,12 +71,29 @@ public class StockOrderAggregate extends AggregateRoot {
             log.info("ConfirmStockOrderItemCommand for order {} has already been handled for product {} with quantity {}",
                     id, event.getProductId(),
                     event.getQuantity());
-            return;
+        } else {
+            confirmedStockOrderItems.add(
+                    createConfirmedStockOrderItem(
+                            event.getProductId(), event.getQuantity()));
         }
-        confirmedStockOrderItems.add(
-                createConfirmedStockOrderItem(
-                        event.getProductId(), event.getQuantity()));
     }
+
+    @CommandHandler
+    public StockOrderResponse handle(ConfirmStockOrderCommand command) {
+        log.info("ConfirmStockOrderCommand started for order {}", command.getOrderId());
+        apply(new StockOrderConfirmed(id));
+
+        return StockOrderResponse.builder()
+                .orderId(id)
+                .version(version)
+                .build();
+    }
+
+    @EventSourcingHandler
+    public void on(StockOrderConfirmed event) {
+        this.allConfirmed = true;
+    }
+
 
     private ConfirmedStockOrderItem createConfirmedStockOrderItem(UUID productId, Integer quantity) {
         return new ConfirmedStockOrderItem(productId, quantity, true);
@@ -81,7 +111,7 @@ public class StockOrderAggregate extends AggregateRoot {
     }
 
     private boolean isAlreadyHandled(UUID productId) {
-        return confirmedStockOrderItems
+        return allConfirmed || confirmedStockOrderItems
                 .stream().map(ConfirmedStockOrderItem::getProductId)
                 .anyMatch(pi -> Objects.equals(productId, pi));
     }

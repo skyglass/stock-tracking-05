@@ -2,6 +2,7 @@ package net.greeta.stock.catalog.domain.base;
 
 import lombok.Getter;
 import org.axonframework.modelling.command.AggregateIdentifier;
+import org.axonframework.modelling.command.AggregateVersion;
 import org.springframework.lang.NonNull;
 
 import java.util.Objects;
@@ -12,6 +13,9 @@ public abstract class Entity {
   @AggregateIdentifier
   @Getter
   protected UUID id;
+
+  @AggregateVersion
+  protected long version;
 
   public boolean isTransient() {
     return id == null;

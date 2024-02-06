@@ -3,6 +3,7 @@ package net.greeta.stock.catalog.api;
 import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import net.greeta.stock.catalog.domain.catalogitem.commands.RemoveStockCommand;
 import net.greeta.stock.common.domain.dto.catalog.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,7 @@ public class CatalogController {
 
   @RequestMapping(method = RequestMethod.PUT, path = "items/removestock")
   public ResponseEntity<CatalogItemResponse> removeStock(@RequestBody @Valid RemoveStockCommand command) {
-    logger.info("Remove stock request for product: {}", command.productId());
+    logger.info("Remove stock request for product: {}", command.getProductId());
     final var response = commandBus.execute(command);
     return ResponseEntity.ok(response);
   }
