@@ -6,13 +6,13 @@ import net.greeta.stock.catalog.application.integrationevents.IntegrationEventPu
 import net.greeta.stock.catalog.application.integrationevents.events.OrderStockConfirmedIntegrationEvent;
 import net.greeta.stock.catalog.config.KafkaTopics;
 import net.greeta.stock.catalog.domain.catalogitem.commands.RemoveStockCommand;
-import net.greeta.stock.catalog.domain.catalogitem.events.StockRemoved;
+import net.greeta.stock.shared.eventhandling.events.StockRemoved;
 import net.greeta.stock.catalog.domain.stockorder.commands.ConfirmStockOrderCommand;
 import net.greeta.stock.catalog.domain.stockorder.commands.ConfirmStockOrderItemCommand;
 import net.greeta.stock.catalog.domain.stockorder.events.StockOrderConfirmed;
 import net.greeta.stock.catalog.domain.stockorder.events.StockOrderItemConfirmed;
-import net.greeta.stock.common.domain.dto.catalog.StockOrderItem;
-import net.greeta.stock.common.domain.events.catalog.StockOrderCreated;
+import net.greeta.stock.catalog.application.integrationevents.events.StockOrderItem;
+import net.greeta.stock.catalog.application.events.StockOrderCreated;
 import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
@@ -39,7 +39,7 @@ public class StockOrderSaga {
 			RemoveStockCommand command = new RemoveStockCommand(
 					current.getProductId(), event.getId(),
 					current.getUnits());
-			log.info("RemoveStockCommand started for order {} and product {} with quantity {}", event.getId(), current.getProductId(), current.getUnits());
+			log.info("StockOrderSaga.RemoveStockCommand started for order {} and product {} with quantity {}", event.getId(), current.getProductId(), current.getUnits());
 			commandBus.execute(command);
 		}
  
@@ -67,7 +67,7 @@ public class StockOrderSaga {
 			RemoveStockCommand nextCommand = new RemoveStockCommand(
 					next.getProductId(), event.getId(),
 					next.getUnits());
-			log.info("RemoveStockCommand started for order {} and product {} with quantity {}",
+			log.info("StockOrderSaga.StockOrderItemConfirmed.RemoveStockCommand started for order {} and product {} with quantity {}",
 					event.getId(), nextCommand.getProductId(), nextCommand.getQuantity());
 			commandBus.execute(nextCommand);
 		}

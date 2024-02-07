@@ -7,7 +7,6 @@ import net.greeta.stock.catalog.config.KafkaTopics;
 import net.greeta.stock.catalog.domain.catalogitem.CatalogItemAggregateRepository;
 import net.greeta.stock.catalog.domain.catalogitem.Price;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
-import net.greeta.stock.common.domain.dto.catalog.ChangePriceCommand;
 import net.greeta.stock.shared.rest.error.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;

@@ -5,18 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.greeta.stock.basket.BasketTestHelper;
 import net.greeta.stock.catalog.CatalogTestHelper;
 import net.greeta.stock.common.domain.dto.basket.BasketCheckout;
-import net.greeta.stock.common.domain.dto.basket.BasketItem;
-import net.greeta.stock.common.domain.dto.basket.CustomerBasket;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.common.domain.dto.order.OrderViewModel;
 import net.greeta.stock.helper.RetryHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Component
 @RequiredArgsConstructor

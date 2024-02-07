@@ -2,8 +2,7 @@ package net.greeta.stock.catalog.domain.stockorder.events;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.greeta.stock.common.domain.dto.catalog.StockOrderItem;
-import net.greeta.stock.common.domain.events.catalog.Event;
+import net.greeta.stock.shared.eventhandling.events.Event;
 
 import java.util.UUID;
 

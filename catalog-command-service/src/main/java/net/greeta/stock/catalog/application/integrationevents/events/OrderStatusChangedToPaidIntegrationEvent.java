@@ -1,6 +1,5 @@
 package net.greeta.stock.catalog.application.integrationevents.events;
 
-import net.greeta.stock.common.domain.dto.catalog.StockOrderItem;
 import net.greeta.stock.shared.eventhandling.IntegrationEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class OrderStatusChangedToPaidIntegrationEvent extends IntegrationEvent {
+
   private String orderId;
   private String orderStatus;
   private String buyerName;

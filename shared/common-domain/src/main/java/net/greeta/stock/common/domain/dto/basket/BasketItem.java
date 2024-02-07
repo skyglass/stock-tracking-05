@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import net.greeta.stock.common.domain.dto.order.OrderItemDTO;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -25,4 +25,15 @@ public class BasketItem implements Serializable {
   @Min(value = 1, message = "Invalid number of units")
   private Integer quantity;
   private String pictureUrl;
+
+  public static OrderItemDTO toOrderItemDTO(BasketItem item) {
+    return new OrderItemDTO(
+            item.getProductId(),
+            item.getProductName(),
+            item.getUnitPrice(),
+            0D,
+            item.getQuantity(),
+            item.getPictureUrl()
+    );
+  }
 }

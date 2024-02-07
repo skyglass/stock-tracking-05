@@ -9,6 +9,7 @@ import net.greeta.stock.ordering.api.infrastructure.exceptions.UnauthorizedExcep
 import net.greeta.stock.ordering.api.application.commands.CancelOrderCommand;
 import net.greeta.stock.ordering.api.application.commands.CreateOrderDraftCommand;
 import net.greeta.stock.ordering.api.application.commands.ShipOrderCommand;
+import net.greeta.stock.ordering.domain.mapper.CreateOrderDraftMapper;
 import net.greeta.stock.shared.rest.error.NotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class OrdersController {
   private final CommandBus commandBus;
   private final OrderQueries orderQueries;
   private final IdentityService identityService;
+  private final CreateOrderDraftMapper createOrderDraftMapper;
 
   @RequestMapping(value = "cancel", method = RequestMethod.PUT)
   @ResponseStatus(HttpStatus.OK)
@@ -91,9 +93,9 @@ public class OrdersController {
 
   @RequestMapping(value = "draft", method = RequestMethod.POST)
   public ResponseEntity<OrderDraftDTO> createOrderDraftFromBasketData(
-    @RequestBody @Valid CreateOrderDraftCommand command
+    @RequestBody @Valid CreateOrderDraftDto dto
   ) {
-    return ResponseEntity.ok(commandBus.send(command));
+    return ResponseEntity.ok(commandBus.send(createOrderDraftMapper.toCommand(dto)));
   }
 
 }

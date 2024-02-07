@@ -5,10 +5,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
 import net.greeta.stock.common.domain.dto.base.Command;
-import net.greeta.stock.common.domain.dto.catalog.StockOrderResponse;
+import net.greeta.stock.catalog.application.models.StockOrderResponse;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-import java.util.List;
 import java.util.UUID;
 
 @Value

@@ -4,7 +4,6 @@ import net.greeta.stock.catalog.CatalogTestHelper;
 import net.greeta.stock.common.E2eTest;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.config.MockHelper;
-import net.greeta.stock.config.auth.UserCredentialsProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

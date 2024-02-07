@@ -1,7 +1,7 @@
 package net.greeta.stock.orderprocessing;
 
 import jakarta.validation.Valid;
-import net.greeta.stock.common.domain.dto.order.CreateOrderDraftCommand;
+import net.greeta.stock.common.domain.dto.order.CreateOrderDraftDto;
 import net.greeta.stock.common.domain.dto.order.OrderDraftDTO;
 import net.greeta.stock.common.domain.dto.order.OrderViewModel;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -23,7 +23,7 @@ public interface OrderProcessingClient {
 
     @RequestMapping(value = "draft", method = RequestMethod.POST)
     public OrderDraftDTO createOrderDraftFromBasketData(
-            @RequestBody @Valid CreateOrderDraftCommand command
+            @RequestBody @Valid CreateOrderDraftDto dto
     );
 
 }

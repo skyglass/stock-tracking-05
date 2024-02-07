@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import net.greeta.stock.common.domain.dto.base.Command;
+import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 
 import java.util.UUID;
 

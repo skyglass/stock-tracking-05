@@ -1,4 +1,4 @@
-package net.greeta.stock.common.domain.dto.catalog;
+package net.greeta.stock.catalog.application.models;
 
 import lombok.Builder;
 import lombok.Getter;

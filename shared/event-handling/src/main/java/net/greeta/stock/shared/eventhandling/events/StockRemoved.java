@@ -1,11 +1,10 @@
-package net.greeta.stock.catalog.domain.catalogitem.events;
+package net.greeta.stock.shared.eventhandling.events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.greeta.stock.common.domain.events.catalog.Event;
 
 import java.util.UUID;
 

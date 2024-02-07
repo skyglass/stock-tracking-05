@@ -1,7 +1,7 @@
 package net.greeta.stock.catalogquery.application.projections;
 
 import lombok.RequiredArgsConstructor;
-import net.greeta.stock.common.domain.events.catalog.CatalogItemCreated;
+import net.greeta.stock.shared.eventhandling.events.CatalogItemCreated;
 import net.greeta.stock.catalogquery.model.CatalogItem;
 import net.greeta.stock.catalogquery.model.CatalogItemRepository;
 import org.axonframework.config.ProcessingGroup;

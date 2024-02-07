@@ -1,14 +1,14 @@
 package net.greeta.stock.catalog.domain.stockorder;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.greeta.stock.catalog.application.events.StockOrderCreated;
+import net.greeta.stock.catalog.application.integrationevents.events.ConfirmedStockOrderItem;
+import net.greeta.stock.catalog.application.integrationevents.events.StockOrderItem;
+import net.greeta.stock.catalog.application.models.StockOrderResponse;
 import net.greeta.stock.catalog.domain.base.AggregateRoot;
 import net.greeta.stock.catalog.domain.stockorder.commands.ConfirmStockOrderCommand;
 import net.greeta.stock.catalog.domain.stockorder.commands.ConfirmStockOrderItemCommand;
 import net.greeta.stock.catalog.domain.stockorder.events.StockOrderConfirmed;
-import net.greeta.stock.common.domain.dto.catalog.*;
-import net.greeta.stock.common.domain.events.catalog.StockOrderCreated;
 import net.greeta.stock.catalog.domain.stockorder.events.StockOrderItemConfirmed;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -31,20 +31,10 @@ public class StockOrderAggregate extends AggregateRoot {
 
     private boolean allConfirmed = false;
 
-    public StockOrderAggregate() {
-    }
-
-    @CommandHandler
-    public StockOrderResponse handle(CreateStockOrderCommand command) {
-        StockOrderCreated stockOrderCreated = new StockOrderCreated(
-                command.orderId(),
-                command.stockOrderItems());
+    public StockOrderAggregate(UUID orderId, List<StockOrderItem> stockOrderItems) {
+        super(orderId);
+        StockOrderCreated stockOrderCreated = new StockOrderCreated(orderId, stockOrderItems);
         apply(stockOrderCreated);
-
-        return StockOrderResponse.builder()
-                .orderId(id)
-                .version(version)
-                .build();
     }
 
     @EventSourcingHandler

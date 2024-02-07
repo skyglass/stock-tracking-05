@@ -2,9 +2,8 @@ package net.greeta.stock.catalog.application.integrationevents.eventhandling;
 
 import lombok.RequiredArgsConstructor;
 import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
+import net.greeta.stock.catalog.application.commands.createstockorder.CreateStockOrderCommand;
 import net.greeta.stock.catalog.application.integrationevents.events.*;
-import net.greeta.stock.catalog.domain.catalogitem.commands.RemoveStockCommand;
-import net.greeta.stock.common.domain.dto.catalog.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -29,7 +28,7 @@ public class OrderStatusChangedToAwaitingValidationIntegrationEventHandler {
     logger.info("Handling integration event: {} ({})", event.getId(), event.getClass().getSimpleName());
 
     CreateStockOrderCommand createStockOrderCommand = new CreateStockOrderCommand(
-            UUID.fromString(event.getOrderId()), event.getStockOrderItems());
+            UUID.fromString(event.getOrderId()), event.getOrderStockItems());
     commandBus.execute(createStockOrderCommand);
   }
 

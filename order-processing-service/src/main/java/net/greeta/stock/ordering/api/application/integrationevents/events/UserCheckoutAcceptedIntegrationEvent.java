@@ -1,12 +1,11 @@
 package net.greeta.stock.ordering.api.application.integrationevents.events;
 
-import net.greeta.stock.shared.eventhandling.IntegrationEvent;
-import net.greeta.stock.ordering.api.application.models.CustomerBasket;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.greeta.stock.common.domain.dto.basket.CustomerBasket;
+import net.greeta.stock.shared.eventhandling.IntegrationEvent;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @NoArgsConstructor

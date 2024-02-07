@@ -10,22 +10,18 @@ import net.greeta.stock.common.domain.dto.basket.BasketCheckout;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemDto;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.common.domain.dto.order.OrderStatus;
-import net.greeta.stock.common.domain.dto.order.OrderViewModel;
 import net.greeta.stock.helper.RetryHelper;
 import net.greeta.stock.orderprocessing.OrderProcessingClient;
-import net.greeta.stock.orderprocessing.OrderProcessingTestHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 

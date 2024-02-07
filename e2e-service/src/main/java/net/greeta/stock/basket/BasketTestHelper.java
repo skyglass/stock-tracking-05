@@ -10,16 +10,9 @@ import net.greeta.stock.common.domain.dto.basket.BasketCheckout;
 import net.greeta.stock.common.domain.dto.basket.BasketItem;
 import net.greeta.stock.common.domain.dto.basket.CustomerBasket;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
-import net.greeta.stock.common.domain.valueobject.OrderStatus;
-import net.greeta.stock.helper.CalculationHelper;
-import net.greeta.stock.helper.RetryHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 

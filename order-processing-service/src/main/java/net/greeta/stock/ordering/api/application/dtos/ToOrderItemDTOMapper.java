@@ -1,10 +1,10 @@
 package net.greeta.stock.ordering.api.application.dtos;
 
-import net.greeta.stock.common.domain.dto.order.OrderBasketItem;
+import net.greeta.stock.common.domain.dto.basket.BasketItem;
 import net.greeta.stock.common.domain.dto.order.OrderItemDTO;
 
 public class ToOrderItemDTOMapper {
-  public OrderItemDTO map(OrderBasketItem basketItem) {
+  public OrderItemDTO map(BasketItem basketItem) {
     return new OrderItemDTO(
         basketItem.getProductId(),
         basketItem.getProductName(),

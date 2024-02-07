@@ -2,6 +2,7 @@ package net.greeta.stock.ordering.api.application.commands;
 
 import an.awesome.pipelinr.Command;
 import lombok.RequiredArgsConstructor;
+import net.greeta.stock.common.domain.dto.basket.BasketItem;
 import net.greeta.stock.common.domain.dto.order.*;
 import net.greeta.stock.ordering.shared.CommandHandler;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ public class CreateOrderDraftCommandHandler implements Command.Handler<CreateOrd
     final var order = Order.newDraft();
     final var orderItems = message.items()
         .stream()
-        .map(OrderBasketItem::toOrderItemDTO)
+        .map(BasketItem::toOrderItemDTO)
         .collect(Collectors.toList());
 
     orderItems.forEach(item -> order.addOrderItem(

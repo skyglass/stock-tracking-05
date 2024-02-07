@@ -1,10 +1,9 @@
-package net.greeta.stock.common.domain.events.catalog;
+package net.greeta.stock.catalog.application.events;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.greeta.stock.common.domain.dto.catalog.StockOrderItem;
+import net.greeta.stock.catalog.application.integrationevents.events.StockOrderItem;
+import net.greeta.stock.shared.eventhandling.events.Event;
 
 import java.util.List;
 import java.util.UUID;

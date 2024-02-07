@@ -5,7 +5,6 @@ import net.greeta.stock.catalog.application.commandbus.CatalogCommandHandler;
 import net.greeta.stock.catalog.domain.catalogitem.CatalogItemAggregateRepository;
 import net.greeta.stock.catalog.domain.catalogitem.ProductName;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
-import net.greeta.stock.common.domain.dto.catalog.ChangeProductNameCommand;
 import org.axonframework.commandhandling.CommandHandler;
 import org.springframework.stereotype.Component;
 

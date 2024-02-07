@@ -1,5 +1,7 @@
 package net.greeta.stock.common.domain.dto.basket;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class CustomerBasket implements Serializable {
   private UUID id;
@@ -20,6 +23,8 @@ public class CustomerBasket implements Serializable {
 
   private BasketStatus status = BasketStatus.New;
 
+  @NotEmpty(message = "The basket must contain at least one product")
+  @Valid
   private List<BasketItem> items = new ArrayList<>();
 
     public CustomerBasket(String buyerId) {
