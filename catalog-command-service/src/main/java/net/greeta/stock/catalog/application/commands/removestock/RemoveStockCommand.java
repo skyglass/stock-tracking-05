@@ -1,4 +1,4 @@
-package net.greeta.stock.catalog.domain.catalogitem.commands;
+package net.greeta.stock.catalog.application.commands.removestock;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
@@ -14,11 +14,11 @@ import java.util.UUID;
 public class RemoveStockCommand implements Command<CatalogItemResponse> {
     @JsonProperty
     @NotNull
-    @TargetAggregateIdentifier
     private UUID productId;
 
     @JsonProperty
     @NotNull
+    @TargetAggregateIdentifier
     private UUID orderId;
 
     @JsonProperty

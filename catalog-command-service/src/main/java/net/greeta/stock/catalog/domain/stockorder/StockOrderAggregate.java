@@ -1,15 +1,24 @@
 package net.greeta.stock.catalog.domain.stockorder;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.greeta.stock.catalog.application.events.RemoveStockConfirmed;
 import net.greeta.stock.catalog.application.events.StockOrderCreated;
 import net.greeta.stock.catalog.application.integrationevents.events.ConfirmedStockOrderItem;
 import net.greeta.stock.catalog.application.integrationevents.events.StockOrderItem;
 import net.greeta.stock.catalog.application.models.StockOrderResponse;
 import net.greeta.stock.catalog.domain.base.AggregateRoot;
-import net.greeta.stock.catalog.domain.stockorder.commands.ConfirmStockOrderCommand;
-import net.greeta.stock.catalog.domain.stockorder.commands.ConfirmStockOrderItemCommand;
-import net.greeta.stock.catalog.domain.stockorder.events.StockOrderConfirmed;
-import net.greeta.stock.catalog.domain.stockorder.events.StockOrderItemConfirmed;
+import net.greeta.stock.catalog.application.commands.removestock.RemoveStockCommand;
+import net.greeta.stock.catalog.application.commands.confirmstockorder.ConfirmStockOrderCommand;
+import net.greeta.stock.catalog.application.commands.confirmstockorderitem.ConfirmStockOrderItemCommand;
+import net.greeta.stock.catalog.application.events.StockOrderConfirmed;
+import net.greeta.stock.catalog.application.events.StockOrderItemConfirmed;
+import net.greeta.stock.catalog.domain.catalogitem.Units;
+import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustBeEnough;
+import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustNotBeEmpty;
+import net.greeta.stock.catalog.domain.catalogitem.rules.QuantityMustBeGreaterThanZero;
+import net.greeta.stock.shared.eventhandling.events.StockRemoved;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
@@ -21,6 +30,7 @@ import java.util.UUID;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Aggregate
 @Slf4j
 public class StockOrderAggregate extends AggregateRoot {
@@ -43,9 +53,22 @@ public class StockOrderAggregate extends AggregateRoot {
         this.stockOrderItems = event.getStockOrderItems();
     }
 
+    public void removeStockConfirmed(StockRemoved event) {
+        RemoveStockConfirmed confirmEvent = new RemoveStockConfirmed(
+                event.getOrderId(), event.getId(),
+                event.getQuantity(), event.getAvailableStock());
+        apply(confirmEvent);
+    }
+
+    @EventSourcingHandler
+    public void on(RemoveStockConfirmed event) {
+        log.info("StockOrderAggregate.RemoveStockConfirmed event handler started for order {} and product {} with quantity {}",
+                event.getId(), event.getProductId(), event.getQuantity());
+    }
+
     @CommandHandler
     public StockOrderResponse handle(ConfirmStockOrderItemCommand command) {
-        log.info("ConfirmStockOrderItemCommand started for order {} and product {} with quantity {}", command.getOrderId(), command.getProductId(), command.getQuantity());
+        log.info("StockOrderAggregate.ConfirmStockOrderItemCommand started for order {} and product {} with quantity {}", command.getOrderId(), command.getProductId(), command.getQuantity());
         apply(new StockOrderItemConfirmed(id, command.getProductId(),
                 command.getQuantity(), getNext(command.getProductId()), true));
 
@@ -58,7 +81,7 @@ public class StockOrderAggregate extends AggregateRoot {
     @EventSourcingHandler
     public void on(StockOrderItemConfirmed event) {
         if (isAlreadyHandled(event.getProductId())) {
-            log.info("ConfirmStockOrderItemCommand for order {} has already been handled for product {} with quantity {}",
+            log.info("StockOrderAggregate.ConfirmStockOrderItemCommand for order {} has already been handled for product {} with quantity {}",
                     id, event.getProductId(),
                     event.getQuantity());
         } else {
@@ -70,7 +93,7 @@ public class StockOrderAggregate extends AggregateRoot {
 
     @CommandHandler
     public StockOrderResponse handle(ConfirmStockOrderCommand command) {
-        log.info("ConfirmStockOrderCommand started for order {}", command.getOrderId());
+        log.info("StockOrderAggregate.ConfirmStockOrderCommand started for order {}", command.getOrderId());
         apply(new StockOrderConfirmed(id));
 
         return StockOrderResponse.builder()
@@ -97,7 +120,7 @@ public class StockOrderAggregate extends AggregateRoot {
             }
         }
         //should never happen!
-        throw new RuntimeException("StockOrderItemConfirmed contains wrong productId: " + productId + ". Please, fix the bug!");
+        throw new RuntimeException("StockOrderAggregate.StockOrderItemConfirmed contains wrong productId: " + productId + ". Please, fix the bug!");
     }
 
     private boolean isAlreadyHandled(UUID productId) {

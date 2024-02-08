@@ -4,14 +4,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.greeta.stock.catalog.application.commands.removestock.RemoveStockCommand;
+import net.greeta.stock.catalog.application.events.RemoveStockConfirmed;
 import net.greeta.stock.catalog.domain.base.AggregateRoot;
+import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.shared.eventhandling.events.*;
 import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustBeEnough;
 import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustNotBeEmpty;
 import net.greeta.stock.catalog.domain.catalogitem.rules.PriceMustBeGreaterThanZero;
 import net.greeta.stock.catalog.domain.catalogitem.rules.QuantityMustBeGreaterThanZero;
-import net.greeta.stock.catalog.domain.catalogitem.commands.RemoveStockCommand;
-import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
@@ -59,26 +60,6 @@ public class CatalogItemAggregate extends AggregateRoot {
     ));
   }
 
-  @CommandHandler
-  public CatalogItemResponse handle(RemoveStockCommand command) {
-    log.info("CatalogItemAggregate.RemoveStockCommand started for order {} and product {} with quantity {}", command.getOrderId(), command.getProductId(), command.getQuantity());
-    Units availableStock = removeStock(Units.of(command.getQuantity()));
-
-    StockRemoved event = new StockRemoved(command.getProductId(), command.getOrderId(),
-            command.getQuantity(), availableStock.getValue());
-    apply(event);
-
-    return CatalogItemResponse.builder()
-            .productId(id)
-            .version(version)
-            .build();
-  }
-
-  @EventSourcingHandler
-  public void on(StockRemoved event) {
-    setAvailableStock(Units.of(event.getAvailableStock()));
-  }
-
 
   /**
    * If there is sufficient stock of an item, then the integer returned at the end of this call should be the same as
@@ -86,13 +67,24 @@ public class CatalogItemAggregate extends AggregateRoot {
    * In the event that there isn't sufficient stock available, the method will throw BusinessRuleBrokenException(AvailableStockMustBeEnough).
    * In this case, it is the responsibility of the client to retry again (immediately, or later, after StockAdded Event happens)
    */
-  public Units removeStock(Units quantityDesired) {
+  public Units removeStock(RemoveStockCommand command) {
+    Units quantity = Units.of(command.getQuantity());
     checkRule(new AvailableStockMustNotBeEmpty(name, availableStock));
-    checkRule(new QuantityMustBeGreaterThanZero(quantityDesired));
-    checkRule(new AvailableStockMustBeEnough(name, availableStock, quantityDesired));
+    checkRule(new QuantityMustBeGreaterThanZero(quantity));
+    checkRule(new AvailableStockMustBeEnough(name, availableStock, quantity));
 
-    final var updatedStock = availableStock.subtract(quantityDesired);
+    final var updatedStock = availableStock.subtract(quantity);
+
+    StockRemoved event = new StockRemoved(command.getProductId(), command.getOrderId(),
+            command.getQuantity(), updatedStock.getValue());
+    apply(event);
     return updatedStock;
+  }
+
+  @EventSourcingHandler
+  public void on(StockRemoved event) {
+    setAvailableStock(Units.of(event.getAvailableStock()));
+    throw new RuntimeException("Test CatalogItemAggregate.StockRemoved");
   }
 
   /**
@@ -102,12 +94,11 @@ public class CatalogItemAggregate extends AggregateRoot {
    */
   public Units addStock(Units quantity) {
     checkRule(new QuantityMustBeGreaterThanZero(quantity));
-    final var originalStock = availableStock;
     final var updatedStock = availableStock.add(quantity);
 
     apply(new StockAdded(id, updatedStock.getValue()));
 
-    return availableStock.subtract(originalStock);
+    return updatedStock;
   }
 
   public void changePrice(@NonNull Price newPrice) {

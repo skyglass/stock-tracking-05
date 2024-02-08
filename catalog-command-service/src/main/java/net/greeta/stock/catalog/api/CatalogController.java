@@ -8,7 +8,7 @@ import net.greeta.stock.catalog.application.commands.changeprice.ChangePriceComm
 import net.greeta.stock.catalog.application.commands.changeproductname.ChangeProductNameCommand;
 import net.greeta.stock.common.domain.dto.catalog.CreateProductCommand;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
-import net.greeta.stock.catalog.domain.catalogitem.commands.RemoveStockCommand;
+import net.greeta.stock.catalog.application.commands.removestock.RemoveStockCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

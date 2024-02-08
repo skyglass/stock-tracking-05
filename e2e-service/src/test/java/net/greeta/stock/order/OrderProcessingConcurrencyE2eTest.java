@@ -17,11 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -108,7 +110,8 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
 
         assertTrue(stockReducedToZero);
 
-        //TimeUnit.MILLISECONDS.sleep(Duration.ofSeconds(3).toMillis());
+        //simulate long waiting for stock update
+        TimeUnit.MILLISECONDS.sleep(Duration.ofSeconds(3).toMillis());
 
         //Check that the next order is not approved, because the stock is zero
         BasketCheckout notApprovedCheckout = basketTestHelper.checkout(
@@ -121,6 +124,26 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
         });
 
         assertTrue(orderStockNotApproved);
+
+        //simulate long waiting for stock update
+        /*TimeUnit.MILLISECONDS.sleep(Duration.ofSeconds(3).toMillis());
+
+        catalogTestHelper.addStock(product.getProductId(), 1);
+
+        Boolean orderStockApproved =  RetryHelper.retry(() -> {
+            var result = orderProcessingClient.getOrderByRequestId(
+                    notApprovedCheckout.getRequestId().toString());
+            return Objects.equals(OrderStatus.Paid.getStatus(), result.status());
+        });
+
+        assertTrue(orderStockApproved);
+
+        Boolean stockZero =  RetryHelper.retry(() -> {
+            CatalogItemDto catalogItemDto = catalogQueryClient.catalogItem(product.getProductId());
+            return catalogItemDto.availableStock() == 0;
+        });
+
+        assertTrue(stockZero); */
     }
 
 

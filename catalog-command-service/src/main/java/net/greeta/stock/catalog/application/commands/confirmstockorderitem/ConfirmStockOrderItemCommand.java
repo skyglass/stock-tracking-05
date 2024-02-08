@@ -1,4 +1,4 @@
-package net.greeta.stock.catalog.domain.stockorder.commands;
+package net.greeta.stock.catalog.application.commands.confirmstockorderitem;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;

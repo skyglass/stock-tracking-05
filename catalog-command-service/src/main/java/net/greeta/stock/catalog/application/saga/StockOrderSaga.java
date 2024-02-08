@@ -2,17 +2,17 @@ package net.greeta.stock.catalog.application.saga;
 
 import lombok.extern.slf4j.Slf4j;
 import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
+import net.greeta.stock.catalog.application.commands.confirmstockorder.ConfirmStockOrderCommand;
+import net.greeta.stock.catalog.application.commands.confirmstockorderitem.ConfirmStockOrderItemCommand;
+import net.greeta.stock.catalog.application.commands.removestock.RemoveStockCommand;
+import net.greeta.stock.catalog.application.events.RemoveStockConfirmed;
+import net.greeta.stock.catalog.application.events.StockOrderConfirmed;
+import net.greeta.stock.catalog.application.events.StockOrderCreated;
+import net.greeta.stock.catalog.application.events.StockOrderItemConfirmed;
 import net.greeta.stock.catalog.application.integrationevents.IntegrationEventPublisher;
 import net.greeta.stock.catalog.application.integrationevents.events.OrderStockConfirmedIntegrationEvent;
-import net.greeta.stock.catalog.config.KafkaTopics;
-import net.greeta.stock.catalog.domain.catalogitem.commands.RemoveStockCommand;
-import net.greeta.stock.shared.eventhandling.events.StockRemoved;
-import net.greeta.stock.catalog.domain.stockorder.commands.ConfirmStockOrderCommand;
-import net.greeta.stock.catalog.domain.stockorder.commands.ConfirmStockOrderItemCommand;
-import net.greeta.stock.catalog.domain.stockorder.events.StockOrderConfirmed;
-import net.greeta.stock.catalog.domain.stockorder.events.StockOrderItemConfirmed;
 import net.greeta.stock.catalog.application.integrationevents.events.StockOrderItem;
-import net.greeta.stock.catalog.application.events.StockOrderCreated;
+import net.greeta.stock.catalog.config.KafkaTopics;
 import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
@@ -45,12 +45,12 @@ public class StockOrderSaga {
  
 	}
 
-	@SagaEventHandler(associationProperty="orderId")
-	public void on(StockRemoved event) {
-		log.info("StockOrderSaga.StockRemoved event started for order {} and product {} with quantity {}",
-				event.getOrderId(), event.getId(), event.getQuantity());
+	@SagaEventHandler(associationProperty="id")
+	public void on(RemoveStockConfirmed event) {
+		log.info("StockOrderSaga.RemoveStockConfirmed event started for order {} and product {} with quantity {}",
+				event.getId(), event.getProductId(), event.getQuantity());
 		ConfirmStockOrderItemCommand command = new ConfirmStockOrderItemCommand(
-				event.getOrderId(), event.getId(), event.getQuantity());
+				event.getId(), event.getProductId(), event.getQuantity());
 		commandBus.execute(command);
 	}
 	
