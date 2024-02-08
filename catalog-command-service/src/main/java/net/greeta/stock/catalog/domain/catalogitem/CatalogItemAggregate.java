@@ -5,15 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.greeta.stock.catalog.application.commands.removestock.RemoveStockCommand;
-import net.greeta.stock.catalog.application.events.RemoveStockConfirmed;
 import net.greeta.stock.catalog.domain.base.AggregateRoot;
-import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
-import net.greeta.stock.shared.eventhandling.events.*;
 import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustBeEnough;
 import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustNotBeEmpty;
 import net.greeta.stock.catalog.domain.catalogitem.rules.PriceMustBeGreaterThanZero;
 import net.greeta.stock.catalog.domain.catalogitem.rules.QuantityMustBeGreaterThanZero;
-import org.axonframework.commandhandling.CommandHandler;
+import net.greeta.stock.shared.eventhandling.events.*;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.lang.NonNull;
@@ -69,6 +66,9 @@ public class CatalogItemAggregate extends AggregateRoot {
    */
   public Units removeStock(RemoveStockCommand command) {
     Units quantity = Units.of(command.getQuantity());
+    if (quantity.greaterThan(availableStock)) {
+      log.info("Test CatalogItemAggregate.removeStock quantity {} and availableStock {}", quantity, availableStock);
+    }
     checkRule(new AvailableStockMustNotBeEmpty(name, availableStock));
     checkRule(new QuantityMustBeGreaterThanZero(quantity));
     checkRule(new AvailableStockMustBeEnough(name, availableStock, quantity));
@@ -84,7 +84,6 @@ public class CatalogItemAggregate extends AggregateRoot {
   @EventSourcingHandler
   public void on(StockRemoved event) {
     setAvailableStock(Units.of(event.getAvailableStock()));
-    throw new RuntimeException("Test CatalogItemAggregate.StockRemoved");
   }
 
   /**
