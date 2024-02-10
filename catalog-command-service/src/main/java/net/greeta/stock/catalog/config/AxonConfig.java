@@ -1,6 +1,7 @@
 package net.greeta.stock.catalog.config;
 
 import com.mongodb.client.MongoClient;
+import jakarta.persistence.EntityManagerFactory;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -11,23 +12,49 @@ import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
 import org.axonframework.eventsourcing.eventstore.EventStorageEngine;
 import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.extensions.mongo.DefaultMongoTemplate;
+import org.axonframework.extensions.mongo.MongoTemplate;
+import org.axonframework.extensions.mongo.eventhandling.saga.repository.MongoSagaStore;
 import org.axonframework.extensions.mongo.eventsourcing.eventstore.MongoEventStorageEngine;
 import org.axonframework.extensions.mongo.eventsourcing.tokenstore.MongoTokenStore;
+import org.axonframework.extensions.mongo.spring.SpringMongoTransactionManager;
 import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
 import org.axonframework.serialization.Serializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.MongoDatabaseFactory;
+import org.springframework.data.mongodb.MongoTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 public class AxonConfig {
+
+  @Bean
+  SpringMongoTransactionManager axonTransactionManager(MongoTransactionManager mongoTransactionManager) {
+    return new SpringMongoTransactionManager(mongoTransactionManager);
+  }
+
+  @Bean
+  MongoTransactionManager mongoTransactionManager(MongoDatabaseFactory dbFactory) {
+    return new MongoTransactionManager(dbFactory);
+  }
+
+  @Bean
+  public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    final JpaTransactionManager transactionManager = new JpaTransactionManager();
+    transactionManager.setEntityManagerFactory(entityManagerFactory);
+    return transactionManager;
+  }
+
+
 
   /**
    * Configures command bus.
    */
   @Bean
-  public CommandBus commandBus(TransactionManager txManager) {
+  public CommandBus commandBus(TransactionManager axonTransactionManager) {
     SimpleCommandBus commandBus = SimpleCommandBus.builder()
-        .transactionManager(txManager)
+        .transactionManager(axonTransactionManager)
         .build();
     commandBus.registerDispatchInterceptor(new BeanValidationInterceptor<>());
 
@@ -46,20 +73,21 @@ public class AxonConfig {
    * Configures Mongo embedded event store.
    */
   @Bean
-  public EventStore eventStore(MongoClient client, Serializer serializer) {
+  public EventStore eventStore(MongoClient client, Serializer serializer,
+                               TransactionManager axonTransactionManager) {
     return EmbeddedEventStore.builder()
-        .storageEngine(eventStorageEngine(client, serializer)).build();
+        .storageEngine(eventStorageEngine(client, serializer, axonTransactionManager)).build();
   }
 
   /**
    * Configures Mongo based Event Storage Engine.
    */
-  private EventStorageEngine eventStorageEngine(MongoClient client, Serializer serializer) {
+  private EventStorageEngine eventStorageEngine(MongoClient client, Serializer serializer,
+                                                TransactionManager axonTransactionManager) {
     return MongoEventStorageEngine.builder()
         .eventSerializer(serializer)
-        .mongoTemplate(DefaultMongoTemplate.builder()
-            .mongoDatabase(client)
-            .build())
+        .transactionManager(axonTransactionManager)
+        .mongoTemplate(axonMongoTemplate(client))
         .build();
   }
 
@@ -67,13 +95,27 @@ public class AxonConfig {
    * Creates Mongo based Token Store.
    */
   @Bean
-  public TokenStore tokenStore(MongoClient client, Serializer serializer) {
+  public TokenStore tokenStore(MongoClient client, Serializer serializer,
+                               TransactionManager axonTransactionManager) {
     return MongoTokenStore.builder()
-        .mongoTemplate(DefaultMongoTemplate.builder()
-            .mongoDatabase(client)
-            .build())
+        .mongoTemplate(axonMongoTemplate(client))
+        .transactionManager(axonTransactionManager)
         .serializer(serializer)
         .build();
+  }
+
+  @Bean
+  public MongoTemplate axonMongoTemplate(MongoClient client) {
+    return DefaultMongoTemplate.builder()
+            .mongoDatabase(client)
+            .build();
+  }
+
+  @Bean
+  public MongoSagaStore sagaStore(MongoClient client) {
+    return MongoSagaStore.builder()
+            .mongoTemplate(axonMongoTemplate(client))
+            .build();
   }
 
   /**

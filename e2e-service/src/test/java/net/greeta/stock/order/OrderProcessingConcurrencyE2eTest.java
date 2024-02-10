@@ -25,7 +25,8 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @TestPropertySource(locations = {
@@ -126,7 +127,7 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
         assertTrue(orderStockNotApproved);
 
         //simulate long waiting for stock update
-        /*TimeUnit.MILLISECONDS.sleep(Duration.ofSeconds(3).toMillis());
+        TimeUnit.MILLISECONDS.sleep(Duration.ofSeconds(3).toMillis());
 
         catalogTestHelper.addStock(product.getProductId(), 1);
 
@@ -143,7 +144,7 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
             return catalogItemDto.availableStock() == 0;
         });
 
-        assertTrue(stockZero); */
+        assertTrue(stockZero);
     }
 
 

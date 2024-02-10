@@ -25,7 +25,7 @@ public class ChangePriceCommandHandler implements CatalogCommandHandler<CatalogI
   private final KafkaTopics topics;
 
   @CommandHandler
-  @Transactional
+  @Transactional("mongoTransactionManager")
   @Override
   public CatalogItemResponse handle(ChangePriceCommand command) {
     final var catalogItemAggregate = catalogItemRepository.loadAggregate(command.productId());

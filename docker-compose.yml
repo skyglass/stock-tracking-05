@@ -23,6 +23,9 @@ services:
       ORDER_DB_USER: orderdbuser
       ORDER_DB_PASSWORD: dbpass
       ORDER_DB_NAME: orderdb
+      STOCK_ORDER_DB_USER: stockorderdbuser
+      STOCK_ORDER_DB_PASSWORD: dbpass
+      STOCK_ORDER_DB_NAME: stockorderdb
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U dbuser" ]
       interval: 10s

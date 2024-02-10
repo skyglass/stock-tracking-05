@@ -6,6 +6,7 @@ import org.axonframework.modelling.command.Aggregate;
 import org.axonframework.spring.config.SpringAxonConfiguration;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -32,6 +33,11 @@ public class StockOrderAxonRepository implements StockOrderAggregateRepository {
     @Override
     public Aggregate<StockOrderAggregate> loadAggregate(UUID id) {
         return repository.load(id.toString());
+    }
+
+    @Override
+    public List<Aggregate<StockOrderAggregate>> findAwaitingConfirmation(UUID productId) {
+        return null;
     }
 
     @Override

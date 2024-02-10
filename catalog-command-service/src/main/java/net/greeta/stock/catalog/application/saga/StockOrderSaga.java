@@ -18,6 +18,7 @@ import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 @Saga
 @Slf4j
@@ -76,11 +77,13 @@ public class StockOrderSaga {
 
 	@EndSaga
 	@SagaEventHandler(associationProperty="id")
+	@Transactional("kafkaTransactionManager")
 	public void handle(StockOrderConfirmed stockOrderConfirmed) {
 		log.info("EndSaga: StockOrderSaga.StockOrderConfirmed event started for order {}", stockOrderConfirmed.getId());
 		integrationEventService.publish(
 				kafkaTopics.getOrderStockConfirmed(),
 				new OrderStockConfirmedIntegrationEvent(stockOrderConfirmed.getId().toString()));
+		//throw new RuntimeException("Test StockOrderSaga.StockOrderConfirmed Transaction Rollback");
 	}
 
 	

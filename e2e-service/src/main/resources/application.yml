@@ -40,6 +40,14 @@ spring:
     hibernate:
       ddl-auto: none
   datasource:
+    catalog-command:
+      url: jdbc:postgresql://${app.catalog-command.postgres.host}:${app.catalog-command.postgres.port}/${app.catalog-command.postgres.database}
+      username: ${app.catalog-command.postgres.user}
+      password: ${app.catalog-command.postgres.password}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        connection-timeout: 2000 #ms
+        maximum-pool-size: 5
     catalog-query:
       url: jdbc:postgresql://${app.catalog-query.postgres.host}:${app.catalog-query.postgres.port}/${app.catalog-query.postgres.database}
       username: ${app.catalog-query.postgres.user}
@@ -78,6 +86,14 @@ app:
       host: localhost
       port: 6379
       password: pass
+
+  catalog-command:
+    postgres:
+      host: localhost
+      port: 5432
+      database: stockorderdb
+      user: stockorderdbuser
+      password: dbpass
 
   catalog-query:
     postgres:

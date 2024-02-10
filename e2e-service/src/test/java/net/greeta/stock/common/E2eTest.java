@@ -3,6 +3,7 @@ package net.greeta.stock.common;
 import lombok.SneakyThrows;
 import net.greeta.stock.axon.AxonTestDataService;
 import net.greeta.stock.basket.BasketTestDataService;
+import net.greeta.stock.catalogcommand.CatalogCommandTestDataService;
 import net.greeta.stock.catalogquery.CatalogQueryTestDataService;
 import net.greeta.stock.client.KafkaClient;
 import net.greeta.stock.config.MockHelper;
@@ -33,6 +34,9 @@ public abstract class E2eTest {
     private BasketTestDataService basketTestDataService;
 
     @Autowired
+    protected CatalogCommandTestDataService catalogCommandTestDataService;
+
+    @Autowired
     protected CatalogQueryTestDataService catalogQueryTestDataService;
 
     @Autowired
@@ -51,9 +55,10 @@ public abstract class E2eTest {
         assertEquals(HttpStatus.OK, result.getStatusCode());
         mockHelper.mockCredentials(securityOauth2Username, securityOauth2Password);
         basketTestDataService.resetDatabase();
+        catalogCommandTestDataService.resetDatabase();
         catalogQueryTestDataService.resetDatabase();
         orderProcessingTestDataService.resetDatabase();
         axonTestDataService.resetDatabase();
-        TimeUnit.MILLISECONDS.sleep(Duration.ofSeconds(1).toMillis());
+        //TimeUnit.MILLISECONDS.sleep(Duration.ofSeconds(1).toMillis());
     }
 }

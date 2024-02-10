@@ -9,15 +9,10 @@ import net.greeta.stock.catalog.application.integrationevents.events.ConfirmedSt
 import net.greeta.stock.catalog.application.integrationevents.events.StockOrderItem;
 import net.greeta.stock.catalog.application.models.StockOrderResponse;
 import net.greeta.stock.catalog.domain.base.AggregateRoot;
-import net.greeta.stock.catalog.application.commands.removestock.RemoveStockCommand;
 import net.greeta.stock.catalog.application.commands.confirmstockorder.ConfirmStockOrderCommand;
 import net.greeta.stock.catalog.application.commands.confirmstockorderitem.ConfirmStockOrderItemCommand;
 import net.greeta.stock.catalog.application.events.StockOrderConfirmed;
 import net.greeta.stock.catalog.application.events.StockOrderItemConfirmed;
-import net.greeta.stock.catalog.domain.catalogitem.Units;
-import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustBeEnough;
-import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustNotBeEmpty;
-import net.greeta.stock.catalog.domain.catalogitem.rules.QuantityMustBeGreaterThanZero;
 import net.greeta.stock.shared.eventhandling.events.StockRemoved;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -39,7 +34,7 @@ public class StockOrderAggregate extends AggregateRoot {
 
     private List<StockOrderItem> stockOrderItems;
 
-    private boolean allConfirmed = false;
+    private StockOrderItemStatus stockOrderStatus = StockOrderItemStatus.AwaitingConfirmation;
 
     public StockOrderAggregate(UUID orderId, List<StockOrderItem> stockOrderItems) {
         super(orderId);
@@ -104,7 +99,7 @@ public class StockOrderAggregate extends AggregateRoot {
 
     @EventSourcingHandler
     public void on(StockOrderConfirmed event) {
-        this.allConfirmed = true;
+        setConfirmed();
     }
 
 
@@ -124,8 +119,16 @@ public class StockOrderAggregate extends AggregateRoot {
     }
 
     private boolean isAlreadyHandled(UUID productId) {
-        return allConfirmed || confirmedStockOrderItems
+        return isConfirmed() || confirmedStockOrderItems
                 .stream().map(ConfirmedStockOrderItem::getProductId)
                 .anyMatch(pi -> Objects.equals(productId, pi));
+    }
+
+    private boolean isConfirmed() {
+        return stockOrderStatus == StockOrderItemStatus.StockConfirmed;
+    }
+
+    private void setConfirmed() {
+        this.stockOrderStatus = StockOrderItemStatus.StockConfirmed;
     }
 }

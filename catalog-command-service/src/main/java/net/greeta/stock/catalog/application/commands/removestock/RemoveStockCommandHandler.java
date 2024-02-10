@@ -11,6 +11,7 @@ import net.greeta.stock.shared.rest.error.NotFoundException;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import static java.util.Objects.isNull;
 
@@ -22,6 +23,7 @@ public class RemoveStockCommandHandler implements CatalogCommandHandler<CatalogI
   private final StockOrderAggregateRepository stockOrderRepository;
 
   @CommandHandler
+  @Transactional("mongoTransactionManager")
   public CatalogItemResponse handle(RemoveStockCommand command) {
     log.info("RemoveStockCommandHandler.RemoveStockCommand started for order {} and product {} with quantity {}",
             command.getOrderId(), command.getProductId(), command.getQuantity());
@@ -39,6 +41,7 @@ public class RemoveStockCommandHandler implements CatalogCommandHandler<CatalogI
   }
 
   @EventHandler
+  @Transactional("mongoTransactionManager")
   public void on(StockRemoved event) {
     log.info("RemoveStockCommandHandler.StockRemoved event handler started for order {} and product {} with quantity {}",
             event.getOrderId(), event.getId(), event.getQuantity());

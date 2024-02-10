@@ -1,9 +1,12 @@
 package net.greeta.stock.catalog.config;
 
+import org.axonframework.config.EventProcessingConfigurer;
 import org.axonframework.extensions.kafka.KafkaProperties;
+import org.axonframework.extensions.kafka.eventhandling.consumer.streamable.StreamableKafkaMessageSource;
 import org.axonframework.extensions.kafka.eventhandling.producer.ConfirmationMode;
 import org.axonframework.extensions.kafka.eventhandling.producer.DefaultProducerFactory;
 import org.axonframework.extensions.kafka.eventhandling.producer.ProducerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

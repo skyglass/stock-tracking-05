@@ -14,6 +14,23 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: 15s
 
+  # JPA
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  # Postgres
+  datasource:
+    url: jdbc:postgresql://${app.postgres.host}:${app.postgres.port}/${app.postgres.database}
+    username: ${app.postgres.user}
+    password: ${app.postgres.password}
+    driver-class-name: org.postgresql.Driver
+
   keycloak:
     server-url: http://localhost:8080
     server-external-url: http://localhost:8080
@@ -108,6 +125,12 @@ openapi:
 
 # Custom config
 app:
+  postgres:
+    host: postgres
+    port: 5432
+    database: stockorderdb
+    user: stockorderdbuser
+    password: dbpass
   mongodb:
     host: mongo
     port: 27017

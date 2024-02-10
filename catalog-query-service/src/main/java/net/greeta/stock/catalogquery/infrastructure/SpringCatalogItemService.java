@@ -2,10 +2,10 @@ package net.greeta.stock.catalogquery.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import net.greeta.stock.catalogquery.application.queries.catalogitembyid.CatalogItemByIdQuery;
-import net.greeta.stock.catalogquery.application.querybus.QueryBus;
 import net.greeta.stock.catalogquery.application.service.CatalogItemService;
-import net.greeta.stock.common.domain.dto.catalog.CatalogItemDto;
 import net.greeta.stock.catalogquery.model.mapper.CatalogItemMapper;
+import net.greeta.stock.common.domain.dto.catalog.CatalogItemDto;
+import net.greeta.stock.catalogquery.application.querybus.QueryBus;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

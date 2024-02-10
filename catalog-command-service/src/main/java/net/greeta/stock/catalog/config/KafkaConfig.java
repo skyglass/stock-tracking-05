@@ -12,17 +12,22 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaOperations;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.listener.AfterRollbackProcessor;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
+import org.springframework.kafka.listener.DefaultAfterRollbackProcessor;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.converter.RecordMessageConverter;
 import org.springframework.kafka.support.converter.StringJsonMessageConverter;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.springframework.transaction.support.AbstractPlatformTransactionManager.SYNCHRONIZATION_ON_ACTUAL_TRANSACTION;
 
 @RequiredArgsConstructor
 @Configuration
@@ -65,6 +70,22 @@ public class KafkaConfig {
   @Bean
   public KafkaTemplate<String, IntegrationEvent> kafkaTemplate() {
     return new KafkaTemplate<>(producerFactory());
+  }
+
+  @Bean
+  public KafkaTransactionManager<String, IntegrationEvent> kafkaTransactionManager(
+          ProducerFactory<String, IntegrationEvent> producerFactory
+  ) {
+    var kafkaTransactionManager = new KafkaTransactionManager<>(producerFactory);
+    kafkaTransactionManager.setTransactionSynchronization(SYNCHRONIZATION_ON_ACTUAL_TRANSACTION);
+    return kafkaTransactionManager;
+  }
+
+  @Bean
+  public AfterRollbackProcessor<String, IntegrationEvent> kafkaAfterRollbackProcessor(
+          KafkaOperations<String, IntegrationEvent> kafkaTemplate) {
+    var dlt = new DeadLetterPublishingRecoverer(kafkaTemplate);
+    return new DefaultAfterRollbackProcessor<>(dlt);
   }
 
   // Consumer

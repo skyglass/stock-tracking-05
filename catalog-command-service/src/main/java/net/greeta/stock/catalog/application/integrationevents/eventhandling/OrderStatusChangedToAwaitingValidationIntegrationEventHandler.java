@@ -23,7 +23,7 @@ public class OrderStatusChangedToAwaitingValidationIntegrationEventHandler {
           groupId = "${app.kafka.group.ordersWaitingValidation}",
           topics = "${spring.kafka.consumer.topic.ordersWaitingForValidation}"
   )
-  @Transactional
+  @Transactional("mongoTransactionManager")
   public void handle(OrderStatusChangedToAwaitingValidationIntegrationEvent event) {
     logger.info("Handling integration event: {} ({})", event.getId(), event.getClass().getSimpleName());
 

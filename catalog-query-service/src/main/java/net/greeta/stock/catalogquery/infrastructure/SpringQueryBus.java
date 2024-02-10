@@ -1,9 +1,9 @@
 package net.greeta.stock.catalogquery.infrastructure;
 
+import lombok.RequiredArgsConstructor;
 import net.greeta.stock.catalogquery.application.querybus.Query;
 import net.greeta.stock.catalogquery.application.querybus.QueryBus;
 import net.greeta.stock.catalogquery.application.querybus.QueryHandler;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
