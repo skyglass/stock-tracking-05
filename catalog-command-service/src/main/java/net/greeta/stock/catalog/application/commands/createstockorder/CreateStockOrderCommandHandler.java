@@ -45,6 +45,7 @@ public class CreateStockOrderCommandHandler implements CatalogCommandHandler<Sto
 
     for (StockOrderItem stockOrderItem : event.getStockOrderItems()) {
       final var queryStockOrderItem = QueryStockOrderItem.builder()
+              .id(UUID.randomUUID())
               .orderId(event.getId())
               .productId(stockOrderItem.getProductId())
               .quantity(stockOrderItem.getUnits())

@@ -1,6 +1,7 @@
 package net.greeta.stock.catalog.config;
 
 import com.mongodb.client.MongoClient;
+import com.thoughtworks.xstream.XStream;
 import jakarta.persistence.EntityManagerFactory;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
@@ -19,8 +20,10 @@ import org.axonframework.extensions.mongo.eventsourcing.tokenstore.MongoTokenSto
 import org.axonframework.extensions.mongo.spring.SpringMongoTransactionManager;
 import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
 import org.axonframework.serialization.Serializer;
+import org.axonframework.serialization.xml.XStreamSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -73,8 +76,7 @@ public class AxonConfig {
    * Configures Mongo embedded event store.
    */
   @Bean
-  public EventStore eventStore(MongoClient client, Serializer serializer,
-                               TransactionManager axonTransactionManager) {
+  public EventStore eventStore(MongoClient client, Serializer serializer, TransactionManager axonTransactionManager) {
     return EmbeddedEventStore.builder()
         .storageEngine(eventStorageEngine(client, serializer, axonTransactionManager)).build();
   }
@@ -82,10 +84,10 @@ public class AxonConfig {
   /**
    * Configures Mongo based Event Storage Engine.
    */
-  private EventStorageEngine eventStorageEngine(MongoClient client, Serializer serializer,
-                                                TransactionManager axonTransactionManager) {
+  private EventStorageEngine eventStorageEngine(MongoClient client, Serializer serializer, TransactionManager axonTransactionManager) {
     return MongoEventStorageEngine.builder()
         .eventSerializer(serializer)
+        .snapshotSerializer(serializer)
         .transactionManager(axonTransactionManager)
         .mongoTemplate(axonMongoTemplate(client))
         .build();
@@ -95,8 +97,7 @@ public class AxonConfig {
    * Creates Mongo based Token Store.
    */
   @Bean
-  public TokenStore tokenStore(MongoClient client, Serializer serializer,
-                               TransactionManager axonTransactionManager) {
+  public TokenStore tokenStore(MongoClient client, Serializer serializer, TransactionManager axonTransactionManager) {
     return MongoTokenStore.builder()
         .mongoTemplate(axonMongoTemplate(client))
         .transactionManager(axonTransactionManager)
@@ -114,8 +115,21 @@ public class AxonConfig {
   @Bean
   public MongoSagaStore sagaStore(MongoClient client) {
     return MongoSagaStore.builder()
+            .serializer(XStreamSerializer.builder().xStream(xStream()).build())
             .mongoTemplate(axonMongoTemplate(client))
             .build();
+  }
+
+  // Workaround to avoid the exception "com.thoughtworks.xstream.security.ForbiddenClassException"
+  // https://stackoverflow.com/questions/70624317/getting-forbiddenclassexception-in-axon-springboot
+  @Bean
+  public XStream xStream() {
+    XStream xStream = new XStream();
+    xStream.allowTypesByWildcard(new String[]{
+            "net.greeta.stock.catalog.**",
+            "org.hibernate.proxy.pojo.bytebuddy.**"
+    });
+    return xStream;
   }
 
   /**
