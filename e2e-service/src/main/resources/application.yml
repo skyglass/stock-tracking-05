@@ -13,12 +13,24 @@ spring:
             url: http://localhost:9000/analytics/api
           basket:
             url: http://localhost:9000/basket/api
+          basket2:
+            url: http://localhost:9000/basket2/api
+          basket3:
+            url: http://localhost:9000/basket3/api
           catalog-command:
             url: http://localhost:9000/catalog-command/api
+          catalog-command2:
+            url: http://localhost:9000/catalog-command2/api
+          catalog-command3:
+            url: http://localhost:9000/catalog-command3/api
           catalog-query:
             url: http://localhost:9000/catalog-query/api
+          catalog-query2:
+            url: http://localhost:9000/catalog-query2/api
           order-processing:
             url: http://localhost:9000/order-processing/api
+          order-processing2:
+            url: http://localhost:9000/order-processing2/api
           oauth2:
             url: http://localhost:8080
           kafka:

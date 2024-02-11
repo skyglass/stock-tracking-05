@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.greeta.stock.catalog.application.events.StockOrderItemConfirmed;
 import net.greeta.stock.catalog.application.query.model.QueryStockOrderItemRepository;
-import net.greeta.stock.catalog.domain.stockorder.StockOrderItemStatus;
+import net.greeta.stock.catalog.application.query.model.StockOrderItemStatus;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

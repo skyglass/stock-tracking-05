@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.greeta.stock.catalog.application.commands.removestock.RemoveStockCommand;
+import net.greeta.stock.catalog.application.events.RemoveStockRejected;
 import net.greeta.stock.catalog.domain.base.AggregateRoot;
 import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustBeEnough;
 import net.greeta.stock.catalog.domain.catalogitem.rules.AvailableStockMustNotBeEmpty;
@@ -66,19 +67,22 @@ public class CatalogItemAggregate extends AggregateRoot {
    */
   public Units removeStock(RemoveStockCommand command) {
     Units quantity = Units.of(command.getQuantity());
-    if (quantity.greaterThan(availableStock)) {
-      log.info("Test CatalogItemAggregate.removeStock quantity {} and availableStock {}", quantity, availableStock);
-    }
-    checkRule(new AvailableStockMustNotBeEmpty(name, availableStock));
+    //checkRule(new AvailableStockMustNotBeEmpty(name, availableStock));
     checkRule(new QuantityMustBeGreaterThanZero(quantity));
-    checkRule(new AvailableStockMustBeEnough(name, availableStock, quantity));
-
-    final var updatedStock = availableStock.subtract(quantity);
-
-    StockRemoved event = new StockRemoved(command.getProductId(), command.getOrderId(),
-            command.getQuantity(), updatedStock.getValue());
-    apply(event);
-    return updatedStock;
+    //checkRule(new AvailableStockMustBeEnough(name, availableStock, quantity));
+    if (quantity.greaterThan(availableStock)) {
+      log.info("Reject CatalogItemAggregate.removeStock for quantity {} and availableStock {}", quantity, availableStock);
+      RemoveStockRejected event = new RemoveStockRejected(command.getProductId(), command.getOrderId(),
+              command.getQuantity(), availableStock.getValue());
+      apply(event);
+      return availableStock;
+    } else {
+      final var updatedStock = availableStock.subtract(quantity);
+      StockRemoved event = new StockRemoved(command.getProductId(), command.getOrderId(),
+              command.getQuantity(), updatedStock.getValue());
+      apply(event);
+      return updatedStock;
+    }
   }
 
   @EventSourcingHandler

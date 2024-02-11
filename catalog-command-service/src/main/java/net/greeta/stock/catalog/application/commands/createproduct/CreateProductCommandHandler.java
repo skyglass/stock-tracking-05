@@ -16,7 +16,6 @@ import java.util.UUID;
 public class CreateProductCommandHandler implements CatalogCommandHandler<CatalogItemResponse, CreateProductCommand> {
   private final CatalogItemAggregateRepository catalogItemRepository;
 
-  @Transactional("mongoTransactionManager")
   @CommandHandler
   @Override
   public CatalogItemResponse handle(CreateProductCommand command) {

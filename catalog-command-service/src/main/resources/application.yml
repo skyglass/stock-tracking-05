@@ -44,6 +44,8 @@ spring:
   # Kafka
   kafka:
     bootstrap-servers: ${app.kafka.brokers}
+    num-of-partitions: 2
+    replication-factor: 2
     producer:
       transaction-id-prefix: tx-catalog-
       properties:

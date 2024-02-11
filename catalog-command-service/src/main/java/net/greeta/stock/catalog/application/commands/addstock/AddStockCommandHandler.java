@@ -27,7 +27,6 @@ public class AddStockCommandHandler implements CatalogCommandHandler<CatalogItem
 
   @CommandHandler
   @Override
-  @Transactional("mongoTransactionManager")
   public CatalogItemResponse handle(AddStockCommand command) {
     final var catalogItem = catalogItemRepository.loadAggregate(command.productId());
 

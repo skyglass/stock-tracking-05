@@ -37,14 +37,32 @@ public class WebSecurityConfig {
                         .pathMatchers(HttpMethod.GET,"/basket/v3/api-docs/**").permitAll()
                         .pathMatchers("/basket", "/basket/**").permitAll()
 
+                        .pathMatchers(HttpMethod.GET,"/basket2/v3/api-docs/**").permitAll()
+                        .pathMatchers("/basket2", "/basket2/**").permitAll()
+
+                        .pathMatchers(HttpMethod.GET,"/basket3/v3/api-docs/**").permitAll()
+                        .pathMatchers("/basket3", "/basket3/**").permitAll()
+
                         .pathMatchers(HttpMethod.GET,"/catalog-command/v3/api-docs/**").permitAll()
                         .pathMatchers("/catalog-command", "/catalog-command/**").permitAll()
 
                         .pathMatchers(HttpMethod.GET,"/catalog-query/v3/api-docs/**").permitAll()
                         .pathMatchers("/catalog-query", "/catalog-query/**").permitAll()
 
+                        .pathMatchers(HttpMethod.GET,"/catalog-query2/v3/api-docs/**").permitAll()
+                        .pathMatchers("/catalog-query2", "/catalog-query2/**").permitAll()
+
                         .pathMatchers(HttpMethod.GET,"/order-processing/v3/api-docs/**").permitAll()
                         .pathMatchers("/order-processing", "/order-processing/**").permitAll()
+
+                        .pathMatchers(HttpMethod.GET,"/order-processing2/v3/api-docs/**").permitAll()
+                        .pathMatchers("/order-processing2", "/order-processing2/**").permitAll()
+
+                        .pathMatchers(HttpMethod.GET,"/catalog-command2/v3/api-docs/**").permitAll()
+                        .pathMatchers("/catalog-command2", "/catalog-command2/**").permitAll()
+
+                        .pathMatchers(HttpMethod.GET,"/catalog-command3/v3/api-docs/**").permitAll()
+                        .pathMatchers("/catalog-command3", "/catalog-command3/**").permitAll()
 
                         .anyExchange().authenticated()
                         .and()

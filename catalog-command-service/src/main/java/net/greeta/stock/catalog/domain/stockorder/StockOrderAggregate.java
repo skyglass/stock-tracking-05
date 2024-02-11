@@ -3,16 +3,14 @@ package net.greeta.stock.catalog.domain.stockorder;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.greeta.stock.catalog.application.events.RemoveStockConfirmed;
-import net.greeta.stock.catalog.application.events.StockOrderCreated;
+import net.greeta.stock.catalog.application.events.*;
 import net.greeta.stock.catalog.application.integrationevents.events.ConfirmedStockOrderItem;
 import net.greeta.stock.catalog.application.integrationevents.events.StockOrderItem;
 import net.greeta.stock.catalog.application.models.StockOrderResponse;
+import net.greeta.stock.catalog.application.query.model.StockOrderItemStatus;
 import net.greeta.stock.catalog.domain.base.AggregateRoot;
 import net.greeta.stock.catalog.application.commands.confirmstockorder.ConfirmStockOrderCommand;
 import net.greeta.stock.catalog.application.commands.confirmstockorderitem.ConfirmStockOrderItemCommand;
-import net.greeta.stock.catalog.application.events.StockOrderConfirmed;
-import net.greeta.stock.catalog.application.events.StockOrderItemConfirmed;
 import net.greeta.stock.shared.eventhandling.events.StockRemoved;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -59,6 +57,12 @@ public class StockOrderAggregate extends AggregateRoot {
     public void on(RemoveStockConfirmed event) {
         log.info("StockOrderAggregate.RemoveStockConfirmed event handler started for order {} and product {} with quantity {}",
                 event.getId(), event.getProductId(), event.getQuantity());
+    }
+
+    @EventSourcingHandler
+    public void on(RemoveStockRejected event) {
+        log.info("StockOrderAggregate.RemoveStockRejected event handler started for order {} and product {} with quantity {}",
+                event.getOrderId(), event.getId(), event.getQuantity());
     }
 
     @CommandHandler

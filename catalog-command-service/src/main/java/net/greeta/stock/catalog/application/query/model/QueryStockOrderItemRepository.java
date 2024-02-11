@@ -1,6 +1,5 @@
 package net.greeta.stock.catalog.application.query.model;
 
-import net.greeta.stock.catalog.domain.stockorder.StockOrderItemStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

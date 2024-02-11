@@ -78,12 +78,12 @@ public class KafkaConfig {
   // Topics
   @Bean
   public NewTopic stockConfirmedTopic() {
-    return new NewTopic(topics.getStockConfirmed(), 1, (short) 1);
+    return new NewTopic(topics.getStockConfirmed(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic paymentStatusTopic() {
-    return new NewTopic(topics.getPaymentStatus(), 1, (short) 1);
+    return new NewTopic(topics.getPaymentStatus(), 2, (short) 2);
   }
 
 }

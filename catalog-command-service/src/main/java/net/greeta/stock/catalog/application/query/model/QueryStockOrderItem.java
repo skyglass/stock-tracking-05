@@ -3,7 +3,6 @@ package net.greeta.stock.catalog.application.query.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import net.greeta.stock.catalog.domain.stockorder.StockOrderItemStatus;
 
 import java.util.UUID;
 

@@ -10,7 +10,7 @@ import net.greeta.stock.catalog.application.query.model.QueryStockOrderItem;
 import net.greeta.stock.catalog.application.query.model.QueryStockOrderItemRepository;
 import net.greeta.stock.catalog.domain.stockorder.StockOrderAggregate;
 import net.greeta.stock.catalog.domain.stockorder.StockOrderAggregateRepository;
-import net.greeta.stock.catalog.domain.stockorder.StockOrderItemStatus;
+import net.greeta.stock.catalog.application.query.model.StockOrderItemStatus;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,6 @@ public class CreateStockOrderCommandHandler implements CatalogCommandHandler<Sto
   private final StockOrderAggregateRepository stockOrderRepository;
   private final QueryStockOrderItemRepository stockOrderItemRepository;
 
-  @Transactional("mongoTransactionManager")
   @CommandHandler
   @Override
   public StockOrderResponse handle(CreateStockOrderCommand command) {

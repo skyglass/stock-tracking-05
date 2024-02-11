@@ -75,7 +75,7 @@ services:
     networks:
       - stock
 
-  order-processing-service:
+  order-processing:
     image: "order-processing-service"
     container_name: "order-processing"
     ports:
@@ -92,7 +92,7 @@ services:
     networks:
       - stock
 
-  payment-service:
+  payment:
     image: "payment-service"
     container_name: "payment"
     ports:
@@ -109,6 +109,107 @@ services:
     networks:
       - stock
 
+  basket2:
+    image: "basket-service"
+    container_name: "basket2"
+    ports:
+      - 9007:9007
+      - 8007:8007
+    environment:
+      - SERVER_PORT=9007
+      - BPL_JVM_THREAD_COUNT=50
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8007
+      - SPRING_KEYCLOAK_SERVER_URL=http://stock-keycloak:8080
+      - SPRING_KEYCLOAK_SERVER_EXTERNAL_URL=http://localhost:8080
+      - ZIPKIN_HOST=zipkin
+    networks:
+      - stock
+
+  basket3:
+    image: "basket-service"
+    container_name: "basket3"
+    ports:
+      - 9008:9008
+      - 8008:8008
+    environment:
+      - SERVER_PORT=9008
+      - BPL_JVM_THREAD_COUNT=50
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8008
+      - SPRING_KEYCLOAK_SERVER_URL=http://stock-keycloak:8080
+      - SPRING_KEYCLOAK_SERVER_EXTERNAL_URL=http://localhost:8080
+      - ZIPKIN_HOST=zipkin
+    networks:
+      - stock
+
+  catalog-query2:
+    image: "catalog-query-service"
+    container_name: "catalog-query2"
+    ports:
+      - 9009:9009
+      - 8009:8009
+    environment:
+      - SERVER_PORT=9009
+      - BPL_JVM_THREAD_COUNT=50
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8009
+      - SPRING_KEYCLOAK_SERVER_URL=http://stock-keycloak:8080
+      - SPRING_KEYCLOAK_SERVER_EXTERNAL_URL=http://localhost:8080
+      - ZIPKIN_HOST=zipkin
+    networks:
+      - stock
+
+  order-processing2:
+    image: "order-processing-service"
+    container_name: "order-processing2"
+    ports:
+      - 9010:9010
+      - 8010:8010
+    environment:
+      - SERVER_PORT=9010
+      - BPL_JVM_THREAD_COUNT=50
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8010
+      - SPRING_KEYCLOAK_SERVER_URL=http://stock-keycloak:8080
+      - SPRING_KEYCLOAK_SERVER_EXTERNAL_URL=http://localhost:8080
+      - ZIPKIN_HOST=zipkin
+    networks:
+      - stock
+
+  catalog-command2:
+    image: "catalog-command-service"
+    container_name: "catalog-command2"
+    ports:
+      - 9011:9011
+      - 8011:8011
+    environment:
+      - SERVER_PORT=9011
+      - BPL_JVM_THREAD_COUNT=50
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8011
+      - SPRING_KEYCLOAK_SERVER_URL=http://stock-keycloak:8080
+      - SPRING_KEYCLOAK_SERVER_EXTERNAL_URL=http://localhost:8080
+      - ZIPKIN_HOST=zipkin
+    networks:
+      - stock
+
+  catalog-command3:
+    image: "catalog-command-service"
+    container_name: "catalog-command3"
+    ports:
+      - 9012:9012
+      - 8012:8012
+    environment:
+      - SERVER_PORT=9012
+      - BPL_JVM_THREAD_COUNT=50
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8012
+      - SPRING_KEYCLOAK_SERVER_URL=http://stock-keycloak:8080
+      - SPRING_KEYCLOAK_SERVER_EXTERNAL_URL=http://localhost:8080
+      - ZIPKIN_HOST=zipkin
+    networks:
+      - stock
 
   gateway:
     image: "gateway-service"
@@ -127,6 +228,12 @@ services:
       - CATALOG_QUERY_SERVICE_URL=http://catalog-query:9004
       - ORDER_PROCESSING_SERVICE_URL=http://order-processing:9005
       - PAYMENT_SERVICE_URL=http://payment:9006
+      - BASKET2_SERVICE_URL=http://basket2:9007
+      - BASKET3_SERVICE_URL=http://basket3:9008
+      - CATALOG_QUERY2_SERVICE_URL=http://catalog-query2:9009
+      - ORDER_PROCESSING2_SERVICE_URL=http://order-processing2:9010
+      - CATALOG_COMMAND2_SERVICE_URL=http://catalog-command2:9011
+      - CATALOG_COMMAND3_SERVICE_URL=http://catalog-command3:9012
       - SPRING_REDIS_HOST=gateway-redis
       - SPRING_REDIS_PORT=6380
       - SPRING_KEYCLOAK_SERVER_URL=http://stock-keycloak:8080

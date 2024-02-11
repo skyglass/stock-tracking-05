@@ -25,6 +25,10 @@ public class BasketTestHelper {
 
     private final BasketClient basketClient;
 
+    private final BasketClient2 basketClient2;
+
+    private final BasketClient3 basketClient3;
+
     private final BasketItemBuilder basketItemBuilder;
 
     private final BasketCheckoutBuilder basketCheckoutBuilder;
@@ -37,35 +41,48 @@ public class BasketTestHelper {
                                                            Integer stockQuantity,
                                                            Double productPrice,
                                                            Integer productQuantity,
-                                                           String customerId) {
+                                                           String customerId,
+                                                           int hash) {
         log.info("Order checkout with amount {} for product {}", productQuantity, productName);
         return CompletableFuture.completedFuture(checkout(productId, productName,
-                productPrice, productQuantity, customerId));
+                productPrice, productQuantity, customerId, hash));
     }
 
     public BasketCheckout checkout(String productName,
                                    Integer stockQuantity,
                                    Double productPrice,
                                    Integer productQuantity,
-                                   String customerId) {
+                                   String customerId,
+                                   int hash) {
         CatalogItemResponse product = catalogTestHelper
                 .createProduct(productName, productPrice, stockQuantity);
-        return checkout(product.getProductId(), productName, productPrice, productQuantity, customerId);
+        return checkout(product.getProductId(), productName, productPrice, productQuantity, customerId, hash);
     }
 
     public BasketCheckout checkout(UUID productId,
                                    String productName,
                                    Double productPrice,
                                    Integer productQuantity,
-                                   String customerId) {
+                                   String customerId,
+                                   int hash) {
         BasketItem basketItem = basketItemBuilder.build(
                 productId, productName, productPrice, productQuantity);
         CustomerBasket customerBasket = customerBasketBuilder.build(customerId, basketItem);
 
         BasketCheckout basketCheckout = basketCheckoutBuilder.build(customerId);
-        basketClient.directCheckout(customerBasket, basketCheckout.getRequestId());
+        directCheckout(customerBasket, basketCheckout.getRequestId(), hash);
 
         return basketCheckout;
+    }
+
+    private void directCheckout(CustomerBasket customerBasket, UUID requestId, int hash) {
+        if (hash % 3 == 0) {
+            basketClient.directCheckout(customerBasket, requestId);
+        } else if (hash % 3 == 1) {
+            basketClient2.directCheckout(customerBasket, requestId);
+        } else {
+            basketClient3.directCheckout(customerBasket, requestId);
+        }
     }
 
 

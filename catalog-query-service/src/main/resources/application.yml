@@ -41,6 +41,8 @@ spring:
   # Kafka
   kafka:
     bootstrap-servers: ${app.kafka.brokers}
+    num-of-partitions: 2
+    replication-factor: 2
     producer:
       properties:
         spring.json.add.type.headers: false

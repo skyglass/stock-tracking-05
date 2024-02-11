@@ -12,6 +12,7 @@ import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.common.domain.dto.order.OrderStatus;
 import net.greeta.stock.helper.RetryHelper;
 import net.greeta.stock.orderprocessing.OrderProcessingClient;
+import net.greeta.stock.orderprocessing.OrderProcessingTestHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,6 +44,9 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
     private CatalogTestHelper catalogTestHelper;
 
     @Autowired
+    private OrderProcessingTestHelper orderProcessingTestHelper;
+
+    @Autowired
     private OrderProcessingClient orderProcessingClient;
 
     @Autowired
@@ -57,6 +62,7 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
         Integer productQuantity = 2;
         CatalogItemResponse product = catalogTestHelper
                 .createProduct(productName, productPrice, stockQuantity);
+        AtomicInteger counter = new AtomicInteger(0);
 
         // Start the clock
         long start = Instant.now().toEpochMilli();
@@ -67,7 +73,7 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
         for (int i = 0; i < numberOfOrders; i++) {
             CompletableFuture<BasketCheckout> orderSummary = basketTestHelper
                     .asyncCheckout(product.getProductId(), productName, stockQuantity,
-                            productPrice, productQuantity, "admin");
+                            productPrice, productQuantity, "admin", i);
             createdOrders.add(orderSummary);
         }
 
@@ -75,7 +81,8 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
         List<CompletableFuture<CatalogItemResponse>> addedStocks = new ArrayList<>();
         // Kick of multiple, asynchronous lookups
         for (int i = 0; i < numberOfStockUpdates; i++) {
-            CompletableFuture<CatalogItemResponse> addStockResult = catalogTestHelper.addStockAsync(product.getProductId(), productQuantity);
+            CompletableFuture<CatalogItemResponse> addStockResult = catalogTestHelper.addStockAsync(
+                    product.getProductId(), productQuantity, i);
             addedStocks.add(addStockResult);
         }
 
@@ -88,8 +95,8 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
             assertNotNull(checkout.getRequestId());
             log.info("--> " + checkout.getRequestId());
             Boolean orderPaid =  RetryHelper.retry(() -> {
-                var result = orderProcessingClient.getOrderByRequestId(
-                        checkout.getRequestId().toString());
+                var result = orderProcessingTestHelper.getOrderByRequestId(
+                        checkout.getRequestId().toString(), counter);
                 return Objects.equals(OrderStatus.Paid.getStatus(), result.status());
             });
 
@@ -105,7 +112,7 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
         log.info("Elapsed time: " + (Instant.now().toEpochMilli() - start));
 
         Boolean stockReducedToZero =  RetryHelper.retry(() -> {
-            CatalogItemDto catalogItemDto = catalogQueryClient.catalogItem(product.getProductId());
+            CatalogItemDto catalogItemDto = catalogTestHelper.catalogItem(product.getProductId(), counter);
             return catalogItemDto.availableStock() == 0;
         });
 
@@ -117,10 +124,10 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
         //Check that the next order is not approved, because the stock is zero
         BasketCheckout notApprovedCheckout = basketTestHelper.checkout(
                 product.getProductId(),
-                productName, productPrice, 1, "admin");
+                productName, productPrice, 1, "admin", 0);
         Boolean orderStockNotApproved =  RetryHelper.retry(() -> {
-            var result = orderProcessingClient.getOrderByRequestId(
-                    notApprovedCheckout.getRequestId().toString());
+            var result = orderProcessingTestHelper.getOrderByRequestId(
+                    notApprovedCheckout.getRequestId().toString(), counter);
             return Objects.equals(OrderStatus.AwaitingValidation.getStatus(), result.status());
         });
 
@@ -129,18 +136,18 @@ public class OrderProcessingConcurrencyE2eTest extends E2eTest {
         //simulate long waiting for stock update
         TimeUnit.MILLISECONDS.sleep(Duration.ofSeconds(3).toMillis());
 
-        catalogTestHelper.addStock(product.getProductId(), 1);
+        catalogTestHelper.addStock(product.getProductId(), 1, 0);
 
         Boolean orderStockApproved =  RetryHelper.retry(() -> {
-            var result = orderProcessingClient.getOrderByRequestId(
-                    notApprovedCheckout.getRequestId().toString());
+            var result = orderProcessingTestHelper.getOrderByRequestId(
+                    notApprovedCheckout.getRequestId().toString(), counter);
             return Objects.equals(OrderStatus.Paid.getStatus(), result.status());
         });
 
         assertTrue(orderStockApproved);
 
         Boolean stockZero =  RetryHelper.retry(() -> {
-            CatalogItemDto catalogItemDto = catalogQueryClient.catalogItem(product.getProductId());
+            CatalogItemDto catalogItemDto = catalogTestHelper.catalogItem(product.getProductId(), counter);
             return catalogItemDto.availableStock() == 0;
         });
 

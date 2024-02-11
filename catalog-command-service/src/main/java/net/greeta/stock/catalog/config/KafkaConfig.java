@@ -97,27 +97,27 @@ public class KafkaConfig {
   // Topics
   @Bean
   public NewTopic paidOrdersTopic() {
-    return new NewTopic(topics.getPaidOrders(), 1, (short) 1);
+    return new NewTopic(topics.getPaidOrders(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic ordersWaitingForValidationTopic() {
-    return new NewTopic(topics.getOrdersWaitingForValidation(), 1, (short) 1);
+    return new NewTopic(topics.getOrdersWaitingForValidation(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic productPriceChangesTopic() {
-    return new NewTopic(topics.getProductPriceChanges(), 1, (short) 1);
+    return new NewTopic(topics.getProductPriceChanges(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic orderStockConfirmedTopic() {
-    return new NewTopic(topics.getOrderStockConfirmed(), 1, (short) 1);
+    return new NewTopic(topics.getOrderStockConfirmed(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic orderStockRejectedTopic() {
-    return new NewTopic(topics.getOrderStockRejected(), 1, (short) 1);
+    return new NewTopic(topics.getOrderStockRejected(), 2, (short) 2);
   }
 
   private ErrorHandlingDeserializer<Object> jsonDeserializer() {

@@ -29,7 +29,7 @@ public class BasketE2eTest extends E2eTest {
     void test() {
         basketTestHelper.checkout(
                 "java17", 20,
-                5.0, 2, "admin");
+                5.0, 2, "admin", 0);
 
         CatalogItemResponse product = catalogTestHelper
                 .createProduct("java21", 5.0, 20);
@@ -37,7 +37,7 @@ public class BasketE2eTest extends E2eTest {
         mockHelper.mockCredentials("user", "user");
 
         basketTestHelper.checkout(product.getProductId(),
-                "java21", 5.0, 2, "user");
+                "java21", 5.0, 2, "user", 0);
     }
 
 

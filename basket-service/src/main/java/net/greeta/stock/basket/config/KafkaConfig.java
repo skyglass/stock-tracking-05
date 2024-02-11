@@ -101,17 +101,17 @@ public class KafkaConfig {
   // Topics
   @Bean
   public NewTopic orderCheckoutsTopic() {
-    return new NewTopic(topics.getOrderCheckouts(), 1, (short) 1);
+    return new NewTopic(topics.getOrderCheckouts(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic ordersTopic() {
-    return new NewTopic(topics.getOrders(), 1, (short) 1);
+    return new NewTopic(topics.getOrders(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic productPriceChangesTopic() {
-    return new NewTopic(topics.getProductPriceChanges(), 1, (short) 1);
+    return new NewTopic(topics.getProductPriceChanges(), 2, (short) 2);
   }
 
   private ErrorHandlingDeserializer<Object> jsonDeserializer() {

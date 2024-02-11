@@ -19,6 +19,7 @@ public class AxonTestDataService {
 
 
     public void resetDatabase() {
+        mongoTemplate.remove(new Query(), "sagas");
         mongoTemplate.remove(new Query(), "domainevents");
         mongoTemplate.remove(new Query(), "snapshotevents");
         mongoTemplate.remove(new Query(), "trackingtokens");

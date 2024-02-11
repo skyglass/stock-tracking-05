@@ -79,6 +79,27 @@ spring:
                 name: basketCircuitBreaker
                 fallbackUri: forward:/stock-fallback
 
+        - id: basket2
+          uri: ${BASKET2_SERVICE_URL:http://localhost:9007}
+          predicates:
+            - Path=/basket2/**
+          filters:
+            - RewritePath=/basket2/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: basketCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: basket3
+          uri: ${BASKET3_SERVICE_URL:http://localhost:9008}
+          predicates:
+            - Path=/basket3/**
+          filters:
+            - RewritePath=/basket3/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: basketCircuitBreaker
+                fallbackUri: forward:/stock-fallback
 
         - id: catalog-command
           uri: ${CATALOG_COMMAND_SERVICE_URL:http://localhost:9003}
@@ -86,6 +107,28 @@ spring:
             - Path=/catalog-command/**
           filters:
             - RewritePath=/catalog-command/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: catalogCommandCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: catalog-command2
+          uri: ${CATALOG_COMMAND2_SERVICE_URL:http://localhost:9011}
+          predicates:
+            - Path=/catalog-command2/**
+          filters:
+            - RewritePath=/catalog-command2/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: catalogCommandCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: catalog-command3
+          uri: ${CATALOG_COMMAND3_SERVICE_URL:http://localhost:9012}
+          predicates:
+            - Path=/catalog-command3/**
+          filters:
+            - RewritePath=/catalog-command3/(?<path>.*), /$\{path}
             - name: CircuitBreaker
               args:
                 name: catalogCommandCircuitBreaker
@@ -103,12 +146,34 @@ spring:
                 name: catalogQueryCircuitBreaker
                 fallbackUri: forward:/stock-fallback
 
+        - id: catalog-query2
+          uri: ${CATALOG_QUERY2_SERVICE_URL:http://localhost:9009}
+          predicates:
+            - Path=/catalog-query2/**
+          filters:
+            - RewritePath=/catalog-query2/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: catalogQueryCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
         - id: order-processing
           uri: ${ORDER_PROCESSING_SERVICE_URL:http://localhost:9005}
           predicates:
             - Path=/order-processing/**
           filters:
             - RewritePath=/order-processing/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: orderProcessingCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: order-processing2
+          uri: ${ORDER_PROCESSING2_SERVICE_URL:http://localhost:9010}
+          predicates:
+            - Path=/order-processing2/**
+          filters:
+            - RewritePath=/order-processing2/(?<path>.*), /$\{path}
             - name: CircuitBreaker
               args:
                 name: orderProcessingCircuitBreaker
@@ -210,11 +275,23 @@ springdoc:
         name: Analytics Service
       - url: /basket/v3/api-docs
         name: Basket Service
+      - url: /basket2/v3/api-docs
+        name: Basket2 Service
+      - url: /basket3/v3/api-docs
+        name: Basket3 Service
       - url: /catalog-command/v3/api-docs
         name: Catalog Command Service
+      - url: /catalog-command2/v3/api-docs
+        name: Catalog Command2 Service
+      - url: /catalog-command3/v3/api-docs
+        name: Catalog Command3 Service
       - url: /catalog-query/v3/api-docs
         name: Catalog Query Service
+      - url: /catalog-query2/v3/api-docs
+        name: Catalog Query2 Service
       - url: /order-processing/v3/api-docs
         name: Order Processing Service
+      - url: /order-processing2/v3/api-docs
+        name: Order Processing2 Service
       - url: /payment/v3/api-docs
         name: Payment Service

@@ -1,4 +1,4 @@
-package net.greeta.stock.catalog.domain.stockorder;
+package net.greeta.stock.catalog.application.query.model;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum StockOrderItemStatus {
     AwaitingConfirmation("AwaitingConfirmation"),
+    StockRejected("StockRejected"),
     StockConfirmed("StockConfirmed");
 
     @Getter

@@ -10,6 +10,8 @@ import net.greeta.stock.common.domain.dto.order.OrderViewModel;
 import net.greeta.stock.helper.RetryHelper;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -24,6 +26,8 @@ public class OrderProcessingTestHelper {
 
     private final OrderProcessingClient orderProcessingClient;
 
+    private final OrderProcessingClient2 orderProcessingClient2;
+
 
     public OrderViewModel.Order orderViewCheckout(String productName,
                                                   Integer stockQuantity,
@@ -34,7 +38,7 @@ public class OrderProcessingTestHelper {
                 .createProduct(productName, productPrice, stockQuantity);
 
         BasketCheckout basketCheckout = basketTestHelper.checkout(product.getProductId(),
-                productName, productPrice, productQuantity, customerId);
+                productName, productPrice, productQuantity, customerId, 0);
 
         OrderViewModel.Order orderCreated =  RetryHelper.retry(() ->
                 orderProcessingClient.getOrderByRequestId(
@@ -52,6 +56,12 @@ public class OrderProcessingTestHelper {
         assertEquals(productPrice, orderItem.unitPrice());
 
         return orderCreated;
+    }
+
+    public OrderViewModel.Order getOrderByRequestId(String requestId, AtomicInteger counter) {
+        int hash = counter.getAndIncrement();
+        return hash % 2 == 0 ? orderProcessingClient.getOrderByRequestId(requestId)
+                : orderProcessingClient2.getOrderByRequestId(requestId);
     }
 
 

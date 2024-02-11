@@ -45,7 +45,7 @@ public class OrderProcessingE2eTest extends E2eTest {
 
         BasketCheckout basketCheckout = basketTestHelper.checkout(
                 product.getProductId(),
-                productName, productPrice, productQuantity, "admin");
+                productName, productPrice, productQuantity, "admin", 0);
 
         OrderViewModel.Order orderCreated =  RetryHelper.retry(() ->
             orderProcessingClient.getOrderByRequestId(
@@ -86,7 +86,7 @@ public class OrderProcessingE2eTest extends E2eTest {
 
         assertTrue(stockReduced);
 
-        catalogTestHelper.addStock(product.getProductId(), 3);
+        catalogTestHelper.addStock(product.getProductId(), 3, 0);
 
         Boolean stockIncreased =  RetryHelper.retry(() -> {
             CatalogItemDto catalogItemDto = catalogQueryClient.catalogItem(product.getProductId());

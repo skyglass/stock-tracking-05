@@ -8,7 +8,7 @@ import net.greeta.stock.catalog.application.commands.removestock.RemoveStockComm
 import net.greeta.stock.catalog.application.query.model.QueryStockOrderItem;
 import net.greeta.stock.catalog.application.query.model.QueryStockOrderItemRepository;
 import net.greeta.stock.catalog.domain.catalogitem.CatalogItemAggregateRepository;
-import net.greeta.stock.catalog.domain.stockorder.StockOrderItemStatus;
+import net.greeta.stock.catalog.application.query.model.StockOrderItemStatus;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.shared.rest.error.NotFoundException;
 import org.axonframework.commandhandling.CommandHandler;
@@ -27,7 +27,7 @@ public class AddStockNotifyOrdersCommandHandler implements CatalogCommandHandler
 
   @CommandHandler
   @Override
-  @Transactional("mongoTransactionManager")
+  @Transactional("transactionManager")
   public CatalogItemResponse handle(AddStockNotifyOrdersCommand command) {
     final var catalogItem = catalogItemRepository.loadAggregate(command.productId());
 
@@ -36,7 +36,7 @@ public class AddStockNotifyOrdersCommandHandler implements CatalogCommandHandler
     }
 
     var stockOrderItems = stockOrderItemRepository
-            .findAllByProductIdAndStockOrderItemStatus(command.productId(), StockOrderItemStatus.AwaitingConfirmation);
+            .findAllByProductIdAndStockOrderItemStatus(command.productId(), StockOrderItemStatus.StockRejected);
     int stockQuantity = command.availableStock().intValue();
     if (stockOrderItems.isPresent()) {
       for (QueryStockOrderItem stockOrderItem: stockOrderItems.get()) {
@@ -45,6 +45,8 @@ public class AddStockNotifyOrdersCommandHandler implements CatalogCommandHandler
                   command.productId(), stockOrderItem.getOrderId(),
                   stockOrderItem.getQuantity());
           log.info("AddStockNotifyOrdersCommandHandler.RemoveStockCommand started for order {} and product {} with quantity {}", stockOrderItem.getOrderId(), command.productId(), stockOrderItem.getQuantity());
+          stockOrderItem.setStockOrderItemStatus(StockOrderItemStatus.AwaitingConfirmation);
+          stockOrderItemRepository.save(stockOrderItem);
           commandBus.execute(removeStockCommand);
           stockQuantity -= stockOrderItem.getQuantity().intValue();
         }

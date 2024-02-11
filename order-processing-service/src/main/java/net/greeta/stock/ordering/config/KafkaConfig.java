@@ -91,57 +91,57 @@ public class KafkaConfig implements KafkaListenerConfigurer {
   // Topics
   @Bean
   public NewTopic paidOrdersTopic() {
-    return new NewTopic(topics.getPaidOrders(), 1, (short) 1);
+    return new NewTopic(topics.getPaidOrders(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic ordersWaitingForValidationTopic() {
-    return new NewTopic(topics.getOrdersWaitingForValidation(), 1, (short) 1);
+    return new NewTopic(topics.getOrdersWaitingForValidation(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic orderCheckoutsTopic() {
-    return new NewTopic(topics.getOrderCheckouts(), 1, (short) 1);
+    return new NewTopic(topics.getOrderCheckouts(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic orderStockConfirmedTopic() {
-    return new NewTopic(topics.getOrderStockConfirmed(), 1, (short) 1);
+    return new NewTopic(topics.getOrderStockConfirmed(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic orderStockRejectedTopic() {
-    return new NewTopic(topics.getOrderStockRejected(), 1, (short) 1);
+    return new NewTopic(topics.getOrderStockRejected(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic stockConfirmedTopic() {
-    return new NewTopic(topics.getStockConfirmed(), 1, (short) 1);
+    return new NewTopic(topics.getStockConfirmed(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic paymentStatusTopic() {
-    return new NewTopic(topics.getPaymentStatus(), 1, (short) 1);
+    return new NewTopic(topics.getPaymentStatus(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic ordersTopic() {
-    return new NewTopic(topics.getOrders(), 1, (short) 1);
+    return new NewTopic(topics.getOrders(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic cancelledOrdersTopic() {
-    return new NewTopic(topics.getCancelledOrders(), 1, (short) 1);
+    return new NewTopic(topics.getCancelledOrders(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic shippedOrdersTopic() {
-    return new NewTopic(topics.getShippedOrders(), 1, (short) 1);
+    return new NewTopic(topics.getShippedOrders(), 2, (short) 2);
   }
 
   @Bean
   public NewTopic submittedOrdersTopic() {
-    return new NewTopic(topics.getSubmittedOrders(), 1, (short) 1);
+    return new NewTopic(topics.getSubmittedOrders(), 2, (short) 2);
   }
 
 }
