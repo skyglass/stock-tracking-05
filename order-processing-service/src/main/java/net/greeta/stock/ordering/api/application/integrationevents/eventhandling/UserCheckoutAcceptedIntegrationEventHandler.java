@@ -3,7 +3,7 @@ package net.greeta.stock.ordering.api.application.integrationevents.eventhandlin
 import net.greeta.stock.ordering.api.application.commands.CreateOrderCommand;
 import net.greeta.stock.ordering.api.application.commands.CreateOrderIdentifiedCommand;
 import net.greeta.stock.ordering.api.application.integrationevents.events.UserCheckoutAcceptedIntegrationEvent;
-import net.greeta.stock.ordering.api.infrastructure.commandbus.CommandBus;
+import net.greeta.stock.shared.eventhandling.commands.IdempotentCommandBus;
 import net.greeta.stock.shared.eventhandling.EventHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,7 +15,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 public class UserCheckoutAcceptedIntegrationEventHandler {
   private static final Logger logger = LoggerFactory.getLogger(UserCheckoutAcceptedIntegrationEventHandler.class);
 
-  private final CommandBus commandBus;
+  private final IdempotentCommandBus commandBus;
 
   /**
    * Integration event handler which starts the create order process.

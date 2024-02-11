@@ -1,14 +1,14 @@
 package net.greeta.stock.catalog.application.integrationevents.eventhandling;
 
 import lombok.RequiredArgsConstructor;
-import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
-import net.greeta.stock.catalog.application.commands.createstockorder.CreateStockOrderCommand;
+import net.greeta.stock.catalog.application.commands.createstockorder.CreateStockOrderIdempotentCommand;
+import net.greeta.stock.catalog.application.commands.createstockorder.CreateStockOrderIdentifiedCommand;
 import net.greeta.stock.catalog.application.integrationevents.events.*;
+import net.greeta.stock.shared.eventhandling.commands.IdempotentCommandBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -17,7 +17,7 @@ import java.util.UUID;
 public class OrderStatusChangedToAwaitingValidationIntegrationEventHandler {
   private static final Logger logger = LoggerFactory.getLogger(OrderStatusChangedToAwaitingValidationIntegrationEventHandler.class);
 
-  private final CatalogCommandBus commandBus;
+  private final IdempotentCommandBus commandBus;
 
   @KafkaListener(
           groupId = "${app.kafka.group.ordersWaitingValidation}",
@@ -26,9 +26,11 @@ public class OrderStatusChangedToAwaitingValidationIntegrationEventHandler {
   public void handle(OrderStatusChangedToAwaitingValidationIntegrationEvent event) {
     logger.info("Handling integration event: {} ({})", event.getId(), event.getClass().getSimpleName());
 
-    CreateStockOrderCommand createStockOrderCommand = new CreateStockOrderCommand(
+    CreateStockOrderIdempotentCommand createStockOrderCommand = new CreateStockOrderIdempotentCommand(
             UUID.fromString(event.getOrderId()), event.getOrderStockItems());
-    commandBus.execute(createStockOrderCommand);
+    CreateStockOrderIdentifiedCommand createStockOrderIdentifiedCommand = new CreateStockOrderIdentifiedCommand(
+            createStockOrderCommand, event.getId());
+    commandBus.send(createStockOrderIdentifiedCommand);
   }
 
 }

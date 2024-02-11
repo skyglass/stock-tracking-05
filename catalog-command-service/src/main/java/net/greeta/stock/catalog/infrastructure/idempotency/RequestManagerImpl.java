@@ -1,4 +1,4 @@
-package net.greeta.stock.ordering.infrastructure.idempotency;
+package net.greeta.stock.catalog.infrastructure.idempotency;
 
 import lombok.RequiredArgsConstructor;
 import net.greeta.stock.common.domain.dto.order.exceptions.OrderingDomainException;

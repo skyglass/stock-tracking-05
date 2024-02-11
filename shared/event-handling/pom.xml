@@ -28,6 +28,11 @@
             <artifactId>jakarta.validation-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>an.awesome</groupId>
+            <artifactId>pipelinr</artifactId>
+        </dependency>
+
     </dependencies>
 
 

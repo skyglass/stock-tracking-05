@@ -41,7 +41,6 @@
         <dependency>
             <groupId>an.awesome</groupId>
             <artifactId>pipelinr</artifactId>
-            <version>${pipelinr-version}</version>
         </dependency>
 
         <dependency>

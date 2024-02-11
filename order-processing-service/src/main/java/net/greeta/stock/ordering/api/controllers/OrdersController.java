@@ -4,10 +4,9 @@ import net.greeta.stock.common.domain.dto.order.*;
 import net.greeta.stock.ordering.api.application.commands.*;
 import net.greeta.stock.ordering.api.application.queries.OrderQueries;
 import net.greeta.stock.ordering.api.application.services.IdentityService;
-import net.greeta.stock.ordering.api.infrastructure.commandbus.CommandBus;
+import net.greeta.stock.shared.eventhandling.commands.IdempotentCommandBus;
 import net.greeta.stock.ordering.api.infrastructure.exceptions.UnauthorizedException;
 import net.greeta.stock.ordering.api.application.commands.CancelOrderCommand;
-import net.greeta.stock.ordering.api.application.commands.CreateOrderDraftCommand;
 import net.greeta.stock.ordering.api.application.commands.ShipOrderCommand;
 import net.greeta.stock.ordering.domain.mapper.CreateOrderDraftMapper;
 import net.greeta.stock.shared.rest.error.NotFoundException;
@@ -27,7 +26,7 @@ import java.util.UUID;
 @Validated
 public class OrdersController {
 
-  private final CommandBus commandBus;
+  private final IdempotentCommandBus commandBus;
   private final OrderQueries orderQueries;
   private final IdentityService identityService;
   private final CreateOrderDraftMapper createOrderDraftMapper;

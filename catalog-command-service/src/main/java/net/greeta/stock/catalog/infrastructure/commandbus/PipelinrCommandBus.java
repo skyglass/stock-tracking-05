@@ -1,10 +1,11 @@
-package net.greeta.stock.ordering.api.infrastructure.commandbus;
+package net.greeta.stock.catalog.infrastructure.commandbus;
 
 import an.awesome.pipelinr.Command;
 import an.awesome.pipelinr.Pipeline;
 import lombok.RequiredArgsConstructor;
-import net.greeta.stock.ordering.api.application.commands.IdentifiedCommand;
-import net.greeta.stock.ordering.api.infrastructure.requestmanager.RequestManager;
+import net.greeta.stock.shared.eventhandling.RequestManager;
+import net.greeta.stock.shared.eventhandling.commands.IdempotentCommandBus;
+import net.greeta.stock.shared.eventhandling.commands.IdentifiedCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,8 +16,8 @@ import org.springframework.stereotype.Component;
  */
 @RequiredArgsConstructor
 @Component
-public class CommandBusImpl implements CommandBus {
-  private static final Logger logger = LoggerFactory.getLogger(CommandBusImpl.class);
+public class PipelinrCommandBus implements IdempotentCommandBus {
+  private static final Logger logger = LoggerFactory.getLogger(PipelinrCommandBus.class);
 
   private final RequestManager requestManager;
   private final Pipeline pipeline;

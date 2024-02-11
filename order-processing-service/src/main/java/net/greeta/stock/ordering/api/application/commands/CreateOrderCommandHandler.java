@@ -7,7 +7,7 @@ import net.greeta.stock.common.domain.dto.order.buyer.*;
 import net.greeta.stock.ordering.api.application.integrationevents.events.OrderStartedIntegrationEvent;
 import net.greeta.stock.ordering.config.KafkaTopics;
 import net.greeta.stock.ordering.domain.aggregatesmodel.order.*;
-import net.greeta.stock.ordering.shared.CommandHandler;
+import net.greeta.stock.shared.eventhandling.commands.CommandHandler;
 import net.greeta.stock.shared.outbox.IntegrationEventLogService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

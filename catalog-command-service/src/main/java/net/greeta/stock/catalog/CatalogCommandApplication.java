@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = { "net.greeta.stock.catalog.application.query.model" })
-@EntityScan(basePackages = { "net.greeta.stock.catalog.application.query.model"})
+@EnableJpaRepositories(basePackages = { "net.greeta.stock.catalog" })
+@EntityScan(basePackages = { "net.greeta.stock.catalog"})
 @EnableTransactionManagement
 public class CatalogCommandApplication {
   public static void main(String[] args) {

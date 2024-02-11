@@ -4,7 +4,7 @@ import an.awesome.pipelinr.Command;
 import lombok.RequiredArgsConstructor;
 import net.greeta.stock.common.domain.dto.basket.BasketItem;
 import net.greeta.stock.common.domain.dto.order.*;
-import net.greeta.stock.ordering.shared.CommandHandler;
+import net.greeta.stock.shared.eventhandling.commands.CommandHandler;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;

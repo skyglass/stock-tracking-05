@@ -1,4 +1,4 @@
-package net.greeta.stock.ordering.api.infrastructure.requestmanager;
+package net.greeta.stock.shared.eventhandling;
 
 import java.util.UUID;
 

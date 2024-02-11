@@ -1,4 +1,4 @@
-package net.greeta.stock.ordering.api.application.commands;
+package net.greeta.stock.shared.eventhandling.commands;
 
 import an.awesome.pipelinr.Command;
 import lombok.Getter;
