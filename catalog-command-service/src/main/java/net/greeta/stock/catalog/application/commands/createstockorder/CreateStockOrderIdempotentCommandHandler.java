@@ -15,8 +15,8 @@ public class CreateStockOrderIdempotentCommandHandler implements Command.Handler
 
   private final CatalogCommandBus commandBus;
 
-  @Transactional
   @Override
+  @Transactional("mongoTransactionManager")
   public Boolean handle(CreateStockOrderIdempotentCommand command) {
 
     CreateStockOrderCommand createStockOrderCommand = new CreateStockOrderCommand(

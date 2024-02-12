@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,4 +16,5 @@ public class OrderStatusChangedToAwaitingValidationIntegrationEvent extends Inte
   private String orderId;
   //The name must be "orderStockItems" for compatibility with correspondent order-processing service integration event
   private List<StockOrderItem> orderStockItems;
+  private UUID requestId;
 }

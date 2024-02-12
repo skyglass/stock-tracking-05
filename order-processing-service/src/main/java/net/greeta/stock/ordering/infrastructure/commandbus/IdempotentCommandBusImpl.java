@@ -1,4 +1,4 @@
-package net.greeta.stock.catalog.infrastructure.commandbus;
+package net.greeta.stock.ordering.infrastructure.commandbus;
 
 import an.awesome.pipelinr.Command;
 import an.awesome.pipelinr.Pipeline;
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
  */
 @RequiredArgsConstructor
 @Component
-public class PipelinrCommandBus implements IdempotentCommandBus {
-  private static final Logger logger = LoggerFactory.getLogger(PipelinrCommandBus.class);
+public class IdempotentCommandBusImpl implements IdempotentCommandBus {
+  private static final Logger logger = LoggerFactory.getLogger(IdempotentCommandBusImpl.class);
 
   private final RequestManager requestManager;
   private final Pipeline pipeline;

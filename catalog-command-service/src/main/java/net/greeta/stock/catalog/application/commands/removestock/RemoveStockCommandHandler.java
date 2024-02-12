@@ -3,9 +3,7 @@ package net.greeta.stock.catalog.application.commands.removestock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.greeta.stock.catalog.application.commandbus.CatalogCommandHandler;
-import net.greeta.stock.catalog.application.events.RemoveStockConfirmed;
 import net.greeta.stock.catalog.application.events.RemoveStockRejected;
-import net.greeta.stock.catalog.application.events.StockOrderItemConfirmed;
 import net.greeta.stock.catalog.application.query.model.QueryStockOrderItemRepository;
 import net.greeta.stock.catalog.application.query.model.StockOrderItemStatus;
 import net.greeta.stock.catalog.domain.catalogitem.CatalogItemAggregateRepository;
@@ -29,6 +27,7 @@ public class RemoveStockCommandHandler implements CatalogCommandHandler<CatalogI
   private final QueryStockOrderItemRepository stockOrderItemRepository;
 
   @CommandHandler
+  @Transactional("mongoTransactionManager")
   public CatalogItemResponse handle(RemoveStockCommand command) {
     log.info("RemoveStockCommandHandler.RemoveStockCommand started for order {} and product {} with quantity {}",
             command.getOrderId(), command.getProductId(), command.getQuantity());
@@ -46,6 +45,7 @@ public class RemoveStockCommandHandler implements CatalogCommandHandler<CatalogI
   }
 
   @EventHandler
+  @Transactional("mongoTransactionManager")
   public void on(StockRemoved event) {
     log.info("RemoveStockCommandHandler.StockRemoved event handler started for order {} and product {} with quantity {}",
             event.getOrderId(), event.getId(), event.getQuantity());

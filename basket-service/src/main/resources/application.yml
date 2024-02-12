@@ -20,7 +20,7 @@ spring:
     num-of-partitions: 2
     replication-factor: 2
     producer:
-      transaction-id-prefix: tx-basket-
+      transaction-id-prefix: tx-basket
       properties:
         spring.json.add.type.headers: false
     consumer:

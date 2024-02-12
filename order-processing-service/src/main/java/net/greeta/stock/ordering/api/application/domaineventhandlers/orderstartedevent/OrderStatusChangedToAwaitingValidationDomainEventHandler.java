@@ -41,7 +41,8 @@ public class OrderStatusChangedToAwaitingValidationDomainEventHandler
         .collect(Collectors.toList());
 
     var orderStatusChangedToAwaitingValidationIntegrationEvent = new OrderStatusChangedToAwaitingValidationIntegrationEvent(
-        order.getId().getUuid(), order.getOrderStatus().getStatus(), buyer.getBuyerName().getName(), orderStockList);
+        order.getId().getUuid(), order.getOrderStatus().getStatus(),
+            buyer.getBuyerName().getName(), orderStockList, event.requestId());
     integrationEventLogService.saveEvent(
         orderStatusChangedToAwaitingValidationIntegrationEvent,
         topics.getOrdersWaitingForValidation()

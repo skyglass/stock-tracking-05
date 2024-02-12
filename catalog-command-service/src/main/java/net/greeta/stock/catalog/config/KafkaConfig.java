@@ -26,6 +26,7 @@ import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.springframework.transaction.support.AbstractPlatformTransactionManager.SYNCHRONIZATION_ON_ACTUAL_TRANSACTION;
 
@@ -64,7 +65,9 @@ public class KafkaConfig {
   }
 
   public ProducerFactory<String, IntegrationEvent> producerFactory() {
-    return new DefaultKafkaProducerFactory<>(producerConfigs());
+    var producerFactory = new DefaultKafkaProducerFactory<String, IntegrationEvent>(producerConfigs());
+    producerFactory.setTransactionIdPrefix(String.format("%s-%s", kafkaProperties.getProducer().getTransactionIdPrefix(), UUID.randomUUID()));
+    return producerFactory;
   }
 
   @Bean
@@ -73,10 +76,8 @@ public class KafkaConfig {
   }
 
   @Bean
-  public KafkaTransactionManager<String, IntegrationEvent> kafkaTransactionManager(
-          ProducerFactory<String, IntegrationEvent> producerFactory
-  ) {
-    var kafkaTransactionManager = new KafkaTransactionManager<>(producerFactory);
+  public KafkaTransactionManager<String, IntegrationEvent> kafkaTransactionManager() {
+    var kafkaTransactionManager = new KafkaTransactionManager<>(producerFactory());
     kafkaTransactionManager.setTransactionSynchronization(SYNCHRONIZATION_ON_ACTUAL_TRANSACTION);
     return kafkaTransactionManager;
   }

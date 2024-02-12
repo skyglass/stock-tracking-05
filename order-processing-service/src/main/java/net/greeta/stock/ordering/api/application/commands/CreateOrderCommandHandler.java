@@ -43,7 +43,7 @@ public class CreateOrderCommandHandler implements Command.Handler<CreateOrderCom
     logger.info("Creating Order");
 
     orderRepository.save(order);
-    pipeline.send(new SetAwaitingValidationOrderStatusCommand(order.getId().getUuid()));
+    pipeline.send(new SetAwaitingValidationOrderStatusCommand(order.getId().getUuid(), order.getRequestId()));
 
     return true;
   }

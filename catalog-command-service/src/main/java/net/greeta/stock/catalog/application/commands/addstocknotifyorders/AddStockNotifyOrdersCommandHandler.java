@@ -12,6 +12,7 @@ import net.greeta.stock.catalog.application.query.model.StockOrderItemStatus;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.shared.rest.error.NotFoundException;
 import org.axonframework.commandhandling.CommandHandler;
+import org.hibernate.Remove;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +23,11 @@ import static java.util.Objects.isNull;
 @Slf4j
 public class AddStockNotifyOrdersCommandHandler implements CatalogCommandHandler<CatalogItemResponse, AddStockNotifyOrdersCommand> {
   private final CatalogItemAggregateRepository catalogItemRepository;
-  private final QueryStockOrderItemRepository stockOrderItemRepository;
   private final CatalogCommandBus commandBus;
 
   @CommandHandler
   @Override
-  @Transactional("transactionManager")
+  @Transactional("mongoTransactionManager")
   public CatalogItemResponse handle(AddStockNotifyOrdersCommand command) {
     final var catalogItem = catalogItemRepository.loadAggregate(command.productId());
 
@@ -35,25 +35,10 @@ public class AddStockNotifyOrdersCommandHandler implements CatalogCommandHandler
       throw new NotFoundException("Catalog Item not found: productId = %s".formatted(command.productId()));
     }
 
-    var stockOrderItems = stockOrderItemRepository
-            .findAllByProductIdAndStockOrderItemStatus(command.productId(), StockOrderItemStatus.StockRejected);
-    int stockQuantity = command.availableStock().intValue();
-    if (stockOrderItems.isPresent()) {
-      for (QueryStockOrderItem stockOrderItem: stockOrderItems.get()) {
-        if (stockQuantity >= stockOrderItem.getQuantity().intValue()) {
-          RemoveStockCommand removeStockCommand = new RemoveStockCommand(
-                  command.productId(), stockOrderItem.getOrderId(),
-                  stockOrderItem.getQuantity());
-          log.info("AddStockNotifyOrdersCommandHandler.RemoveStockCommand started for order {} and product {} with quantity {}", stockOrderItem.getOrderId(), command.productId(), stockOrderItem.getQuantity());
-          stockOrderItem.setStockOrderItemStatus(StockOrderItemStatus.AwaitingConfirmation);
-          stockOrderItemRepository.save(stockOrderItem);
-          commandBus.execute(removeStockCommand);
-          stockQuantity -= stockOrderItem.getQuantity().intValue();
-        }
-        if (stockQuantity == 0) {
-          break;
-        }
-      }
+    for (RemoveStockCommand removeStockCommand: command.removeStockCommands()) {
+      log.info("AddStockNotifyOrdersCommandHandler.RemoveStockCommand started for order {} and product {} with quantity {}",
+              removeStockCommand.getOrderId(), command.productId(), removeStockCommand.getQuantity());
+      commandBus.execute(removeStockCommand);
     }
 
     return CatalogItemResponse.builder()

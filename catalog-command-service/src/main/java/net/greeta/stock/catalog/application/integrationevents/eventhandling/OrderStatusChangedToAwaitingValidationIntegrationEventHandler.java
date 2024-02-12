@@ -29,7 +29,7 @@ public class OrderStatusChangedToAwaitingValidationIntegrationEventHandler {
     CreateStockOrderIdempotentCommand createStockOrderCommand = new CreateStockOrderIdempotentCommand(
             UUID.fromString(event.getOrderId()), event.getOrderStockItems());
     CreateStockOrderIdentifiedCommand createStockOrderIdentifiedCommand = new CreateStockOrderIdentifiedCommand(
-            createStockOrderCommand, event.getId());
+            createStockOrderCommand, event.getRequestId());
     commandBus.send(createStockOrderIdentifiedCommand);
   }
 

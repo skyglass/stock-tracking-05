@@ -118,9 +118,9 @@ public class Order extends AggregateRoot<OrderId> {
         );
   }
 
-  public void setAwaitingValidationStatus() {
+  public void setAwaitingValidationStatus(UUID requestId) {
     if (OrderStatus.Submitted.equals(orderStatus)) {
-      addDomainEvent(new OrderStatusChangedToAwaitingValidationDomainEvent(id, orderItems));
+      addDomainEvent(new OrderStatusChangedToAwaitingValidationDomainEvent(id, orderItems, requestId));
       changeOrderStatusTo(OrderStatus.AwaitingValidation);
     }
   }

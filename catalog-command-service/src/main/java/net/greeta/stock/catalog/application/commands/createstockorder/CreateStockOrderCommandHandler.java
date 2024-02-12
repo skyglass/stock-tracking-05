@@ -27,6 +27,7 @@ public class CreateStockOrderCommandHandler implements CatalogCommandHandler<Sto
 
   @CommandHandler
   @Override
+  @Transactional("mongoTransactionManager")
   public StockOrderResponse handle(CreateStockOrderCommand command) {
 
     final var stockOrderAggregate = stockOrderRepository.save(() -> stockOrderOf(command));

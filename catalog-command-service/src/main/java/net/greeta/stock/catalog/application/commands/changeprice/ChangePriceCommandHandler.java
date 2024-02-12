@@ -26,6 +26,7 @@ public class ChangePriceCommandHandler implements CatalogCommandHandler<CatalogI
 
   @CommandHandler
   @Override
+  @Transactional("mongoTransactionManager")
   public CatalogItemResponse handle(ChangePriceCommand command) {
     final var catalogItemAggregate = catalogItemRepository.loadAggregate(command.productId());
 

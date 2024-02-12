@@ -21,7 +21,7 @@ public class SetAwaitingValidationOrderStatusCommandHandler
   public Boolean handle(SetAwaitingValidationOrderStatusCommand command) {
     orderRepository.findById(OrderId.of(command.orderNumber()))
         .ifPresent(order -> {
-          order.setAwaitingValidationStatus();
+          order.setAwaitingValidationStatus(command.requestId());
           orderRepository.save(order);
         });
     return true;
