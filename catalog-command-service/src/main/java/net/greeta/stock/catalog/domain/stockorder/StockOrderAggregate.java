@@ -46,35 +46,11 @@ public class StockOrderAggregate extends AggregateRoot {
         this.stockOrderItems = event.getStockOrderItems();
     }
 
-    public void removeStockConfirmed(StockRemoved event) {
-        RemoveStockConfirmed confirmEvent = new RemoveStockConfirmed(
-                event.getOrderId(), event.getId(),
-                event.getQuantity(), event.getAvailableStock());
-        apply(confirmEvent);
-    }
-
-    @EventSourcingHandler
-    public void on(RemoveStockConfirmed event) {
-        log.info("StockOrderAggregate.RemoveStockConfirmed event handler started for order {} and product {} with quantity {}",
-                event.getId(), event.getProductId(), event.getQuantity());
-    }
-
-    @EventSourcingHandler
-    public void on(RemoveStockRejected event) {
-        log.info("StockOrderAggregate.RemoveStockRejected event handler started for order {} and product {} with quantity {}",
-                event.getOrderId(), event.getId(), event.getQuantity());
-    }
-
     @CommandHandler
-    public StockOrderResponse handle(ConfirmStockOrderItemCommand command) {
+    public void handle(ConfirmStockOrderItemCommand command) {
         log.info("StockOrderAggregate.ConfirmStockOrderItemCommand started for order {} and product {} with quantity {}", command.getOrderId(), command.getProductId(), command.getQuantity());
         apply(new StockOrderItemConfirmed(id, command.getProductId(),
                 command.getQuantity(), getNext(command.getProductId()), true));
-
-        return StockOrderResponse.builder()
-                .orderId(id)
-                .version(version)
-                .build();
     }
 
     @EventSourcingHandler
@@ -91,14 +67,9 @@ public class StockOrderAggregate extends AggregateRoot {
     }
 
     @CommandHandler
-    public StockOrderResponse handle(ConfirmStockOrderCommand command) {
+    public void handle(ConfirmStockOrderCommand command) {
         log.info("StockOrderAggregate.ConfirmStockOrderCommand started for order {}", command.getOrderId());
         apply(new StockOrderConfirmed(id));
-
-        return StockOrderResponse.builder()
-                .orderId(id)
-                .version(version)
-                .build();
     }
 
     @EventSourcingHandler

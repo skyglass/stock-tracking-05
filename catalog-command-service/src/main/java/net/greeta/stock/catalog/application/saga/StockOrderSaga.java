@@ -2,6 +2,7 @@ package net.greeta.stock.catalog.application.saga;
 
 import lombok.extern.slf4j.Slf4j;
 import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
+import net.greeta.stock.catalog.application.commandbus.CommandBusRetryHelper;
 import net.greeta.stock.catalog.application.commands.confirmstockorder.ConfirmStockOrderCommand;
 import net.greeta.stock.catalog.application.commands.confirmstockorderitem.ConfirmStockOrderItemCommand;
 import net.greeta.stock.catalog.application.commands.removestock.RemoveStockCommand;
@@ -30,6 +31,8 @@ public class StockOrderSaga {
 	private transient KafkaTopics kafkaTopics;
 	@Autowired
 	private transient CatalogCommandBus commandBus;
+	@Autowired
+	private transient CommandBusRetryHelper commandBusRetryHelper;
 	
 	@StartSaga
 	@SagaEventHandler(associationProperty="id")
@@ -41,7 +44,7 @@ public class StockOrderSaga {
 					current.getProductId(), event.getId(),
 					current.getUnits());
 			log.info("StockOrderSaga.RemoveStockCommand started for order {} and product {} with quantity {}", event.getId(), current.getProductId(), current.getUnits());
-			commandBus.execute(command);
+			commandBusRetryHelper.execute(command);
 		}
  
 	}
@@ -70,7 +73,7 @@ public class StockOrderSaga {
 					next.getUnits());
 			log.info("StockOrderSaga.StockOrderItemConfirmed.RemoveStockCommand started for order {} and product {} with quantity {}",
 					event.getId(), nextCommand.getProductId(), nextCommand.getQuantity());
-			commandBus.execute(nextCommand);
+			commandBusRetryHelper.execute(nextCommand);
 		}
  
 	}

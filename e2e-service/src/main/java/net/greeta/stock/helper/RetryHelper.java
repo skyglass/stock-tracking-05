@@ -30,7 +30,7 @@ public class RetryHelper {
                     }
                 }
             } catch (Throwable t) {
-                //ignore
+                log.info(t.getMessage());
             }
         }
         return result;

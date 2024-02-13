@@ -1,7 +1,7 @@
 package net.greeta.stock.catalogcommand;
 
 import jakarta.validation.Valid;
-import net.greeta.stock.common.domain.dto.catalog.AddStockCommand;
+import net.greeta.stock.common.domain.dto.catalog.AddStockDto;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.common.domain.dto.catalog.CreateProductCommand;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -16,6 +16,6 @@ public interface CatalogCommandClient {
     CatalogItemResponse createProduct(@RequestBody @Valid CreateProductCommand command);
 
     @RequestMapping(method = RequestMethod.PUT, path = "items/addstock")
-    CatalogItemResponse addStock(@RequestBody @Valid AddStockCommand command);
+    CatalogItemResponse addStock(@RequestBody @Valid AddStockDto command);
 
 }

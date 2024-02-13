@@ -12,6 +12,7 @@ import net.greeta.stock.catalogquery.CatalogQueryClient2;
 import net.greeta.stock.common.GenericTestHelper;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemDto;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
+import net.greeta.stock.helper.RetryHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 

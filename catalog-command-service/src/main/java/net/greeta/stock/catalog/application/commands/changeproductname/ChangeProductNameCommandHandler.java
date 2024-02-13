@@ -15,7 +15,6 @@ public class ChangeProductNameCommandHandler implements CatalogCommandHandler<Ca
   private final CatalogItemAggregateRepository catalogItemRepository;
 
   @CommandHandler
-  @Transactional("mongoTransactionManager")
   public CatalogItemResponse handle(ChangeProductNameCommand command) {
     final var catalogItem = catalogItemRepository.loadAggregate(command.productId());
 

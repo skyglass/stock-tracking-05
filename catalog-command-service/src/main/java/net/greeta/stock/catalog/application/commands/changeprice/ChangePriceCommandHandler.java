@@ -1,5 +1,6 @@
 package net.greeta.stock.catalog.application.commands.changeprice;
 
+import lombok.RequiredArgsConstructor;
 import net.greeta.stock.catalog.application.commandbus.CatalogCommandHandler;
 import net.greeta.stock.catalog.application.integrationevents.IntegrationEventPublisher;
 import net.greeta.stock.catalog.application.integrationevents.events.ProductPriceChangedIntegrationEvent;
@@ -8,7 +9,6 @@ import net.greeta.stock.catalog.domain.catalogitem.CatalogItemAggregateRepositor
 import net.greeta.stock.catalog.domain.catalogitem.Price;
 import net.greeta.stock.common.domain.dto.catalog.CatalogItemResponse;
 import net.greeta.stock.shared.rest.error.NotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,6 @@ public class ChangePriceCommandHandler implements CatalogCommandHandler<CatalogI
 
   @CommandHandler
   @Override
-  @Transactional("mongoTransactionManager")
   public CatalogItemResponse handle(ChangePriceCommand command) {
     final var catalogItemAggregate = catalogItemRepository.loadAggregate(command.productId());
 

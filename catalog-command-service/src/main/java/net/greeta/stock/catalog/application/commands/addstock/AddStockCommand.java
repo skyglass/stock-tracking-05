@@ -1,4 +1,4 @@
-package net.greeta.stock.catalog.application.commands.removestock;
+package net.greeta.stock.catalog.application.commands.addstock;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
@@ -11,7 +11,7 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import java.util.UUID;
 
 @Value
-public class RemoveStockCommand implements Command<CatalogItemResponse> {
+public class AddStockCommand implements Command<CatalogItemResponse> {
     @JsonProperty
     @NotNull
     @TargetAggregateIdentifier
@@ -19,9 +19,6 @@ public class RemoveStockCommand implements Command<CatalogItemResponse> {
 
     @JsonProperty
     @NotNull
-    private UUID orderId;
-
-    @JsonProperty
-    @NotNull @Min(1)
+    @Min(1)
     private Integer quantity;
 }

@@ -16,13 +16,12 @@ public class CreateStockOrderIdempotentCommandHandler implements Command.Handler
   private final CatalogCommandBus commandBus;
 
   @Override
-  @Transactional("mongoTransactionManager")
   public Boolean handle(CreateStockOrderIdempotentCommand command) {
 
     CreateStockOrderCommand createStockOrderCommand = new CreateStockOrderCommand(
             command.orderId(), command.stockOrderItems());
 
-    commandBus.execute(createStockOrderCommand);
+      commandBus.execute(createStockOrderCommand);
 
     return true;
   }
