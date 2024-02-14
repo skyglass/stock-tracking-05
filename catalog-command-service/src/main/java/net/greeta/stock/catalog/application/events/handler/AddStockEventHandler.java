@@ -1,8 +1,9 @@
-package net.greeta.stock.catalog.application.commands.addstock;
+package net.greeta.stock.catalog.application.events.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
+import net.greeta.stock.catalog.application.commandbus.CommandBusRetryHelper;
 import net.greeta.stock.catalog.application.commands.addstocknotifyorders.AddStockNotifyOrdersCommand;
 import net.greeta.stock.catalog.application.commands.removestock.RemoveStockCommand;
 import net.greeta.stock.catalog.application.query.model.QueryStockOrderItem;
@@ -21,7 +22,7 @@ import java.util.List;
 @Component
 @Slf4j
 public class AddStockEventHandler {
-  private final CatalogCommandBus commandBus;
+  private final CommandBusRetryHelper commandBusRetryHelper;
   private final QueryStockOrderItemRepository stockOrderItemRepository;
 
   @EventHandler
@@ -54,7 +55,7 @@ public class AddStockEventHandler {
 
     if (CollectionUtils.isNotEmpty(removeStockCommands)) {
       AddStockNotifyOrdersCommand command = new AddStockNotifyOrdersCommand(event.getId(), removeStockCommands);
-      commandBus.execute(command);
+      commandBusRetryHelper.execute(command);
     }
   }
 }

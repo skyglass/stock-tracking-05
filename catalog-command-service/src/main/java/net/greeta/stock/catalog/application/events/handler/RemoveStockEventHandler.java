@@ -1,4 +1,4 @@
-package net.greeta.stock.catalog.application.commands.removestock;
+package net.greeta.stock.catalog.application.events.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,15 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class RemoveStockEventHandler {
   private final QueryStockOrderItemRepository stockOrderItemRepository;
 
-  @EventHandler
   @Transactional("transactionManager")
   public void on(RemoveStockRejected event) {
     log.info("Handling event: {} ({})", event.getId(), event.getClass().getSimpleName());
     log.info("RemoveStockEventHandler.RemoveStockRejected event handler started for order {} and product {} with available stock {}",
-            event.getOrderId(), event.getId(), event.getAvailableStock());
+            event.getId(), event.getProductId(), event.getAvailableStock());
 
-    final var queryStockOrderItem = stockOrderItemRepository.findByOrderIdAndProductId(event.getOrderId(), event.getId())
-            .orElseThrow(() -> new RuntimeException("Stock Order Item not found: orderId = %s, productId = %s".formatted(event.getOrderId(), event.getId())));
+    final var queryStockOrderItem = stockOrderItemRepository.findByOrderIdAndProductId(event.getId(), event.getProductId())
+            .orElseThrow(() -> new RuntimeException("Stock Order Item not found: orderId = %s, productId = %s".formatted(event.getId(), event.getProductId())));
 
     queryStockOrderItem.setStockOrderItemStatus(StockOrderItemStatus.StockRejected);
 

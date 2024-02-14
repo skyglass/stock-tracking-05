@@ -36,11 +36,6 @@ public class StockOrderAxonRepository implements StockOrderAggregateRepository {
     }
 
     @Override
-    public List<Aggregate<StockOrderAggregate>> findAwaitingConfirmation(UUID productId) {
-        return null;
-    }
-
-    @Override
     public Aggregate<StockOrderAggregate> save(Supplier<StockOrderAggregate> stockOrderSupplier) {
         try {
             return repository.newInstance(stockOrderSupplier::get);

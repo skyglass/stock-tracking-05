@@ -12,7 +12,5 @@ public interface StockOrderAggregateRepository {
 
   Aggregate<StockOrderAggregate> loadAggregate(UUID id);
 
-  List<Aggregate<StockOrderAggregate>> findAwaitingConfirmation(UUID productId);
-
   Aggregate<StockOrderAggregate> save(Supplier<StockOrderAggregate> stockOrderSupplier);
 }

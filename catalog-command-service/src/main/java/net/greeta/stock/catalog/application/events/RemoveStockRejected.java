@@ -14,7 +14,7 @@ import java.util.UUID;
 public class RemoveStockRejected extends Event {
     @JsonProperty
     @NotNull
-    private UUID orderId;
+    private UUID productId;
     @JsonProperty
     @NotNull @Min(1)
     private Integer quantity;
@@ -22,9 +22,9 @@ public class RemoveStockRejected extends Event {
     @NotNull @Min(0)
     private Integer availableStock;
 
-    public RemoveStockRejected(UUID productId, UUID orderId, Integer quantity, Integer availableStock) {
-        super(productId);
-        this.orderId = orderId;
+    public RemoveStockRejected(UUID orderId, UUID productId, Integer quantity, Integer availableStock) {
+        super(orderId);
+        this.productId = productId;
         this.quantity = quantity;
         this.availableStock = availableStock;
     }

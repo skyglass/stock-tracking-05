@@ -1,19 +1,17 @@
 package net.greeta.stock.catalog.application.saga;
 
 import lombok.extern.slf4j.Slf4j;
-import net.greeta.stock.catalog.application.commandbus.CatalogCommandBus;
 import net.greeta.stock.catalog.application.commandbus.CommandBusRetryHelper;
 import net.greeta.stock.catalog.application.commands.confirmstockorder.ConfirmStockOrderCommand;
 import net.greeta.stock.catalog.application.commands.confirmstockorderitem.ConfirmStockOrderItemCommand;
 import net.greeta.stock.catalog.application.commands.removestock.RemoveStockCommand;
-import net.greeta.stock.catalog.application.events.RemoveStockConfirmed;
-import net.greeta.stock.catalog.application.events.StockOrderConfirmed;
-import net.greeta.stock.catalog.application.events.StockOrderCreated;
-import net.greeta.stock.catalog.application.events.StockOrderItemConfirmed;
+import net.greeta.stock.catalog.application.events.handler.RemoveStockEventHandler;
+import net.greeta.stock.catalog.application.events.*;
 import net.greeta.stock.catalog.application.integrationevents.IntegrationEventPublisher;
 import net.greeta.stock.catalog.application.integrationevents.events.OrderStockConfirmedIntegrationEvent;
 import net.greeta.stock.catalog.application.integrationevents.events.StockOrderItem;
 import net.greeta.stock.catalog.config.KafkaTopics;
+import net.greeta.stock.catalog.application.events.handler.StockOrderEventHandler;
 import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
@@ -30,14 +28,18 @@ public class StockOrderSaga {
 	@Autowired
 	private transient KafkaTopics kafkaTopics;
 	@Autowired
-	private transient CatalogCommandBus commandBus;
-	@Autowired
 	private transient CommandBusRetryHelper commandBusRetryHelper;
+	@Autowired
+	private transient StockOrderEventHandler stockOrderEventHandler;
+	@Autowired
+	private transient RemoveStockEventHandler removeStockEventHandler;
+
 	
 	@StartSaga
 	@SagaEventHandler(associationProperty="id")
 	public void handle(StockOrderCreated event) {
 		log.info("StartSaga: StockOrderSaga.StockOrderCreated event started for order {}", event.getId());
+		stockOrderEventHandler.on(event);
 		if (event.getStockOrderItems().size() > 0) {
 			var current = event.getStockOrderItems().get(0);
 			RemoveStockCommand command = new RemoveStockCommand(
@@ -55,7 +57,14 @@ public class StockOrderSaga {
 				event.getId(), event.getProductId(), event.getQuantity());
 		ConfirmStockOrderItemCommand command = new ConfirmStockOrderItemCommand(
 				event.getId(), event.getProductId(), event.getQuantity());
-		commandBus.execute(command);
+		commandBusRetryHelper.execute(command);
+	}
+
+	@SagaEventHandler(associationProperty="id")
+	public void on(RemoveStockRejected event) {
+		log.info("StockOrderSaga.RemoveStockRejected event started for order {} and product {} with quantity {}",
+				event.getId(), event.getProductId(), event.getQuantity());
+		removeStockEventHandler.on(event);
 	}
 	
 	@SagaEventHandler(associationProperty="id")
@@ -66,7 +75,7 @@ public class StockOrderSaga {
 		if (next == null) {
 			ConfirmStockOrderCommand command = new ConfirmStockOrderCommand(event.getId());
 			log.info("ConfirmStockOrderCommand started for order {}", event.getId());
-			commandBus.execute(command);
+			commandBusRetryHelper.execute(command);
 		} else {
 			RemoveStockCommand nextCommand = new RemoveStockCommand(
 					next.getProductId(), event.getId(),

@@ -84,7 +84,7 @@ public class CatalogItemAggregate extends AggregateRoot {
     //checkRule(new AvailableStockMustBeEnough(name, availableStock, quantity));
     if (quantity.greaterThan(availableStock)) {
       log.info("Reject CatalogItemAggregate.removeStock for quantity {} and availableStock {}", quantity, availableStock);
-      RemoveStockRejected event = new RemoveStockRejected(command.getProductId(), command.getOrderId(),
+      RemoveStockRejected event = new RemoveStockRejected(command.getOrderId(), command.getProductId(),
               command.getQuantity(), availableStock.getValue());
       apply(event);
     } else {
